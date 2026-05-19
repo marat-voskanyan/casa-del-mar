@@ -7,7 +7,7 @@ const en = {
   tagline: 'Make your dream come true',
   nav: { home: 'Home', spain: 'Spain', cyprus: 'Cyprus', contact: 'Contact' },
   hero: {
-    home:   { title: 'Your Dream Home\nAwaits by the Sea', subtitle: 'Exclusive coastal properties in Spain and Cyprus — curated for the discerning buyer', cta: 'Browse Spain', ctaContact: 'Browse Cyprus' },
+    home:   { title: 'Your Dream Home\nAwaits by the Sea', subtitle: 'Exclusive coastal properties in Spain and Cyprus', cta: 'Browse Spain', ctaContact: 'Browse Cyprus' },
     spain:  { title: 'Properties in Spain',  subtitle: 'Discover exceptional homes along the Spanish coastline' },
     cyprus: { title: 'Properties in Cyprus', subtitle: 'Find your paradise on the sun-kissed island of Cyprus' },
   },
@@ -149,7 +149,7 @@ const ru: typeof en = {
   tagline: 'Воплотите свою мечту в жизнь',
   nav: { home: 'Главная', spain: 'Испания', cyprus: 'Кипр', contact: 'Контакты' },
   hero: {
-    home:   { title: 'Ваш дом мечты\nждёт у моря', subtitle: 'Эксклюзивные прибрежные объекты в Испании и на Кипре — для взыскательных покупателей', cta: 'Смотреть Испанию', ctaContact: 'Смотреть Кипр' },
+    home:   { title: 'Ваш дом мечты\nждёт у моря', subtitle: 'Эксклюзивные прибрежные объекты в Испании и на Кипре', cta: 'Смотреть Испанию', ctaContact: 'Смотреть Кипр' },
     spain:  { title: 'Недвижимость в Испании',  subtitle: 'Откройте исключительные дома вдоль испанского побережья' },
     cyprus: { title: 'Недвижимость на Кипре', subtitle: 'Найдите свой рай на солнечном острове Кипр' },
   },
@@ -291,7 +291,7 @@ const hy: typeof en = {
   tagline: 'Իրականացրեք ձեր երազանքը',
   nav: { home: 'Գլխավոր', spain: 'Իսպանիա', cyprus: 'Կիպրոս', contact: 'Կապ' },
   hero: {
-    home:   { title: 'Ձեր երազանքի տունը\nսպասում է ծովի մոտ', subtitle: 'Բացառիկ ծովափնյա գույքեր Իսպանիայում և Կիպրոսում — պահանջկոտ գնորդների համար', cta: 'Դիտել Իսպանիա', ctaContact: 'Դիտել Կիպրոս' },
+    home:   { title: 'Ձեր երազանքի տունը\nսպասում է ծովի մոտ', subtitle: 'Բացառիկ ծովափնյա գույքեր Իսպանիայում և Կիպրոսում', cta: 'Դիտել Իսպանիա', ctaContact: 'Դիտել Կիպրոս' },
     spain:  { title: 'Գույքեր Իսպանիայում',  subtitle: 'Բացահայտեք բացառիկ տներ Իսպանիայի ափին' },
     cyprus: { title: 'Գույքեր Կիպրոսում', subtitle: 'Գտեք ձեր դրախտը Կիպրոսի արևոտ կղզում' },
   },
