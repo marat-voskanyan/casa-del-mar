@@ -13,6 +13,7 @@ const en = {
   },
   home: {
     featured:    'Featured Properties',
+    featuredSub: 'Handpicked luxury homes in the finest locations',
     viewAll:     'View All Properties',
     why:     'Why Casa del Mar',
     whySub:  'Over 15 years of expertise in Mediterranean luxury real estate',
@@ -154,6 +155,7 @@ const ru: typeof en = {
   },
   home: {
     featured:    'Избранные объекты',
+    featuredSub: 'Отборная роскошная недвижимость в лучших локациях',
     viewAll:     'Все объекты',
     why:     'Почему Casa del Mar',
     whySub:  'Более 15 лет опыта в сфере средиземноморской элитной недвижимости',
@@ -295,6 +297,7 @@ const hy: typeof en = {
   },
   home: {
     featured:    'Ընտրված գույքեր',
+    featuredSub: 'Ձեռքով ընտրված շքեղ տներ լավագույն վայրերում',
     viewAll:     'Բոլոր գույքերը',
     why:     'Ինչու Casa del Mar',
     whySub:  'Միջերկրածովյան շքեղ անշարժ գույքի ոլորտում 15+ տարվա փորձ',
