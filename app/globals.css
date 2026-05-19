@@ -1,0 +1,209 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply font-sans bg-sand text-dark antialiased; }
+  h1, h2, h3, h4, h5, h6 { @apply font-serif; }
+  * { box-sizing: border-box; }
+}
+
+@layer components {
+  /* ── Buttons ── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 bg-gold text-navy-900 px-8 py-3.5
+           font-accent font-semibold tracking-[0.15em] uppercase text-xs
+           hover:bg-gold-600 hover:shadow-gold active:scale-[0.97]
+           transition-all duration-300 cursor-pointer;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 border-2 border-gold text-gold px-8 py-3.5
+           font-accent font-semibold tracking-[0.15em] uppercase text-xs
+           hover:bg-gold hover:text-navy-900 active:scale-[0.97]
+           transition-all duration-300 cursor-pointer;
+  }
+  .btn-outline-white {
+    @apply inline-flex items-center justify-center gap-2 border-2 border-white text-white px-8 py-3.5
+           font-accent font-semibold tracking-[0.15em] uppercase text-xs
+           hover:bg-white hover:text-navy active:scale-[0.97]
+           transition-all duration-300 cursor-pointer;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 text-navy px-4 py-2
+           font-accent text-xs font-semibold tracking-[0.12em] uppercase
+           hover:text-gold transition-colors duration-200 cursor-pointer;
+  }
+
+  /* ── Layout ── */
+  .container-site { @apply max-w-7xl mx-auto px-5 md:px-10; }
+  .section-pad    { @apply py-24 md:py-32; }
+
+  /* ── Typography ── */
+  .eyebrow {
+    @apply font-accent text-gold tracking-[0.3em] uppercase text-[11px] font-semibold;
+  }
+  .section-title {
+    @apply font-serif text-4xl md:text-5xl lg:text-6xl font-normal leading-tight;
+  }
+  .gold-divider { @apply w-14 h-[2px] bg-gold my-5; }
+
+  /* ── Cards ── */
+  .card {
+    @apply bg-white rounded-2xl shadow-card overflow-hidden
+           hover:shadow-card-hover hover:-translate-y-1.5
+           transition-all duration-400;
+  }
+
+  /* ── Forms (public) ── */
+  .input-field {
+    @apply w-full bg-white border border-sand-400 rounded-lg px-4 py-3.5
+           font-sans text-sm text-navy placeholder-sand-600
+           focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20
+           transition-all duration-200;
+  }
+  .label-field {
+    @apply block font-accent text-[10px] font-semibold tracking-[0.2em] uppercase text-navy-700 mb-1.5;
+  }
+
+  /* ── Admin forms ── */
+  .admin-input {
+    @apply w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm
+           focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold
+           transition-all duration-200;
+  }
+  .admin-label {
+    @apply block text-[10px] font-semibold text-gray-500 uppercase tracking-[0.18em] mb-1.5;
+  }
+  .admin-btn {
+    @apply px-5 py-2.5 bg-gold text-navy-900 text-sm font-semibold rounded-lg
+           hover:bg-gold-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .admin-btn-danger {
+    @apply px-5 py-2.5 bg-red-600 text-white text-sm font-semibold rounded-lg
+           hover:bg-red-700 transition-colors;
+  }
+  .admin-btn-secondary {
+    @apply px-5 py-2.5 bg-gray-100 text-gray-700 text-sm font-semibold rounded-lg
+           hover:bg-gray-200 transition-colors;
+  }
+
+  /* ── Status badges ── */
+  .badge { @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold font-accent; }
+  .badge-available { @apply bg-emerald-50 text-emerald-700; }
+  .badge-sold      { @apply bg-red-50 text-red-700; }
+  .badge-reserved  { @apply bg-amber-50 text-amber-700; }
+  .dot-available   { @apply w-1.5 h-1.5 rounded-full bg-emerald-500; }
+  .dot-sold        { @apply w-1.5 h-1.5 rounded-full bg-red-500; }
+  .dot-reserved    { @apply w-1.5 h-1.5 rounded-full bg-amber-500; }
+}
+
+/* ── Hero animated gradient ── */
+.hero-bg {
+  background: linear-gradient(-45deg, #0D1F2D, #102030, #1a3348, #0D2030, #0D1F2D);
+  background-size: 400% 400%;
+  animation: hero-gradient 18s ease infinite;
+}
+@keyframes hero-gradient {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── Glassmorphism ── */
+.glass {
+  background: rgba(13, 31, 45, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.18);
+}
+.glass-light {
+  background: rgba(242, 235, 217, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ── Scroll animation hook ── */
+.reveal         { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-d1.visible { transition-delay: 0.1s; }
+.reveal-d2.visible { transition-delay: 0.2s; }
+.reveal-d3.visible { transition-delay: 0.3s; }
+.reveal-d4.visible { transition-delay: 0.4s; }
+
+/* ── Skeleton loading ── */
+.skeleton {
+  @apply bg-gray-200 rounded animate-pulse;
+  background: linear-gradient(90deg, #e8e3d9 25%, #f0ebe0 50%, #e8e3d9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Leaflet overrides ── */
+.leaflet-container { font-family: var(--font-inter), sans-serif; }
+.leaflet-popup-content-wrapper {
+  border-radius: 12px !important;
+  box-shadow: 0 8px 30px rgba(13,31,45,0.15) !important;
+}
+.leaflet-popup-content { margin: 12px 16px !important; }
+.custom-map-marker {
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px;
+  background: #C9A84C; border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg); box-shadow: 0 4px 12px rgba(201,168,76,0.4);
+}
+.custom-map-marker span { transform: rotate(45deg); font-size: 18px; }
+
+/* ── Gallery / Lightbox ── */
+.lightbox-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.96);
+  display: flex; align-items: center; justify-content: center;
+}
+.lightbox-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 48px; height: 48px; border-radius: 50%;
+  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+  color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 20px; transition: background 0.2s;
+}
+.lightbox-arrow:hover { background: rgba(201,168,76,0.4); }
+
+/* ── Quick view modal ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(13,31,45,0.6);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+
+/* ── Horizontal scroll carousel ── */
+.scroll-x {
+  display: flex; gap: 1.5rem; overflow-x: auto;
+  scrollbar-width: none; -ms-overflow-style: none;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 4px;
+}
+.scroll-x::-webkit-scrollbar { display: none; }
+.scroll-x > * { scroll-snap-align: start; flex-shrink: 0; }
+
+/* ── Filter pill buttons ── */
+.filter-pill {
+  @apply px-4 py-2 rounded-full font-accent text-xs font-semibold tracking-wider
+         uppercase border border-sand-400 text-navy-700
+         hover:border-gold hover:text-gold transition-all duration-200 cursor-pointer;
+}
+.filter-pill.active {
+  @apply bg-navy text-white border-navy;
+}
+
+/* ── Number ticker ── */
+@keyframes tick-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
