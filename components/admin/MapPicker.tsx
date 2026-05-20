@@ -34,7 +34,7 @@ export default function MapPicker({ lat, lng, onPick }: Props) {
         maxZoom: 19,
       }).addTo(map)
 
-      map.setView([lat, lng], 12)
+      map.setView([lat, lng], 13)
 
       marker = L.marker([lat, lng], { icon, draggable: true }).addTo(map)
 

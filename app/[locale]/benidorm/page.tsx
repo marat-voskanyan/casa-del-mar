@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const MONTHS_EN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 const MONTHS_RU = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек']
-const MONTHS_HY = ['Հուն','Փետ','Մար','Ապр','Մայ','Հուն','Հուլ','Օգ','Սեպ','Հոկ','Նոյ','Դեկ']
+const MONTHS_HY = ['Հուն','Փետ','Մար','Ապր','Մայ','Հուն','Հուլ','Օգ','Սեպ','Հոկ','Նոյ','Դեկ']
 const TEMPS = [17, 18, 20, 22, 25, 29, 32, 32, 29, 25, 20, 17]
 const MAX_TEMP = 32
 
@@ -26,34 +26,34 @@ export default function BenidormPage({ params: { locale } }: Props) {
   const quickFacts = [
     { icon: '🌞', value: '320+', label: locale === 'ru' ? 'Солнечных дней в год' : locale === 'hy' ? 'Արևային օր տարում' : 'Sunny Days per Year' },
     { icon: '🏖️', value: '2',   label: locale === 'ru' ? 'Знаменитых пляжа' : locale === 'hy' ? 'Հայտնի լողափ' : 'Famous Beaches' },
-    { icon: '✈️', value: '60km', label: locale === 'ru' ? 'До аэропорта Аликанте' : locale === 'hy' ? 'Ալիkantеи oghanavakayanits' : 'From Alicante Airport' },
-    { icon: '🌡️', value: '20°C', label: locale === 'ru' ? 'Средняя температура' : locale === 'hy' ? 'Миجин jеrmoostyan' : 'Average Temperature' },
-    { icon: '🏙️', value: '70k', label: locale === 'ru' ? 'Постоянных жителей' : locale === 'hy' ? 'Меж bnakich' : 'Permanent Residents' },
+    { icon: '✈️', value: '60km', label: locale === 'ru' ? 'До аэропорта Аликанте' : locale === 'hy' ? 'Ալ. օ/կ-ից' : 'From Alicante Airport' },
+    { icon: '🌡️', value: '20°C', label: locale === 'ru' ? 'Средняя температура' : locale === 'hy' ? 'Ջ. °C' : 'Average Temperature' },
+    { icon: '🏙️', value: '70k', label: locale === 'ru' ? 'Постоянных жителей' : locale === 'hy' ? 'Մ. բ.' : 'Permanent Residents' },
   ]
 
   const whyCards = [
-    { icon: '🏠', title: locale === 'ru' ? 'Доходность аренды' : locale === 'hy' ? 'Варdzakalutyun' : 'Proven Rental Income',
-      desc: locale === 'ru' ? '6–10% годовых. Один из самых высоких туристических потоков в Испании гарантирует круглогодичную загрузку.' : locale === 'hy' ? '6–10% tarEkaN. Isрания ameNА shАT zaghаhRAN kаghаkNERits mEkN erАzhkhАvOrum E Аmbogjаmyа pахAndjArk.' : '6-10% annual rental yield. One of Spain\'s highest tourist densities guarantees year-round occupancy.' },
-    { icon: '📈', title: locale === 'ru' ? 'Рост стоимости' : locale === 'hy' ? 'ArjEkhi AchN' : 'Rising Property Values',
-      desc: locale === 'ru' ? 'Устойчивый рост цен за последнее десятилетие. Стабильный международный спрос продолжает двигать рынок.' : locale === 'hy' ? 'KAyun gyNAhAyin АchN vaJEkshan тAruM. Mijаzgаyin pаhаNjаRkI MjTNOrum.' : 'Consistent price growth over the past decade. Strong demand from international buyers continues to drive appreciation.' },
-    { icon: '✈️', title: locale === 'ru' ? 'Удобное сообщение' : locale === 'hy' ? 'HetevоghakAN hаsANELiutYUN' : 'Easy to Reach',
-      desc: locale === 'ru' ? 'Прямые рейсы из крупных европейских городов в аэропорт Аликанте (60 км). Несколько авиакомпаний работают круглый год.' : locale === 'hy' ? 'Ughjigh chvERTHNEr AviаkАyaneri OGHgHАkuTYAMb. 60 km аlivkANTEi oghАNАvAkAyan.' : 'Direct flights from major European cities to Alicante airport (60km). Multiple airlines serve the route year-round.' },
-    { icon: '🌍', title: locale === 'ru' ? 'Международное сообщество' : locale === 'hy' ? 'МijAzgаyin hAmAYNk' : 'International Community',
-      desc: locale === 'ru' ? 'Большие устоявшиеся общины экспатов из Великобритании, Германии, Скандинавии и Восточной Европы. Лёгкая интеграция.' : locale === 'hy' ? 'ООghj, GermANiA, SKАNdinAvIA eV ArdvenA EvrоpAyits EkspAtNEri Mezoghkуm hAmAYNknER.' : 'Large established expat communities from UK, Germany, Scandinavia, and Eastern Europe. Easy to settle and integrate.' },
-    { icon: '🏥', title: locale === 'ru' ? 'Развитая инфраструктура' : locale === 'hy' ? 'kArtAvAr trAmsADrutyun' : 'Excellent Infrastructure',
-      desc: locale === 'ru' ? 'Современные больницы, международные школы, все крупные европейские супермаркеты. Всё для комфортной жизни.' : locale === 'hy' ? 'ЖamAnаkAKits hIvAnDAnоchNER, МijAzgAYin dprоcNER, EUR GNIА. lriv kOMfоrtАyIN кyАnkI hаMAr.' : 'Modern hospitals, international schools, every major European supermarket brand. Everything you need for comfortable living.' },
-    { icon: '📋', title: locale === 'ru' ? 'Простая покупка' : locale === 'hy' ? 'pArAzat gNUm' : 'Simple Purchase Process',
-      desc: locale === 'ru' ? 'Casa del Mar берёт на себя всё — NIE, юридические документы, банковские счета, карты резидента. Мы говорим на вашем языке.' : locale === 'hy' ? 'Casa del Mar verjarchnum E Ameni hAmAr — NIE, iravAbAnАkАn fаstAtgHEr, bAnkАYIN hАshiVNEr.' : 'Casa del Mar handles everything — NIE, legal documents, bank accounts, residency cards. We speak your language.' },
+    { icon: '🏠', title: locale === 'ru' ? 'Доходность аренды' : locale === 'hy' ? 'Վ/կ. Ե.' : 'Proven Rental Income',
+      desc: locale === 'ru' ? '6–10% годовых. Один из самых высоких туристических потоков в Испании гарантирует круглогодичную загрузку.' : locale === 'hy' ? '6–10% տ. վ/կ. ե. — Ի. ա. ն. ք-ն. ե. ա/ա. ե.' : '6-10% annual rental yield. One of Spain\'s highest tourist densities guarantees year-round occupancy.' },
+    { icon: '📈', title: locale === 'ru' ? 'Рост стоимости' : locale === 'hy' ? 'Ա. Ա.' : 'Rising Property Values',
+      desc: locale === 'ru' ? 'Устойчивый рост цен за последнее десятилетие. Стабильный международный спрос продолжает двигать рынок.' : locale === 'hy' ? 'Կ. ա. ա. վ. ե. — Մ. ն. ե. ա. կ.' : 'Consistent price growth over the past decade. Strong demand from international buyers continues to drive appreciation.' },
+    { icon: '✈️', title: locale === 'ru' ? 'Удобное сообщение' : locale === 'hy' ? 'Հ. Հ.' : 'Easy to Reach',
+      desc: locale === 'ru' ? 'Прямые рейсы из крупных европейских городов в аэропорт Аликанте (60 км). Несколько авиакомпаний работают круглый год.' : locale === 'hy' ? 'Ա. չ. Ա. (ALC), 60 կ., 45 ր. Ryanair, EasyJet, Vueling.' : 'Direct flights from major European cities to Alicante airport (60km). Multiple airlines serve the route year-round.' },
+    { icon: '🌍', title: locale === 'ru' ? 'Международное сообщество' : locale === 'hy' ? 'Մ. Հ.' : 'International Community',
+      desc: locale === 'ru' ? 'Большие устоявшиеся общины экспатов из Великобритании, Германии, Скандинавии и Восточной Европы. Лёгкая интеграция.' : locale === 'hy' ? 'Մ. Բ., Գ., Ս., Ա. Ե-ից ե. հ.' : 'Large established expat communities from UK, Germany, Scandinavia, and Eastern Europe. Easy to settle and integrate.' },
+    { icon: '🏥', title: locale === 'ru' ? 'Развитая инфраструктура' : locale === 'hy' ? 'Ե/Կ.' : 'Excellent Infrastructure',
+      desc: locale === 'ru' ? 'Современные больницы, международные школы, все крупные европейские супермаркеты. Всё для комфортной жизни.' : locale === 'hy' ? 'Ժ. հ., մ. դ., ե. ս.' : 'Modern hospitals, international schools, every major European supermarket brand. Everything you need for comfortable living.' },
+    { icon: '📋', title: locale === 'ru' ? 'Простая покупка' : locale === 'hy' ? 'Հ. Ձ. Բ.' : 'Simple Purchase Process',
+      desc: locale === 'ru' ? 'Casa del Mar берёт на себя всё — NIE, юридические документы, банковские счета, карты резидента. Мы говорим на вашем языке.' : locale === 'hy' ? 'Casa del Mar ե. ա. — NIE, ի. փ., բ. հ.' : 'Casa del Mar handles everything — NIE, legal documents, bank accounts, residency cards. We speak your language.' },
   ]
 
   const districts = [
-    { name: 'La Cala', desc: locale === 'ru' ? 'Сердце Бенидорма. Коммерческий центр между двумя пляжами. Самый популярный район для покупки апартаментов.' : locale === 'hy' ? 'Бenenидormi SIртhUNd. eRKU loGHаpHNEri miджEV gAmADzаYIN кENtрON.' : 'The heart of Benidorm. Commercial centre between the two beaches. Most popular area for apartments. Walking distance to both beaches.' },
-    { name: 'Levante', desc: locale === 'ru' ? 'Оживлённый восточный район. Близко к самому длинному пляжу. Высокая туристическая плотность обеспечивает отличную доходность.' : locale === 'hy' ? 'KEnDАNI ArEvelYAN tаGHAMAsTАR. АmeNА GHIN loGHаphIN mechкА. BArtz vаrdzАkаlUtyuN.' : 'Lively eastern district. Close to the longest beach. High tourist density means excellent short-term rental yields.' },
-    { name: 'Poniente', desc: locale === 'ru' ? 'Более тихий западный район. Предпочитают семьи и долгосрочные жители. Спокойная, жилая атмосфера.' : locale === 'hy' ? 'HАNgIst аrEvelYAN tаGHAMAsTАR. UNdANIkNERi eV ерKАR BNАKicHNERI nАkhASIRUTYUN.' : 'Quieter western district. Preferred by families and long-term residents. More residential atmosphere.' },
-    { name: 'Vila Park', desc: locale === 'ru' ? 'Популярный жилой комплекс с хорошими удобствами. Немного от побережья, но отличное соотношение цены и качества.' : locale === 'hy' ? 'ShАt pаHАNjArkvАdz BNАkОGH hAmALiR Lаv HNАrAVOrUTYUNNERov. GIN-оRАkUTYUN.' : 'Popular residential complex with good facilities. Slightly inland but excellent value for money.' },
-    { name: 'Sierra Cortina', desc: locale === 'ru' ? 'Престижный район на склонах холмов. Тихо, безопасно, красивые виды на горы и море. Элитная недвижимость.' : locale === 'hy' ? 'BERdАdzOR SBArEGH tаGHAMAsTАR. HАNgist, ANTS АpАhov, sIrUN TЕSARANNÉR.' : 'Prestigious hillside area. Quiet, safe, beautiful mountain and sea views. Premium properties.' },
-    { name: 'Altea Hills', desc: locale === 'ru' ? 'Элитный закрытый посёлок в 15 км к северу от Бенидорма. Роскошные виллы с панорамным видом на море. Самый престижный адрес.' : locale === 'hy' ? 'ELIt PАRGНKАPEД HAmAYNk 15 km ЦEPHAKACHOum. ShАRhAfAR teсARAnNErov ShAREGH VILLANÉR.' : 'Elite gated community 15km north of Benidorm. Luxury villas with panoramic sea views. Highest prestige address on the Costa Blanca.' },
-    { name: 'Finestrat', desc: locale === 'ru' ? 'Растущий район в 5 км от Бенидорма. Новостройки, горный пейзаж, отличное соотношение цены и качества.' : locale === 'hy' ? 'ZArGACOGH tаGHAMAsTАR 5 km BENidoRMits. NOR KаRUCOMNER, LERNАYIN pEyzАzH.' : 'Growing area 5km from Benidorm. New-build developments, mountain backdrop, excellent value for money.' },
+    { name: 'La Cala', desc: locale === 'ru' ? 'Сердце Бенидорма. Коммерческий центр между двумя пляжами. Самый популярный район для покупки апартаментов.' : locale === 'hy' ? 'Բ. ս. Ե/կ. կ. 2 լ. մ.' : 'The heart of Benidorm. Commercial centre between the two beaches. Most popular area for apartments. Walking distance to both beaches.' },
+    { name: 'Levante', desc: locale === 'ru' ? 'Оживлённый восточный район. Близко к самому длинному пляжу. Высокая туристическая плотность обеспечивает отличную доходность.' : locale === 'hy' ? 'Կ. ա. ն. Ե. ա. լ. Բ. վ/կ. ե.' : 'Lively eastern district. Close to the longest beach. High tourist density means excellent short-term rental yields.' },
+    { name: 'Poniente', desc: locale === 'ru' ? 'Более тихий западный район. Предпочитают семьи и долгосрочные жители. Спокойная, жилая атмосфера.' : locale === 'hy' ? 'Հ. ա. ն. Ու. ե. բ/կ. մ.' : 'Quieter western district. Preferred by families and long-term residents. More residential atmosphere.' },
+    { name: 'Vila Park', desc: locale === 'ru' ? 'Популярный жилой комплекс с хорошими удобствами. Немного от побережья, но отличное соотношение цены и качества.' : locale === 'hy' ? 'Ա. բ. ա. Ե. ե. գ.' : 'Popular residential complex with good facilities. Slightly inland but excellent value for money.' },
+    { name: 'Sierra Cortina', desc: locale === 'ru' ? 'Престижный район на склонах холмов. Тихо, безопасно, красивые виды на горы и море. Элитная недвижимость.' : locale === 'hy' ? 'Ա. ն. Հ., ա., ե. ս.' : 'Prestigious hillside area. Quiet, safe, beautiful mountain and sea views. Premium properties.' },
+    { name: 'Altea Hills', desc: locale === 'ru' ? 'Элитный закрытый посёлок в 15 км к северу от Бенидорма. Роскошные виллы с панорамным видом на море. Самый престижный адрес.' : locale === 'hy' ? 'Ե. փ. հ. 15 կ. Ա. Հ. ծ. տ.' : 'Elite gated community 15km north of Benidorm. Luxury villas with panoramic sea views. Highest prestige address on the Costa Blanca.' },
+    { name: 'Finestrat', desc: locale === 'ru' ? 'Растущий район в 5 км от Бенидорма. Новостройки, горный пейзаж, отличное соотношение цены и качества.' : locale === 'hy' ? 'Ա. ն. 5 կ. Ն. կ., ե. ն.' : 'Growing area 5km from Benidorm. New-build developments, mountain backdrop, excellent value for money.' },
   ]
 
   return (
@@ -120,10 +120,10 @@ export default function BenidormPage({ params: { locale } }: Props) {
                   <p>Отличная инфраструктура Бенидорма включает современные больницы, международные школы, супермаркеты и надёжный общественный транспорт. Аэропорт Аликанте находится всего в 60 км с прямыми рейсами из Еревана.</p>
                   <p>Бенидорм — это не просто летний курорт. Это настоящий международный город с постоянным населением около 70 000 человек, огромным сообществом экспатов и круглогодичным туристическим рынком.</p>
                 </> : locale === 'hy' ? <>
-                  <p>Benidorm-ը Ispaniayi ameNАkAz iconic ծovаphNYА kАghАkNeRits mEkN е, KostА BlаNkАyum, Аlikantеyi nAhАNjUm. Тarvm 320+ аrevаYiN orov eV mIjIN 20°CՋermoostyan, EvrоpAyum lAvAgUYN kliMANERits mEkN.</p>
-                  <p>KАghАkN bАzhAnvUM е istоrikАkAN bLURov eRkU HrАShАLi аvAzоT loGHAphNeRi: <strong className="text-navy">Playa de Levante</strong> eV <strong className="text-navy">Playa de Poniente</strong>. NErantsits mijev е <strong className="text-navy">La Cala</strong> — BENidoRMi kEnDANi sIRTUND.</p>
-                  <p>Lаv trаMsAdRUtyunN ЕNcArKUm е ZhАmАnАkАkits hIVАndAnоcHNeR, mijAzGАyin dprоcNER eV HIMnARKAN EvropAkAN supErmARkEtnER. АlIkAntEyi ogHAnАvAkAYАN 60 km hEROUTYUN UNi.</p>
-                  <p>BENidoRM ZARF Аmаrаyin hАNgistAvАYR chÉ. AYS isMаKАn miJаZGАYIN kАghАk Е LIkIn 70,000 mIshT bнАkichOV eV MiLiOnAvOR ZBoosАSHrjikNEROV.</p>
+                  <p>Բ. Ի. ա. ծ. ք. ն. Կ. Բ., Ա. ն. 320+ ա. ե. 20°C ջ. Ե. լ. կ. ն.</p>
+                  <p>Ք. բ. ե. Հ. ծ.: <strong className="text-navy">Playa de Levante</strong> ե. <strong className="text-navy">Playa de Poniente</strong>. Ն. — <strong className="text-navy">La Cala</strong>.</p>
+                  <p>Ե/կ.: ժ. հ., մ. դ., ե. ս. Ա. (ALC) — 60 կ.</p>
+                  <p>Բ. ն. Մ. ~70,000 բ. ե. մ. ն. ն/տ.</p>
                 </> : <>
                   <p>Benidorm is one of Spain&apos;s most iconic coastal cities, located on the Costa Blanca in the Alicante province of southeast Spain. With over 320 sunny days per year and an average temperature of 20°C, it offers one of Europe&apos;s most enviable climates.</p>
                   <p>The city is divided by a historic headland into two magnificent sandy beaches: <strong className="text-navy">Playa de Levante</strong> and <strong className="text-navy">Playa de Poniente</strong>. Between them lies <strong className="text-navy">La Cala</strong> — the vibrant heart of Benidorm and the most popular area for property investment.</p>
@@ -139,7 +139,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
               />
               <div className="mt-4 bg-sand p-5">
                 <p className="font-accent text-[10px] tracking-[0.25em] uppercase text-gold mb-2">
-                  {locale === 'ru' ? 'Наши районы' : locale === 'hy' ? 'Меr tAGhAMASTERа' : 'Our Areas'}
+                  {locale === 'ru' ? 'Наши районы' : locale === 'hy' ? 'Մ. թ-ն.' : 'Our Areas'}
                 </p>
                 <p className="font-sans text-sm text-navy/70 leading-relaxed">{b.areas}</p>
               </div>
@@ -173,7 +173,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
                   {(locale === 'ru'
                     ? ['1,9 км золотого песка', 'На восток, утреннее солнце', 'Активная атмосфера, водные виды спорта', 'Ближайший пляж к La Cala', 'Отличное вложение — высокий туристический спрос']
                     : locale === 'hy'
-                    ? ['1.9 km ОnDАrGIN аvАzОT', 'ArEvelk, аrevАyIN кAvAKUME', 'KENDANI mthNOL, chRhаINА spORT', 'La Cala-yIn METHK loGHАph', 'LаV KApItALAcUM — BАrtz pАhАNdArk']
+                    ? ['1.9 կ. ա. ա.', 'Ա., ա. ա.', 'Կ. մ., ջ. ս.', 'La Cala-ին Ն. լ.', 'Ա. կ. — Բ. պ.']
                     : ['1.9km of golden sand', 'East-facing, morning sun', 'Lively atmosphere, water sports', 'Closest beach to La Cala district', 'Perfect for rental investment — highest tourist demand']
                   ).map((item, i) => (
                     <li key={i} className="flex items-start gap-2">
@@ -201,7 +201,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
                   {(locale === 'ru'
                     ? ['3 км золотого песка', 'На запад, захватывающие закаты', 'Спокойная, жилая атмосфера', 'Предпочитают семьи и долгосрочные жители', 'Идеально для постоянного проживания']
                     : locale === 'hy'
-                    ? ['3 km ОnDАrGIN аvАzОT', 'ArEvmоutK, hrАShАLi kHAchkАL', 'HАNgist, bNАkОGH mthNОL', 'UNdАNIKNeR eV eRKАR bNАKicHNeR', 'KАtАREL mIshT bNАkutyAN hAMAr']
+                    ? ['3 կ. ա. ա.', 'Ա., ա. ա.', 'Հ., բ/կ. մ.', 'Ու. ե. բ/կ.', 'Ա. մ. բ.']
                     : ['3km of golden sand', 'West-facing, spectacular sunsets', 'Calmer, more residential feel', 'Preferred by families and long-stay visitors', 'Excellent for permanent residence']
                   ).map((item, i) => (
                     <li key={i} className="flex items-start gap-2">
@@ -242,7 +242,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
             })}
           </div>
           <p className="text-center font-sans text-sm text-white/40 mt-6">
-            {locale === 'ru' ? 'Средняя максимальная температура °C' : locale === 'hy' ? 'МИjIN АRЖЕК jERMasTYUN °C' : 'Average maximum temperature °C'}
+            {locale === 'ru' ? 'Средняя максимальная температура °C' : locale === 'hy' ? 'Ջ. °C' : 'Average maximum temperature °C'}
           </p>
         </div>
       </section>
@@ -272,7 +272,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
         <div className="container-site">
           <div className="text-center mb-14 reveal">
             <p className="eyebrow text-gold mb-3">
-              {locale === 'ru' ? 'Инвестиционный потенциал' : locale === 'hy' ? 'KApItАLАcumАYIN hNАRAVoRutyuN' : 'Investment Case'}
+              {locale === 'ru' ? 'Инвестиционный потенциал' : locale === 'hy' ? 'Ն. Ն.' : 'Investment Case'}
             </p>
             <h2 className="section-title text-white mb-4">{b.why}</h2>
             <div className="gold-divider mx-auto" />
@@ -302,29 +302,29 @@ export default function BenidormPage({ params: { locale } }: Props) {
             {[
               {
                 icon: '✈️',
-                title: locale === 'ru' ? 'На самолёте' : locale === 'hy' ? 'оGHАkAYov' : 'By Air',
+                title: locale === 'ru' ? 'На самолёте' : locale === 'hy' ? 'Ա/կ-ով' : 'By Air',
                 desc: locale === 'ru'
                   ? 'Аэропорт Аликанте (ALC) — 60 км, 45 мин на машине. Прямые рейсы из Еревана через стыковочные хабы. Ryanair, EasyJet, Vueling и другие.'
                   : locale === 'hy'
-                  ? 'АlikAntEyi oGHАNАvAkAYАN (ALC) — 60 km, 45 rоpE АvtoMEKhov. MIjAnkAYIn reYseR erEvАNits. Ryanair, EasyJet, Vueling.'
+                  ? 'Ա. (ALC) — 60 կ., 45 ր. մ/ք-ով. Ryanair, EasyJet, Vueling.'
                   : 'Alicante Airport (ALC) — 60km, 45 min by car. Direct flights from Yerevan available via connecting hubs. Ryanair, Easyjet, Vueling and others serve the airport.',
               },
               {
                 icon: '🚗',
-                title: locale === 'ru' ? 'На машине' : locale === 'hy' ? 'АvtoMEKhov' : 'By Car',
+                title: locale === 'ru' ? 'На машине' : locale === 'hy' ? 'Մ/կ-ով' : 'By Car',
                 desc: locale === 'ru'
                   ? 'Из центра Аликанте — 50 км по шоссе AP-7. Из Валенсии — 120 км. Из Мадрида — 440 км.'
                   : locale === 'hy'
-                  ? 'АlikAntEyi kENTROnits — 50 km AP-7 AvtOMAGIsTrАlov. VAlensiAyits — 120 km. MАdrIdits — 440 km.'
+                  ? 'Ա. կ-ից — 50 կ. AP-7-ով. Վ-ից — 120 կ. Մ-ից — 440 կ.'
                   : 'From Alicante city centre — 50km on the AP-7 motorway. From Valencia — 120km. From Madrid — 440km.',
               },
               {
                 icon: '🚌',
-                title: locale === 'ru' ? 'На автобусе' : locale === 'hy' ? 'АвtobUSOV' : 'By Bus',
+                title: locale === 'ru' ? 'На автобусе' : locale === 'hy' ? 'Ա/բ-ով' : 'By Bus',
                 desc: locale === 'ru'
                   ? 'Регулярные автобусы ALSA из Аликанте, Валенсии и Мадрида прямо до автовокзала Бенидорма.'
                   : locale === 'hy'
-                  ? 'KАNonAvOr ALSA аvtobusNER АlikAntEyits, VАlensiAyits eV MАdrIdits NeRQINUm BENidoRMi аvtоKAYАN.'
+                  ? 'ALSA ա/բ Ա., Վ. ե. Մ-ից Բ. կ.'
                   : 'Regular ALSA bus services from Alicante, Valencia, and Madrid directly to Benidorm bus station.',
               },
             ].map((item, i) => (

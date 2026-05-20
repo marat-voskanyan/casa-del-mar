@@ -12,6 +12,21 @@ const MAX_IMAGES = 20
 const TABS = ['Basic', 'Details', 'Description', 'Images', 'Location', 'Notes'] as const
 type Tab = typeof TABS[number]
 
+const BENIDORM_LAT = 38.5401
+const BENIDORM_LNG = -0.1228
+
+const LOCATION_PRESETS = [
+  { label: 'Benidorm',       lat: 38.5401, lng: -0.1228 },
+  { label: 'La Cala',        lat: 38.5416, lng: -0.1197 },
+  { label: 'Levante',        lat: 38.5430, lng: -0.1150 },
+  { label: 'Poniente',       lat: 38.5380, lng: -0.1280 },
+  { label: 'Sierra Cortina', lat: 38.5520, lng: -0.1050 },
+  { label: 'Altea Hills',    lat: 38.6100, lng: -0.0500 },
+  { label: 'Finestrat',      lat: 38.5630, lng: -0.1890 },
+  { label: 'Larnaca CY',     lat: 34.9009, lng: 33.6231 },
+  { label: 'Paphos CY',      lat: 34.7754, lng: 32.4240 },
+]
+
 const EMPTY: PropertyFormData = {
   name: '', location: '', price: '', bedrooms: '', bathrooms: '',
   floor: '', size_sqm: '', parking: false, status: 'available',
@@ -245,19 +260,29 @@ export default function PropertyForm({ initial, mode }: Props) {
     <form onSubmit={onSubmit}>
       {/* Tabs */}
       <div className="flex border-b border-gray-200 mb-6 md:mb-8 overflow-x-auto scrollbar-none">
-        {TABS.map(t => (
-          <button
-            key={t}
-            type="button"
-            onClick={() => setTab(t)}
-            className={[
-              'px-5 py-3 text-sm font-sans font-medium border-b-2 -mb-px whitespace-nowrap transition-colors',
-              tab === t ? 'border-gold text-gold' : 'border-transparent text-gray-500 hover:text-navy',
-            ].join(' ')}
-          >
-            {t === 'Images' ? `Images (${form.images.length}/${MAX_IMAGES})` : t}
-          </button>
-        ))}
+        {TABS.map(t => {
+          const isNotes = t === 'Notes'
+          const isActive = tab === t
+          return (
+            <button
+              key={t}
+              type="button"
+              onClick={() => setTab(t)}
+              className={[
+                'px-5 py-3 text-sm font-sans font-medium border-b-2 -mb-px whitespace-nowrap transition-colors',
+                isNotes
+                  ? isActive
+                    ? 'bg-amber-500 text-white border-amber-500 rounded-t'
+                    : 'bg-amber-100 text-amber-700 border-amber-300 hover:bg-amber-500 hover:text-white rounded-t'
+                  : isActive
+                    ? 'border-gold text-gold'
+                    : 'border-transparent text-gray-500 hover:text-navy',
+              ].join(' ')}
+            >
+              {isNotes ? `🔒 Internal Notes` : t === 'Images' ? `Images (${form.images.length}/${MAX_IMAGES})` : t}
+            </button>
+          )
+        })}
       </div>
 
       {/* ─── Basic ─── */}
@@ -436,6 +461,26 @@ export default function PropertyForm({ initial, mode }: Props) {
         <div className="space-y-5">
           <p className="font-sans text-sm text-gray-600">Set GPS coordinates to show an interactive map on the property page.</p>
 
+          {/* Quick location presets */}
+          <div>
+            <p className="admin-label mb-2">Quick Presets</p>
+            <div className="flex flex-wrap gap-2">
+              {LOCATION_PRESETS.map(p => (
+                <button
+                  key={p.label}
+                  type="button"
+                  onClick={() => {
+                    setField('latitude', String(p.lat))
+                    setField('longitude', String(p.lng))
+                  }}
+                  className="px-3 py-1 text-xs font-sans font-medium rounded-full bg-[#C9A84C]/10 text-[#8a6b1e] border border-[#C9A84C]/40 hover:bg-[#C9A84C] hover:text-white transition-colors"
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="admin-label">Latitude</label>
@@ -445,7 +490,7 @@ export default function PropertyForm({ initial, mode }: Props) {
                 value={form.latitude}
                 onChange={e => setField('latitude', e.target.value)}
                 className="admin-input"
-                placeholder="36.8969"
+                placeholder="38.5401"
               />
             </div>
             <div>
@@ -456,22 +501,34 @@ export default function PropertyForm({ initial, mode }: Props) {
                 value={form.longitude}
                 onChange={e => setField('longitude', e.target.value)}
                 className="admin-input"
-                placeholder="30.7133"
+                placeholder="-0.1228"
               />
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setShowMapPicker(true)}
-            className="admin-btn-secondary flex items-center gap-2"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-            </svg>
-            Pick on Map
-          </button>
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() => setShowMapPicker(true)}
+              className="admin-btn-secondary flex items-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+              </svg>
+              Pick on Map
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setField('latitude', String(BENIDORM_LAT))
+                setField('longitude', String(BENIDORM_LNG))
+              }}
+              className="px-4 py-2 text-sm font-sans font-medium rounded border border-[#C9A84C] text-[#8a6b1e] hover:bg-[#C9A84C] hover:text-white transition-colors flex items-center gap-1.5"
+            >
+              🏖️ Reset to Benidorm
+            </button>
+          </div>
 
           {/* Map preview */}
           {form.latitude && form.longitude && (
@@ -491,26 +548,54 @@ export default function PropertyForm({ initial, mode }: Props) {
 
       {/* ─── Notes ─── */}
       {tab === 'Notes' && (
-        <div className="rounded-lg border border-yellow-200 bg-[#FFFBEB] p-6 space-y-5">
-          <div className="bg-red-600 text-white text-sm font-sans font-bold text-center py-2.5 px-4 rounded-md tracking-wide">
-            ⚠️ INTERNAL USE ONLY — Not visible to visitors
+        <div className="space-y-5">
+          {/* Warning banner */}
+          <div
+            className="rounded-lg px-4 py-3 font-sans font-bold text-sm"
+            style={{ background: '#FEE2E2', border: '2px solid #EF4444', borderRadius: '8px' }}
+          >
+            ⚠️ INTERNAL USE ONLY — This information is never shown to website visitors
           </div>
-          <p className="font-sans text-sm text-gray-600">
-            Use this tab to store private notes about the property. This information is never shown on the public website.
-          </p>
+
+          {/* Quick template buttons */}
+          <div>
+            <p className="admin-label mb-2">Quick Templates</p>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { label: '📞 Owner contact', insert: 'Owner contact: ' },
+                { label: '💰 Price note',    insert: 'Price negotiable: ' },
+                { label: '👤 Client interest', insert: 'Client interested: ' },
+                { label: '🔑 Key location',  insert: 'Key location: ' },
+                { label: '📋 Commission',    insert: 'Commission: ' },
+              ].map(({ label, insert }) => (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => setField('internal_notes', form.internal_notes + (form.internal_notes && !form.internal_notes.endsWith('\n') ? '\n' : '') + insert)}
+                  className="px-3 py-1.5 text-xs font-sans rounded border border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-200 transition-colors"
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Textarea */}
           <div>
             <label className="admin-label">Internal Notes</label>
             <textarea
               value={form.internal_notes}
-              onChange={e => setField('internal_notes', e.target.value)}
-              rows={10}
-              className="admin-input resize-y bg-white/80"
-              placeholder={"Owner contact: +34 612 xxx\nKey held at office\nPrice negotiable — owner motivated\nClient interested: John D.\nNeeds renovation check"}
+              onChange={e => {
+                if (e.target.value.length <= 2000) setField('internal_notes', e.target.value)
+              }}
+              className="w-full rounded border-2 border-[#F59E0B] bg-[#FFFBEB] px-3 py-2 font-sans text-[15px] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-amber-500 resize-y"
+              style={{ minHeight: '200px' }}
+              placeholder={"Add private notes here...\nExamples:\n• Owner contact: +34 612 xxx xxx\n• Key held at office\n• Price negotiable — owner motivated\n• Client Ara is interested — follow up\n• Needs renovation inspection before sale\n• Commission: 3%"}
             />
+            <p className="font-sans text-xs text-gray-400 mt-1 text-right">
+              {form.internal_notes.length} / 2000 characters
+            </p>
           </div>
-          <p className="font-sans text-xs text-yellow-700 bg-yellow-100 border border-yellow-200 rounded px-3 py-2">
-            💡 Examples: owner contact details, key location, negotiation notes, interested clients, maintenance issues.
-          </p>
         </div>
       )}
 
@@ -550,8 +635,8 @@ export default function PropertyForm({ initial, mode }: Props) {
             </div>
             <div className="h-96">
               <MapPicker
-                lat={form.latitude ? parseFloat(form.latitude) : 38}
-                lng={form.longitude ? parseFloat(form.longitude) : 23}
+                lat={form.latitude ? parseFloat(form.latitude) : BENIDORM_LAT}
+                lng={form.longitude ? parseFloat(form.longitude) : BENIDORM_LNG}
                 onPick={(lat, lng) => {
                   setField('latitude', String(lat.toFixed(6)))
                   setField('longitude', String(lng.toFixed(6)))
