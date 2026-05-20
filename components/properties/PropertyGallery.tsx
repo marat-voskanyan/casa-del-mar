@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import Image from 'next/image'
 import type { Locale } from '@/types'
 import { getT } from '@/lib/i18n'
@@ -14,7 +14,9 @@ interface Props {
 export default function PropertyGallery({ images, name, locale }: Props) {
   const t = getT(locale)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+  const [mobileIndex, setMobileIndex] = useState(0)
   const isOpen = lightboxIndex !== null
+  const touchStartX = useRef<number | null>(null)
 
   const open = (i: number) => setLightboxIndex(i)
   const close = () => setLightboxIndex(null)
@@ -26,6 +28,9 @@ export default function PropertyGallery({ images, name, locale }: Props) {
   const next = useCallback(() => {
     setLightboxIndex(i => (i == null ? 0 : (i + 1) % images.length))
   }, [images.length])
+
+  const mobilePrev = () => setMobileIndex(i => (i - 1 + images.length) % images.length)
+  const mobileNext = () => setMobileIndex(i => (i + 1) % images.length)
 
   useEffect(() => {
     if (!isOpen) return
@@ -68,8 +73,63 @@ export default function PropertyGallery({ images, name, locale }: Props) {
         </div>
         <div className="gold-divider mb-6" />
 
-        {/* Main image + grid */}
-        <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[420px] md:h-[520px]">
+        {/* Mobile: single image with swipe */}
+        <div
+          className="md:hidden relative aspect-[4/3] overflow-hidden rounded-xl"
+          onTouchStart={e => { touchStartX.current = e.touches[0].clientX }}
+          onTouchEnd={e => {
+            if (touchStartX.current === null) return
+            const diff = touchStartX.current - e.changedTouches[0].clientX
+            if (Math.abs(diff) > 50) diff > 0 ? mobileNext() : mobilePrev()
+            touchStartX.current = null
+          }}
+        >
+          <Image
+            src={images[mobileIndex]}
+            alt={name}
+            fill
+            className="object-cover"
+            sizes="100vw"
+            priority={mobileIndex === 0}
+          />
+          {/* Counter badge */}
+          <div className="absolute bottom-3 right-3 bg-navy/70 text-white font-accent text-[11px] px-2.5 py-1 rounded-full">
+            {mobileIndex + 1} / {images.length}
+          </div>
+          {/* Prev / Next arrows */}
+          {images.length > 1 && (
+            <>
+              <button
+                onClick={mobilePrev}
+                className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-navy/50 flex items-center justify-center text-white"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+              </button>
+              <button
+                onClick={mobileNext}
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-navy/50 flex items-center justify-center text-white"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+              </button>
+            </>
+          )}
+          {/* Open lightbox */}
+          <button
+            onClick={() => open(mobileIndex)}
+            className="absolute top-3 right-3 w-9 h-9 rounded-full bg-navy/50 flex items-center justify-center text-white"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Desktop: photo grid */}
+        <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-2 h-[520px]">
           {/* Primary — takes 2 columns + 2 rows */}
           <button
             className="col-span-2 row-span-2 relative overflow-hidden group rounded-l-xl"

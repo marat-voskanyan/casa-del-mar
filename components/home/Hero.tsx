@@ -63,7 +63,7 @@ export default function Hero({ locale, page = 'home' }: Props) {
         </div>
 
         {/* Title */}
-        <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-light text-white leading-[1.05] mb-6 opacity-0 animate-fade-up whitespace-pre-line max-w-4xl">
+        <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-light text-white leading-[1.05] mb-6 opacity-0 animate-fade-up whitespace-pre-line max-w-4xl">
           {hero.title}
         </h1>
 

@@ -35,10 +35,11 @@ export default function Header({ locale }: Props) {
   const isHome = pathname === `/${locale}` || pathname === `/${locale}/`
 
   const navLinks = [
-    { href: `/${locale}`,         label: t.nav.home },
-    { href: `/${locale}/spain`,   label: t.nav.spain },
-    { href: `/${locale}/cyprus`,  label: t.nav.cyprus },
-    { href: `/${locale}/contact`, label: t.nav.contact },
+    { href: `/${locale}`,           label: t.nav.home },
+    { href: `/${locale}/spain`,     label: t.nav.spain },
+    { href: `/${locale}/benidorm`,  label: t.nav.benidorm },
+    { href: `/${locale}/cyprus`,    label: t.nav.cyprus },
+    { href: `/${locale}/contact`,   label: t.nav.contact },
   ]
 
   function localeHref(newLocale: Locale) {
@@ -133,7 +134,7 @@ export default function Header({ locale }: Props) {
 
             {/* Mobile hamburger */}
             <button
-              className="md:hidden text-white p-1.5 -mr-1.5 rounded-lg hover:bg-white/10 transition-colors"
+              className="md:hidden text-white p-2.5 -mr-1.5 rounded-lg hover:bg-white/10 transition-colors"
               onClick={() => setMenuOpen(v => !v)}
               aria-label="Toggle menu"
               aria-expanded={menuOpen}

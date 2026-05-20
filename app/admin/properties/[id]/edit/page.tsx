@@ -16,11 +16,11 @@ export default async function EditPropertyPage({ params: { id } }: Props) {
   if (!property) notFound()
 
   return (
-    <div className="flex">
+    <div className="flex min-h-screen">
       <AdminNav />
-      <div className="flex-1 p-8 overflow-auto">
+      <div className="flex-1 pt-16 md:pt-0 p-4 md:p-8 overflow-auto">
         <div className="max-w-3xl mx-auto">
-          <div className="flex items-center gap-3 mb-8">
+          <div className="flex items-center gap-3 mb-6 md:mb-8">
             <Link href="/admin" className="text-sm text-gray-400 hover:text-navy transition-colors">
               ← Properties
             </Link>

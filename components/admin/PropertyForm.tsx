@@ -244,7 +244,7 @@ export default function PropertyForm({ initial, mode }: Props) {
   return (
     <form onSubmit={onSubmit}>
       {/* Tabs */}
-      <div className="flex border-b border-gray-200 mb-8 overflow-x-auto">
+      <div className="flex border-b border-gray-200 mb-6 md:mb-8 overflow-x-auto scrollbar-none">
         {TABS.map(t => (
           <button
             key={t}
@@ -534,7 +534,7 @@ export default function PropertyForm({ initial, mode }: Props) {
 
       {/* Map picker modal */}
       {showMapPicker && (
-        <div className="fixed inset-0 z-50 bg-navy/60 backdrop-blur-sm flex items-center justify-center p-6">
+        <div className="fixed inset-0 z-50 bg-navy/60 backdrop-blur-sm flex items-center justify-center p-2 md:p-6">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden">
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
               <h3 className="font-sans font-semibold text-navy">Pick Location on Map</h3>

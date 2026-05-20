@@ -6,7 +6,6 @@ import FeaturedProperties from '@/components/home/FeaturedProperties'
 import Destinations from '@/components/home/Destinations'
 import WhyUs from '@/components/home/WhyUs'
 import AboutServices from '@/components/home/AboutServices'
-import Testimonials from '@/components/home/Testimonials'
 import ContactStrip from '@/components/home/ContactStrip'
 
 // Force server-render on every request so new properties appear immediately
@@ -34,7 +33,6 @@ export default async function HomePage({ params: { locale } }: Props) {
       <FeaturedProperties locale={locale} properties={properties} />
       <AboutServices locale={locale} />
       <WhyUs locale={locale} />
-      <Testimonials locale={locale} />
       <ContactStrip locale={locale} />
     </>
   )

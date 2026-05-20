@@ -84,10 +84,10 @@ export default function AdminDashboard() {
   const availableCount = properties.filter(p => p.status === 'available').length
 
   return (
-    <div className="flex">
+    <div className="flex min-h-screen">
       <AdminNav />
 
-      <div className="flex-1 p-8 overflow-auto">
+      <div className="flex-1 pt-16 md:pt-0 p-4 md:p-8 overflow-auto">
         <div className="max-w-6xl mx-auto">
 
           {/* Header */}
@@ -145,7 +145,8 @@ export default function AdminDashboard() {
             </div>
           ) : (
             <div className="bg-white rounded shadow-sm overflow-hidden">
-              <table className="w-full text-sm font-sans">
+              <div className="overflow-x-auto">
+              <table className="w-full text-sm font-sans min-w-[580px]">
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
                     <th className="text-left px-4 py-3 text-xs uppercase tracking-wider text-gray-500 font-semibold">Property</th>
@@ -203,6 +204,7 @@ export default function AdminDashboard() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           )}
         </div>

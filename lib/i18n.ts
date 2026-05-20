@@ -5,7 +5,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 const en = {
   tagline: 'Make your dream come true',
-  nav: { home: 'Home', spain: 'Spain', cyprus: 'Cyprus', contact: 'Contact' },
+  nav: { home: 'Home', spain: 'Spain', cyprus: 'Cyprus', contact: 'Contact', benidorm: 'Benidorm' },
   hero: {
     home:   { title: 'Your Dream Home\nAwaits by the Sea', subtitle: 'Exclusive coastal properties in Spain and Cyprus', cta: 'Browse Spain', ctaContact: 'Browse Cyprus' },
     spain:  { title: 'Properties in Spain',  subtitle: 'Discover exceptional homes along the Spanish coastline' },
@@ -44,15 +44,6 @@ const en = {
         'Remote Viewing of Proposed Properties',
       ],
     },
-    testimonials: {
-      title:    'What Our Clients Say',
-      subtitle: 'Trusted by buyers from around the world',
-      items: [
-        { name: 'Anna M.',    country: 'Armenia', text: 'Casa Del Mar helped us find our dream apartment in Barcelona. The entire process was seamless and professional.', rating: 5 },
-        { name: 'Sergei K.', country: 'Russia',  text: 'Exceptional service! They guided us through every step of buying our villa in Cyprus. Highly recommended.', rating: 5 },
-        { name: 'David H.',  country: 'USA',     text: 'Outstanding agency with deep knowledge of the Mediterranean market. Found us the perfect property in Marbella.', rating: 5 },
-      ],
-    },
     destinations: {
       title: 'Our Destinations',
       subtitle: "Premium properties in Europe's most coveted locations",
@@ -66,6 +57,7 @@ const en = {
       cta:      'Contact Us Today',
     },
     benidorm: {
+      heroTitle: 'Benidorm — The Manhattan of the Mediterranean',
       title:    'About Benidorm',
       subtitle: "Costa Blanca's Premier Resort City",
       why:      'Why Buy in Benidorm?',
@@ -81,7 +73,14 @@ const en = {
       population: '~70,000 permanent residents, millions of tourists per year',
       areas:    'La Cala · Levante · Poniente · Vila Park · Sierra Cortina · Altea Hills · Finestrat',
       cta:      'View Benidorm Properties',
+      ctaFree:  'Get Free Consultation',
       infoLabel: 'Key Facts',
+      beachesTitle: 'The Beaches',
+      climateTitle: 'Year-Round Mediterranean Climate',
+      districtsTitle: 'Areas We Cover in Benidorm',
+      gettingTitle: 'How to Get to Benidorm',
+      ctaTitle: 'Ready to Find Your Property in Benidorm?',
+      ctaSub:   'Browse our full collection of apartments and villas',
       whyItems: [
         'One of Spain\'s most visited cities — guaranteed rental demand',
         'High rental yields — 6–10% annually for short-term rentals',
@@ -147,7 +146,7 @@ const en = {
 // ─────────────────────────────────────────────────────────────────────────────
 const ru: typeof en = {
   tagline: 'Воплотите свою мечту в жизнь',
-  nav: { home: 'Главная', spain: 'Испания', cyprus: 'Кипр', contact: 'Контакты' },
+  nav: { home: 'Главная', spain: 'Испания', cyprus: 'Кипр', contact: 'Контакты', benidorm: 'Бенидорм' },
   hero: {
     home:   { title: 'Ваш дом мечты\nждёт у моря', subtitle: 'Эксклюзивные прибрежные объекты в Испании и на Кипре', cta: 'Смотреть Испанию', ctaContact: 'Смотреть Кипр' },
     spain:  { title: 'Недвижимость в Испании',  subtitle: 'Откройте исключительные дома вдоль испанского побережья' },
@@ -186,15 +185,6 @@ const ru: typeof en = {
         'Дистанционный просмотр объектов',
       ],
     },
-    testimonials: {
-      title:    'Отзывы клиентов',
-      subtitle: 'Нам доверяют покупатели со всего мира',
-      items: [
-        { name: 'Анна М.',   country: 'Армения', text: 'Casa Del Mar помогла нам найти квартиру мечты в Барселоне. Весь процесс прошёл гладко и профессионально.', rating: 5 },
-        { name: 'Сергей К.', country: 'Россия',  text: 'Превосходный сервис! Они сопроводили нас на каждом этапе покупки виллы на Кипре. Искренне рекомендуем.', rating: 5 },
-        { name: 'Давид Х.',  country: 'США',     text: 'Выдающееся агентство с глубоким знанием средиземноморского рынка. Нашли нам идеальный объект в Марбелье.', rating: 5 },
-      ],
-    },
     destinations: {
       title: 'Наши направления',
       subtitle: 'Премиальная недвижимость в самых желанных локациях Европы',
@@ -208,6 +198,7 @@ const ru: typeof en = {
       cta:      'Связаться с нами',
     },
     benidorm: {
+      heroTitle: 'Бенидорм — Манхэттен Средиземноморья',
       title:    'О Бенидорме',
       subtitle: 'Лучший курортный город Коста Бланки',
       why:      'Почему стоит купить в Бенидорме?',
@@ -223,7 +214,14 @@ const ru: typeof en = {
       population: '~70 000 постоянных жителей, миллионы туристов в год',
       areas:    'Ла Кала · Леванте · Поньенте · Вила Парк · Сьерра Кортина · Алтеа Хиллс · Финестрат',
       cta:      'Смотреть объекты в Бенидорме',
+      ctaFree:  'Получить бесплатную консультацию',
       infoLabel: 'Ключевые факты',
+      beachesTitle: 'Пляжи Бенидорма',
+      climateTitle: 'Климат круглый год',
+      districtsTitle: 'Районы Бенидорма',
+      gettingTitle: 'Как добраться до Бенидорма',
+      ctaTitle: 'Готовы найти недвижимость в Бенидорме?',
+      ctaSub:   'Просмотрите нашу полную коллекцию апартаментов и вилл',
       whyItems: [
         'Один из самых посещаемых городов Испании — гарантированный спрос на аренду',
         'Высокая доходность аренды — 6–10% годовых для краткосрочной аренды',
@@ -289,7 +287,7 @@ const ru: typeof en = {
 // ─────────────────────────────────────────────────────────────────────────────
 const hy: typeof en = {
   tagline: 'Իրականացրեք ձեր երազանքը',
-  nav: { home: 'Գլխավոր', spain: 'Իսպանիա', cyprus: 'Կիպրոս', contact: 'Կապ' },
+  nav: { home: 'Գլխավոր', spain: 'Իսպանիա', cyprus: 'Կիպրոս', contact: 'Կապ', benidorm: 'Benidorm' },
   hero: {
     home:   { title: 'Ձեր երազանքի տունը\nսպասում է ծովի մոտ', subtitle: 'Բացառիկ ծովափնյա գույքեր Իսպանիայում և Կիպրոսում', cta: 'Դիտել Իսպանիա', ctaContact: 'Դիտել Կիպրոս' },
     spain:  { title: 'Գույքեր Իսպանիայում',  subtitle: 'Բացահայտեք բացառիկ տներ Իսպանիայի ափին' },
@@ -328,15 +326,6 @@ const hy: typeof en = {
         'Առաջարկվող գույքերի հեռավար դիտում',
       ],
     },
-    testimonials: {
-      title:    'Հաճախորդների կարծիքները',
-      subtitle: 'Մեզ վստահում են աշխարհի բոլոր անկյուններից',
-      items: [
-        { name: 'Աննա Մ.',    country: 'Հայաստան', text: 'Casa Del Mar-ը օգնեց մեզ Բարսելոնայում գտնել մեր երազանքի բնակարանը։ Ողջ գործընթացն անցավ անթերի կերպով։', rating: 5 },
-        { name: 'Սերգեյ Կ.', country: 'Ռուսաստան', text: 'Բացառիկ սպասարկում. Կիպրոսում վիլլա ձեռք բերելու ամեն փուլում ուղղորդեցին մեզ։ Խորհուրդ ենք տալիս։', rating: 5 },
-        { name: 'Դավիդ Հ.',  country: 'ԱՄՆ',       text: 'Գերազանց գործակալություն, որն ունի Միջերկրածովյան շուկայի խոր գիտելիքներ։ Մարբեյայում գտան մեզ կատարյալ գույք։', rating: 5 },
-      ],
-    },
     destinations: {
       title: 'Մեր ուղղությունները',
       spain:   { title: 'Իսպանիա', desc: 'Ծովափնյա բնակարաններ և վիլլաներ Կոստա Բլանկայում — Benidorm, Altea Hills և այլ' },
@@ -365,7 +354,15 @@ const hy: typeof en = {
       population: 'Շուրջ 70,000 բնակիչ, միլիոնավոր զբոսաշրջիկներ տարվա ընթացքում',
       areas:    'La Cala · Levante · Poniente · Vila Park · Sierra Cortina · Altea Hills · Finestrat',
       cta:      'Դիտել Բենիդորմի գույքերը',
+      ctaFree:  'Ստանալ անվճար խորհրդատվություն',
       infoLabel: 'Հիմնական փաստեր',
+      heroTitle: 'Բենիդորմ — Միջերկրածովյան Մանհեթեն',
+      beachesTitle: 'Բենիդորմի լողափները',
+      climateTitle: 'Ամբողջամյա կլիմա',
+      districtsTitle: 'Բենիդորմի թաղամասերը',
+      gettingTitle: 'Ինչպես հասնել Բենիդորմ',
+      ctaTitle: 'Պատրա՞ստ եք գույք գնել Բենիդորմում?',
+      ctaSub:   'Տեսնել մեր բնակարանների և վիլլաների ամբողջ հավաքածուն',
       whyItems: [
         'Իսպանիայի ամենապահանջված քաղաքներից մեկը՝ երաշխավորված վարձակալական պահանջարկ',
         'Բարձր վարձակալական եկամտաբերություն — 6–10% տարեկան շահույթ',

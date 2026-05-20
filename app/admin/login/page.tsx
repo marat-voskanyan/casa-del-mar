@@ -81,7 +81,7 @@ export default function AdminLoginPage() {
             <p className="mt-4 text-sm text-red-600 bg-red-50 px-3 py-2 rounded">{error}</p>
           )}
 
-          <button type="submit" disabled={loading} className="admin-btn w-full mt-6 py-3">
+          <button type="submit" disabled={loading} className="admin-btn w-full mt-6">
             {loading ? 'Signing in…' : 'Sign In'}
           </button>
         </form>

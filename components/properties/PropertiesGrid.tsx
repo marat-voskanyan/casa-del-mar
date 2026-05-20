@@ -93,80 +93,75 @@ export default function PropertiesGrid({ properties, locale, country, flag, subt
         </div>
 
         {/* Filter bar */}
-        <div className="sticky top-[88px] z-30 bg-sand/95 backdrop-blur-sm -mx-5 md:-mx-10 px-5 md:px-10 py-4 mb-10 border-b border-sand-300 shadow-sm">
-          <div className="flex flex-col gap-3">
-            {/* Row 1: Status + sort/count */}
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex flex-wrap gap-2">
-                {statusPills.map(pill => (
-                  <button
-                    key={pill.key}
-                    onClick={() => setStatus(pill.key)}
-                    className={`filter-pill ${status === pill.key ? 'active' : ''}`}
-                  >
-                    {pill.label}
-                  </button>
-                ))}
-              </div>
-              <div className="flex items-center gap-4">
-                <span className="font-accent text-[10px] tracking-wider text-navy/50 uppercase">
-                  {filtered.length} {t.filter.results}
-                </span>
-                <select
-                  value={sort}
-                  onChange={e => setSort(e.target.value as SortKey)}
-                  className="font-accent text-[11px] tracking-wide bg-transparent border border-sand-400 rounded-full px-3 py-1.5 text-navy/70 focus:outline-none focus:border-gold cursor-pointer"
+        <div className="sticky top-[80px] md:top-[88px] z-30 bg-sand/95 backdrop-blur-sm -mx-5 md:-mx-10 px-5 md:px-10 py-3 mb-10 border-b border-sand-300 shadow-sm">
+          {/* Single scrollable row on mobile, flex-wrap on desktop */}
+          <div className="overflow-x-auto scrollbar-none">
+            <div className="flex items-center gap-2 min-w-max pb-0.5">
+              {/* Status pills */}
+              {statusPills.map(pill => (
+                <button
+                  key={pill.key}
+                  onClick={() => setStatus(pill.key)}
+                  className={`filter-pill whitespace-nowrap py-2 ${status === pill.key ? 'active' : ''}`}
                 >
-                  {sortOptions.map(o => (
-                    <option key={o.key} value={o.key}>{o.label}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
+                  {pill.label}
+                </button>
+              ))}
 
-            {/* Row 2: Beds + Max price */}
-            <div className="flex flex-wrap items-center gap-4">
+              <div className="w-px h-5 bg-navy/15 mx-1 shrink-0" />
+
               {/* Beds */}
-              <div className="flex items-center gap-2">
-                <span className="font-accent text-[10px] tracking-[0.2em] uppercase text-navy/40">{t.filter.beds}</span>
-                <div className="flex gap-1.5">
-                  {bedOptions.map(b => (
-                    <button
-                      key={b.key}
-                      onClick={() => setBeds(b.key)}
-                      className={`px-2.5 py-1 rounded-full font-accent text-[10px] tracking-wide transition-colors ${
-                        beds === b.key
-                          ? 'bg-navy text-white'
-                          : 'bg-white/60 text-navy/60 hover:bg-white hover:text-navy border border-navy/15'
-                      }`}
-                    >
-                      {b.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <span className="font-accent text-[10px] tracking-[0.15em] uppercase text-navy/40 shrink-0">{t.filter.beds}:</span>
+              {bedOptions.map(b => (
+                <button
+                  key={b.key}
+                  onClick={() => setBeds(b.key)}
+                  className={`px-3 py-2 rounded-full font-accent text-[10px] tracking-wide transition-colors whitespace-nowrap shrink-0 ${
+                    beds === b.key
+                      ? 'bg-navy text-white'
+                      : 'bg-white/60 text-navy/60 hover:bg-white hover:text-navy border border-navy/15'
+                  }`}
+                >
+                  {b.label}
+                </button>
+              ))}
+
+              <div className="w-px h-5 bg-navy/15 mx-1 shrink-0" />
 
               {/* Max price */}
-              <div className="flex items-center gap-2">
-                <span className="font-accent text-[10px] tracking-[0.2em] uppercase text-navy/40">{t.filter.maxPrice}</span>
-                <select
-                  value={maxPrice}
-                  onChange={e => setMaxPrice(Number(e.target.value))}
-                  className="font-accent text-[11px] tracking-wide bg-white/60 border border-navy/15 rounded-full px-3 py-1.5 text-navy/70 focus:outline-none focus:border-gold cursor-pointer hover:bg-white transition-colors"
-                >
-                  {MAX_PRICE_OPTIONS.map(o => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
-                  ))}
-                </select>
-              </div>
+              <select
+                value={maxPrice}
+                onChange={e => setMaxPrice(Number(e.target.value))}
+                className="font-accent text-[11px] tracking-wide bg-white/60 border border-navy/15 rounded-full px-3 py-2 text-navy/70 focus:outline-none focus:border-gold cursor-pointer hover:bg-white transition-colors shrink-0"
+              >
+                {MAX_PRICE_OPTIONS.map(o => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+
+              {/* Sort */}
+              <select
+                value={sort}
+                onChange={e => setSort(e.target.value as SortKey)}
+                className="font-accent text-[11px] tracking-wide bg-transparent border border-sand-400 rounded-full px-3 py-2 text-navy/70 focus:outline-none focus:border-gold cursor-pointer shrink-0"
+              >
+                {sortOptions.map(o => (
+                  <option key={o.key} value={o.key}>{o.label}</option>
+                ))}
+              </select>
+
+              {/* Results count */}
+              <span className="font-accent text-[10px] tracking-wider text-navy/50 uppercase shrink-0 ml-1">
+                {filtered.length} {t.filter.results}
+              </span>
 
               {/* Clear filters */}
               {hasActiveFilters && (
                 <button
                   onClick={clearAll}
-                  className="font-accent text-[10px] tracking-wider text-gold hover:text-gold/70 uppercase transition-colors underline underline-offset-2"
+                  className="font-accent text-[10px] tracking-wider text-gold hover:text-gold/70 uppercase transition-colors underline underline-offset-2 shrink-0"
                 >
-                  Clear all
+                  ✕ Clear
                 </button>
               )}
             </div>

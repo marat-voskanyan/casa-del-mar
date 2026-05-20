@@ -84,7 +84,7 @@ export default async function PropertyDetailPage({ params: { locale, id } }: Pro
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="pt-24 min-h-screen bg-white">
+      <div className="pt-24 min-h-screen bg-white pb-20 lg:pb-0">
         {/* Breadcrumb */}
         <div className="bg-sand border-b border-sand-300">
           <div className="container-site py-3 flex items-center gap-2 text-xs font-sans text-navy/50">
@@ -217,6 +217,17 @@ export default async function PropertyDetailPage({ params: { locale, id } }: Pro
 
       {/* Similar properties */}
       <SimilarProperties properties={similar} locale={locale} />
+
+      {/* Mobile sticky bottom bar */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-navy border-t border-white/10 shadow-lg px-4 py-3 flex items-center gap-3">
+        <div className="shrink-0">
+          <p className="font-accent text-[9px] tracking-[0.2em] uppercase text-gold/70">{t.property.price}</p>
+          <p className="font-serif text-xl text-white font-light leading-tight">{formatPrice(property.price)}</p>
+        </div>
+        <Link href={`/${locale}/contact`} className="btn-primary flex-1 text-center text-xs py-3">
+          {t.property.contactCta}
+        </Link>
+      </div>
     </>
   )
 }

@@ -62,7 +62,7 @@ export default function PropertyMapInner({ lat, lng, name, price, locale }: Prop
       <div className="gold-divider mb-6" />
       <div
         ref={containerRef}
-        className="w-full h-80 rounded-xl overflow-hidden border border-sand-200 shadow-card"
+        className="w-full h-[250px] md:h-80 rounded-xl overflow-hidden border border-sand-200 shadow-card"
       />
     </div>
   )
