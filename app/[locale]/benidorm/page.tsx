@@ -5,141 +5,235 @@ import { getT } from '@/lib/i18n'
 
 interface Props { params: { locale: Locale } }
 
-export const metadata: Metadata = {
-  title: 'Benidorm Properties & Guide | Casa del Mar Real Estate',
-  description: 'Complete guide to buying property in Benidorm, Spain. Beaches, climate, districts, investment potential. Browse apartments from €180,000. Free consultation.',
+export function generateMetadata({ params }: Props): Metadata {
+  const locale = params.locale
+  const isRu = locale === 'ru'
+  const isHy = locale === 'hy'
+  return {
+    title: isRu
+      ? 'Недвижимость в Бенидорме — Гид по Ла Кала | Casa del Mar'
+      : isHy
+        ? 'Բ. Գ. La Cala | Casa del Mar'
+        : 'Benidorm Property Guide — La Cala Apartments | Casa del Mar',
+    description: isRu
+      ? 'Полный гид по покупке недвижимости в Бенидорме, Испания. Район Ла Кала — современные апартаменты 2008–2015 г.п. с бассейнами и теннисными кортами. Консультация из Еревана.'
+      : isHy
+        ? 'Բ. գ. La Cala ա. 2008–2015 բ. հ. թ. կ. Casa del Mar.'
+        : 'Complete guide to buying property in Benidorm, Spain. La Cala modern apartments (2008–2015) with pools & tennis courts. Free consultation from Yerevan.',
+  }
 }
 
 const MONTHS_EN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 const MONTHS_RU = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек']
 const MONTHS_HY = ['Հուն','Փետ','Մար','Ապր','Մայ','Հուն','Հուլ','Օգ','Սեպ','Հոկ','Նոյ','Դեկ']
-const TEMPS = [17, 18, 20, 22, 25, 29, 32, 32, 29, 25, 20, 17]
+const TEMPS    = [17, 18, 20, 22, 25, 29, 32, 32, 29, 25, 20, 17]
 const MAX_TEMP = 32
 
-export default function BenidormPage({ params: { locale } }: Props) {
-  const t = getT(locale)
-  const b = t.home.benidorm
-  const c = t.contact
+const LA_CALA_TIMELINE_EN = [
+  { year: '2005', text: 'La Cala development begins' },
+  { year: '2008', text: 'First residential buildings completed' },
+  { year: '2010', text: 'Main commercial area opens' },
+  { year: '2012', text: 'La Cala fully established as premier district' },
+  { year: '2015', text: 'Final buildings completed — district fully developed' },
+  { year: 'Today', text: 'Most sought-after area for international buyers' },
+]
+const LA_CALA_TIMELINE_RU = [
+  { year: '2005', text: 'Начало застройки Ла Кала' },
+  { year: '2008', text: 'Первые жилые здания сданы' },
+  { year: '2010', text: 'Открытие коммерческой зоны' },
+  { year: '2012', text: 'Ла Кала признан престижным районом' },
+  { year: '2015', text: 'Последние здания завершены — район полностью застроен' },
+  { year: 'Сегодня', text: 'Самый востребованный район для международных покупателей' },
+]
+const LA_CALA_TIMELINE_HY = [
+  { year: '2005', text: 'La Cala-ի կ.' },
+  { year: '2008', text: 'Ա. բ. ա.' },
+  { year: '2010', text: 'Կ. ա. բ.' },
+  { year: '2012', text: 'La Cala — ա. թ.' },
+  { year: '2015', text: 'Ա. բ. ա.' },
+  { year: 'Այ.', text: 'Մ. ն. ա. գ.' },
+]
 
-  const months = locale === 'ru' ? MONTHS_RU : locale === 'hy' ? MONTHS_HY : MONTHS_EN
+export default function BenidormPage({ params: { locale } }: Props) {
+  const t   = getT(locale)
+  const b   = t.home.benidorm
+  const c   = t.contact
+  const isRu = locale === 'ru'
+  const isHy = locale === 'hy'
+
+  const months   = isRu ? MONTHS_RU : isHy ? MONTHS_HY : MONTHS_EN
+  const timeline = isRu ? LA_CALA_TIMELINE_RU : isHy ? LA_CALA_TIMELINE_HY : LA_CALA_TIMELINE_EN
+
+  const laCalaFeatures = [
+    { icon: '🏊', text: (b.laCalaFeatures as string[])[0] },
+    { icon: '🎾', text: (b.laCalaFeatures as string[])[1] },
+    { icon: '🚗', text: (b.laCalaFeatures as string[])[2] },
+    { icon: '🏗️', text: (b.laCalaFeatures as string[])[3] },
+    { icon: '🏖️', text: (b.laCalaFeatures as string[])[4] },
+    { icon: '🛒', text: (b.laCalaFeatures as string[])[5] },
+  ]
 
   const quickFacts = [
-    { icon: '🌞', value: '320+', label: locale === 'ru' ? 'Солнечных дней в год' : locale === 'hy' ? 'Արևային օր տարում' : 'Sunny Days per Year' },
-    { icon: '🏖️', value: '2',   label: locale === 'ru' ? 'Знаменитых пляжа' : locale === 'hy' ? 'Հայտնի լողափ' : 'Famous Beaches' },
-    { icon: '✈️', value: '60km', label: locale === 'ru' ? 'До аэропорта Аликанте' : locale === 'hy' ? 'Ալ. օ/կ-ից' : 'From Alicante Airport' },
-    { icon: '🌡️', value: '20°C', label: locale === 'ru' ? 'Средняя температура' : locale === 'hy' ? 'Ջ. °C' : 'Average Temperature' },
-    { icon: '🏙️', value: '70k', label: locale === 'ru' ? 'Постоянных жителей' : locale === 'hy' ? 'Մ. բ.' : 'Permanent Residents' },
+    { icon: '🌞', value: '320+', label: isRu ? 'Солнечных дней' : isHy ? 'Արևային օր' : 'Sunny Days' },
+    { icon: '🏖️', value: '2',   label: isRu ? 'Пляжа' : isHy ? 'Լողափ' : 'Famous Beaches' },
+    { icon: '✈️', value: '60km', label: isRu ? 'До аэропорта' : isHy ? 'Ա. օ/կ' : 'To Airport' },
+    { icon: '🌡️', value: '20°C', label: isRu ? 'Средняя темп.' : isHy ? 'Ջ. °C' : 'Avg Temperature' },
+    { icon: '🏙️', value: '1960s', label: isRu ? 'Курорт с' : isHy ? 'Կ. հ.' : 'Resort Since' },
   ]
 
-  const whyCards = [
-    { icon: '🏠', title: locale === 'ru' ? 'Доходность аренды' : locale === 'hy' ? 'Վ/կ. Ե.' : 'Proven Rental Income',
-      desc: locale === 'ru' ? '6–10% годовых. Один из самых высоких туристических потоков в Испании гарантирует круглогодичную загрузку.' : locale === 'hy' ? '6–10% տ. վ/կ. ե. — Ի. ա. ն. ք-ն. ե. ա/ա. ե.' : '6-10% annual rental yield. One of Spain\'s highest tourist densities guarantees year-round occupancy.' },
-    { icon: '📈', title: locale === 'ru' ? 'Рост стоимости' : locale === 'hy' ? 'Ա. Ա.' : 'Rising Property Values',
-      desc: locale === 'ru' ? 'Устойчивый рост цен за последнее десятилетие. Стабильный международный спрос продолжает двигать рынок.' : locale === 'hy' ? 'Կ. ա. ա. վ. ե. — Մ. ն. ե. ա. կ.' : 'Consistent price growth over the past decade. Strong demand from international buyers continues to drive appreciation.' },
-    { icon: '✈️', title: locale === 'ru' ? 'Удобное сообщение' : locale === 'hy' ? 'Հ. Հ.' : 'Easy to Reach',
-      desc: locale === 'ru' ? 'Прямые рейсы из крупных европейских городов в аэропорт Аликанте (60 км). Несколько авиакомпаний работают круглый год.' : locale === 'hy' ? 'Ա. չ. Ա. (ALC), 60 կ., 45 ր. Ryanair, EasyJet, Vueling.' : 'Direct flights from major European cities to Alicante airport (60km). Multiple airlines serve the route year-round.' },
-    { icon: '🌍', title: locale === 'ru' ? 'Международное сообщество' : locale === 'hy' ? 'Մ. Հ.' : 'International Community',
-      desc: locale === 'ru' ? 'Большие устоявшиеся общины экспатов из Великобритании, Германии, Скандинавии и Восточной Европы. Лёгкая интеграция.' : locale === 'hy' ? 'Մ. Բ., Գ., Ս., Ա. Ե-ից ե. հ.' : 'Large established expat communities from UK, Germany, Scandinavia, and Eastern Europe. Easy to settle and integrate.' },
-    { icon: '🏥', title: locale === 'ru' ? 'Развитая инфраструктура' : locale === 'hy' ? 'Ե/Կ.' : 'Excellent Infrastructure',
-      desc: locale === 'ru' ? 'Современные больницы, международные школы, все крупные европейские супермаркеты. Всё для комфортной жизни.' : locale === 'hy' ? 'Ժ. հ., մ. դ., ե. ս.' : 'Modern hospitals, international schools, every major European supermarket brand. Everything you need for comfortable living.' },
-    { icon: '📋', title: locale === 'ru' ? 'Простая покупка' : locale === 'hy' ? 'Հ. Ձ. Բ.' : 'Simple Purchase Process',
-      desc: locale === 'ru' ? 'Casa del Mar берёт на себя всё — NIE, юридические документы, банковские счета, карты резидента. Мы говорим на вашем языке.' : locale === 'hy' ? 'Casa del Mar ե. ա. — NIE, ի. փ., բ. հ.' : 'Casa del Mar handles everything — NIE, legal documents, bank accounts, residency cards. We speak your language.' },
+  const districts = isRu ? [
+    { name: 'La Cala',        tag: 'Современное сердце',  bullets: ['Построено 2008–2015', 'Бассейн и теннис в каждом комплексе', 'Рядом с пляжем Поньенте', 'Большинство объектов Casa del Mar'] },
+    { name: 'Levante',        tag: 'Живой восток',         bullets: ['Пляж 1,9 км', 'Высокая туристическая плотность', 'Лучшая краткосрочная аренда', 'Самая активная набережная'] },
+    { name: 'Poniente',       tag: 'Тихий запад',          bullets: ['Пляж 3 км', 'Захватывающие закаты', 'Предпочитают семьи', 'Жилая атмосфера'] },
+    { name: 'Vila Park',      tag: 'Надёжный и стабильный', bullets: ['Известный жилой комплекс', 'Хорошая инфраструктура', 'Устоявшееся сообщество', 'Отличное соотношение цены'] },
+    { name: 'Sierra Cortina', tag: 'Холмистый престиж',    bullets: ['Возвышенное положение', 'Тишина и безопасность', 'Виды на горы и море', 'Элитная недвижимость'] },
+    { name: 'Altea Hills',    tag: 'Элитное жильё',        bullets: ['15 км от Бенидорма', 'Закрытый посёлок', 'Роскошные виллы', 'Самый престижный адрес'] },
+    { name: 'Finestrat',      tag: 'Новый и растущий',     bullets: ['5 км от Бенидорма', 'Новостройки', 'Горный пейзаж', 'Лучшее соотношение цены'] },
+  ] : [
+    { name: 'La Cala',        tag: isHy ? 'Ժ. ս.' : "Benidorm's Modern Heart",   bullets: isHy ? ['2008–2015 կ.','Բ. +թ. կ.','Poniente ծ.','Casa del Mar'] : ['Built 2008–2015, all modern','Pool & tennis in every complex','Next to Poniente beach','Most Casa del Mar properties here'] },
+    { name: 'Levante',        tag: isHy ? 'Կ. ա.' : 'The Lively East',            bullets: isHy ? ['1.9 կ.','Բ. ն/տ.','Վ/կ. ե.','Ա. ժ.'] : ['Longest beach (1.9km)','Highest tourist density','Best short-term rental yields','Most vibrant nightlife & dining'] },
+    { name: 'Poniente',       tag: isHy ? 'Հ. ա.' : 'The Peaceful West',          bullets: isHy ? ['3 կ.','Ա. ա.','Ու. ե.','Բ/կ. մ.'] : ['3km of golden sand','Stunning sunset views','Preferred by families','More residential atmosphere'] },
+    { name: 'Vila Park',      tag: isHy ? 'Կ. ե.' : 'Established & Reliable',    bullets: isHy ? ['Ա. բ. ա.','Ե. ե.','Կ. հ.','Ե. գ.'] : ['Popular residential complex','Good facilities','Well-established community','Excellent value'] },
+    { name: 'Sierra Cortina', tag: isHy ? 'Բ. հ.' : 'Hillside Prestige',         bullets: isHy ? ['Բ. դ.','Հ., ա.','Ե. ե. ս.','Ա. գ.'] : ['Elevated position with views','Quiet and prestigious','Mountain & sea panoramas','Premium properties'] },
+    { name: 'Altea Hills',    tag: isHy ? 'Ե. կ.' : 'Elite Living',              bullets: isHy ? ['15 կ.','Ե. փ. հ.','Շ. վ.','Ա. հ.'] : ['15km north of Benidorm','Exclusive gated community','Luxury villas & penthouses','Most prestigious address'] },
+    { name: 'Finestrat',      tag: isHy ? 'Ն. ե.' : 'New & Growing',             bullets: isHy ? ['5 կ.','Ն. կ.','Լ. ն.','Ե. գ.'] : ['5km from Benidorm','Brand new developments','Mountain backdrop','Best value for new-builds'] },
   ]
 
-  const districts = [
-    { name: 'La Cala', desc: locale === 'ru' ? 'Сердце Бенидорма. Коммерческий центр между двумя пляжами. Самый популярный район для покупки апартаментов.' : locale === 'hy' ? 'Բ. ս. Ե/կ. կ. 2 լ. մ.' : 'The heart of Benidorm. Commercial centre between the two beaches. Most popular area for apartments. Walking distance to both beaches.' },
-    { name: 'Levante', desc: locale === 'ru' ? 'Оживлённый восточный район. Близко к самому длинному пляжу. Высокая туристическая плотность обеспечивает отличную доходность.' : locale === 'hy' ? 'Կ. ա. ն. Ե. ա. լ. Բ. վ/կ. ե.' : 'Lively eastern district. Close to the longest beach. High tourist density means excellent short-term rental yields.' },
-    { name: 'Poniente', desc: locale === 'ru' ? 'Более тихий западный район. Предпочитают семьи и долгосрочные жители. Спокойная, жилая атмосфера.' : locale === 'hy' ? 'Հ. ա. ն. Ու. ե. բ/կ. մ.' : 'Quieter western district. Preferred by families and long-term residents. More residential atmosphere.' },
-    { name: 'Vila Park', desc: locale === 'ru' ? 'Популярный жилой комплекс с хорошими удобствами. Немного от побережья, но отличное соотношение цены и качества.' : locale === 'hy' ? 'Ա. բ. ա. Ե. ե. գ.' : 'Popular residential complex with good facilities. Slightly inland but excellent value for money.' },
-    { name: 'Sierra Cortina', desc: locale === 'ru' ? 'Престижный район на склонах холмов. Тихо, безопасно, красивые виды на горы и море. Элитная недвижимость.' : locale === 'hy' ? 'Ա. ն. Հ., ա., ե. ս.' : 'Prestigious hillside area. Quiet, safe, beautiful mountain and sea views. Premium properties.' },
-    { name: 'Altea Hills', desc: locale === 'ru' ? 'Элитный закрытый посёлок в 15 км к северу от Бенидорма. Роскошные виллы с панорамным видом на море. Самый престижный адрес.' : locale === 'hy' ? 'Ե. փ. հ. 15 կ. Ա. Հ. ծ. տ.' : 'Elite gated community 15km north of Benidorm. Luxury villas with panoramic sea views. Highest prestige address on the Costa Blanca.' },
-    { name: 'Finestrat', desc: locale === 'ru' ? 'Растущий район в 5 км от Бенидорма. Новостройки, горный пейзаж, отличное соотношение цены и качества.' : locale === 'hy' ? 'Ա. ն. 5 կ. Ն. կ., ե. ն.' : 'Growing area 5km from Benidorm. New-build developments, mountain backdrop, excellent value for money.' },
-  ]
+  const whyItems = Array.isArray(b.whyItems)
+    ? b.whyItems as { icon: string; title: string; desc: string }[]
+    : []
 
   return (
     <>
-      {/* ── Hero ── */}
-      <section className="relative flex items-center min-h-[65vh] overflow-hidden">
-        <div className="absolute inset-0 hero-bg" />
+      {/* JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'City',
+          name: 'Benidorm',
+          description: 'Coastal resort city on the Costa Blanca, Spain. Popular for property investment.',
+          containedInPlace: { '@type': 'Country', name: 'Spain' },
+        }) }}
+      />
+
+      {/* ── HERO ── */}
+      <section className="relative flex flex-col items-center justify-center min-h-[100svh] overflow-hidden text-center">
+        {/* Background */}
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-25"
-          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=1400&q=80)' }}
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1555993539-1732b0258235?w=1600&q=80)' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-navy/40 via-transparent to-navy/60" />
-        <div className="relative container-site z-10 py-36 text-center">
-          <div className="flex items-center justify-center gap-4 mb-8 opacity-0 animate-fade-in">
-            <div className="w-10 h-px bg-gold/70" />
-            <span className="eyebrow text-gold/80">🇪🇸 Costa Blanca · Spain</span>
-            <div className="w-10 h-px bg-gold/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-navy/70 via-navy/50 to-navy/80" />
+
+        {/* Content */}
+        <div className="relative z-10 container-site pt-24 pb-32 flex flex-col items-center">
+          {/* Eyebrow */}
+          <div className="flex items-center gap-3 mb-6 opacity-0 animate-fade-in">
+            <div className="w-8 h-px bg-gold/60" />
+            <span className="eyebrow text-gold/90 text-[10px]">🇪🇸 Costa Blanca · Spain</span>
+            <div className="w-8 h-px bg-gold/60" />
           </div>
-          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white mb-6 leading-tight opacity-0 animate-fade-up">
+
+          {/* Title */}
+          <h1 className="font-serif text-[clamp(3.5rem,12vw,8rem)] font-light text-white leading-none mb-3 opacity-0 animate-fade-up">
             {b.heroTitle}
           </h1>
-          <div className="w-16 h-px bg-gold my-6 mx-auto opacity-0 animate-fade-up-d1" />
-          <p className="font-sans text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-10 opacity-0 animate-fade-up-d1">
-            {b.subtitle}
+          <div className="w-20 h-px bg-gold mx-auto my-4 opacity-0 animate-fade-up-d1" />
+          <p className="font-serif text-[clamp(1.1rem,3vw,1.75rem)] text-white/70 italic font-light mb-8 opacity-0 animate-fade-up-d1">
+            {(b as any).heroSub ?? 'The Manhattan of the Mediterranean'}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center opacity-0 animate-fade-up-d2">
-            <Link href={`/${locale}/spain`} className="btn-primary px-8 py-4">
+
+          {/* Stat pills */}
+          <div className="flex flex-wrap justify-center gap-3 mb-10 opacity-0 animate-fade-up-d2">
+            {(['320+ Sunny Days', '2 World-Famous Beaches', '60km from Airport'] as const).map(pill => (
+              <span key={pill} className="px-4 py-1.5 rounded-full border border-white/25 bg-white/10 backdrop-blur-sm font-accent text-[10px] tracking-[0.15em] text-white/85 uppercase">
+                {pill}
+              </span>
+            ))}
+          </div>
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row gap-4 opacity-0 animate-fade-up-d2 w-full sm:w-auto px-4 sm:px-0">
+            <Link href={`/${locale}/spain`} className="btn-primary w-full sm:w-auto justify-center py-4 sm:py-3.5">
               {b.cta}
             </Link>
-            <Link href={`/${locale}/contact`} className="btn-outline-white px-8 py-4">
+            <Link href={`/${locale}/contact`} className="btn-outline-white w-full sm:w-auto justify-center py-4 sm:py-3.5">
               {b.ctaFree}
             </Link>
           </div>
         </div>
+
+        {/* Scroll bounce */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 animate-bounce opacity-60">
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
       </section>
 
-      {/* ── Quick Facts Bar ── */}
+      {/* ── QUICK FACTS STRIP ── */}
       <div className="bg-navy border-t border-white/8">
         <div className="container-site">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 divide-x divide-white/8">
-            {quickFacts.map(f => (
-              <div key={f.label} className="py-5 px-4 text-center">
-                <div className="text-2xl mb-1">{f.icon}</div>
-                <p className="font-serif text-xl md:text-2xl text-gold font-light">{f.value}</p>
-                <p className="font-accent text-[9px] tracking-[0.18em] text-white/45 uppercase mt-0.5 leading-tight">{f.label}</p>
-              </div>
-            ))}
+          <div className="overflow-x-auto scrollbar-none -webkit-overflow-scrolling-touch">
+            <div className="flex divide-x divide-white/8 min-w-max md:grid md:grid-cols-5 md:min-w-0">
+              {quickFacts.map(f => (
+                <div key={f.value} className="py-5 px-6 text-center shrink-0 md:shrink">
+                  <div className="text-2xl mb-1">{f.icon}</div>
+                  <p className="font-serif text-2xl text-gold font-light">{f.value}</p>
+                  <p className="font-accent text-[9px] tracking-[0.18em] text-white/45 uppercase mt-0.5">{f.label}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ── About Benidorm ── */}
+      {/* ── ABOUT BENIDORM ── */}
       <section className="section-pad bg-white">
         <div className="container-site">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
-            <div className="reveal">
-              <p className="eyebrow text-gold mb-3">La Cala · Levante · Poniente</p>
-              <h2 className="section-title text-navy mb-6">{b.title}</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
+            {/* Text — 3/5 */}
+            <div className="lg:col-span-3 reveal">
+              <p className="eyebrow text-gold mb-3">Costa Blanca · Spain</p>
+              <h2 className="section-title text-navy mb-4">{b.title}</h2>
               <div className="gold-divider mb-8" />
               <div className="space-y-4 font-sans text-navy/70 leading-relaxed text-[15px]">
-                {locale === 'ru' ? <>
+                {isRu ? <>
                   <p>Бенидорм — один из самых iconic прибрежных городов Испании, расположенный на Коста Бланке в провинции Аликанте. С более чем 320 солнечными днями в год и средней температурой 20°C он предлагает один из лучших климатов в Европе.</p>
-                  <p>Город разделён историческим мысом на два великолепных пляжа: <strong className="text-navy">Пляж Леванте</strong> и <strong className="text-navy">Пляж Поньенте</strong>. Между ними находится <strong className="text-navy">Ла Кала</strong> — оживлённое сердце Бенидорма и самый популярный район для покупки апартаментов.</p>
-                  <p>Отличная инфраструктура Бенидорма включает современные больницы, международные школы, супермаркеты и надёжный общественный транспорт. Аэропорт Аликанте находится всего в 60 км с прямыми рейсами из Еревана.</p>
-                  <p>Бенидорм — это не просто летний курорт. Это настоящий международный город с постоянным населением около 70 000 человек, огромным сообществом экспатов и круглогодичным туристическим рынком.</p>
-                </> : locale === 'hy' ? <>
-                  <p>Բ. Ի. ա. ծ. ք. ն. Կ. Բ., Ա. ն. 320+ ա. ե. 20°C ջ. Ե. լ. կ. ն.</p>
-                  <p>Ք. բ. ե. Հ. ծ.: <strong className="text-navy">Playa de Levante</strong> ե. <strong className="text-navy">Playa de Poniente</strong>. Ն. — <strong className="text-navy">La Cala</strong>.</p>
+                  <p>Город разделён историческим мысом на два пляжа: <strong className="text-navy">Playa de Levante</strong> (восток, самый длинный) и <strong className="text-navy">Playa de Poniente</strong> (запад, более спокойный). К западу от Поньенте расположен <strong className="text-navy">Ла Кала</strong> — самый современный жилой район Бенидорма.</p>
+                  <p>Отличная инфраструктура включает больницы, международные школы, супермаркеты и общественный транспорт. Аэропорт Аликанте — всего 60 км.</p>
+                  <p>Бенидорм — настоящий круглогодичный город с постоянным населением ~70 000 человек и миллионами туристов ежегодно.</p>
+                </> : isHy ? <>
+                  <p>Բ. Ի. ա. ծ. ք. Կ. Բ., Ա. ն. 320+ ա. ե. 20°C ջ. Ե. լ. կ.</p>
+                  <p>Ք. բ. ե. Հ. ծ. Levante (ա., ե. լ.) ե. Poniente (ա., հ.). La Cala-ն Poniente-ի ա. — Բ. ա. ժ. բ. թ.</p>
                   <p>Ե/կ.: ժ. հ., մ. դ., ե. ս. Ա. (ALC) — 60 կ.</p>
-                  <p>Բ. ն. Մ. ~70,000 բ. ե. մ. ն. ն/տ.</p>
+                  <p>Բ. ն. ~70,000 բ. ե. մ. ն. ն/տ.</p>
                 </> : <>
-                  <p>Benidorm is one of Spain&apos;s most iconic coastal cities, located on the Costa Blanca in the Alicante province of southeast Spain. With over 320 sunny days per year and an average temperature of 20°C, it offers one of Europe&apos;s most enviable climates.</p>
-                  <p>The city is divided by a historic headland into two magnificent sandy beaches: <strong className="text-navy">Playa de Levante</strong> and <strong className="text-navy">Playa de Poniente</strong>. Between them lies <strong className="text-navy">La Cala</strong> — the vibrant heart of Benidorm and the most popular area for property investment.</p>
-                  <p>Benidorm&apos;s excellent infrastructure includes modern hospitals, international schools, supermarkets of every European brand, and a well-connected public transport network. Alicante Airport is just 60km away with direct flights from Yerevan via multiple airlines.</p>
-                  <p>Despite its reputation as a tourist hotspot, Benidorm has a thriving year-round community of residents, expats and retirees from across Europe. With a permanent population of around 70,000 and millions of tourists annually, the rental market never sleeps.</p>
+                  <p>Benidorm is one of Spain's most iconic coastal cities, located on the Costa Blanca in the Alicante province of southeast Spain. With over 320 sunny days per year and an average temperature of 20°C, it offers one of Europe's most enviable climates.</p>
+                  <p>The city is divided by a historic headland into two beaches: <strong className="text-navy">Playa de Levante</strong> (east-facing, the longest and most lively) and <strong className="text-navy">Playa de Poniente</strong> (west-facing, calmer and more residential). To the west, beyond Poniente, lies <strong className="text-navy">La Cala</strong> — Benidorm's newest and most modern residential district.</p>
+                  <p>Benidorm's excellent infrastructure includes modern hospitals, international schools, supermarkets, and public transport. Alicante Airport is just 60km away with direct flights from Yerevan.</p>
+                  <p>Despite its reputation as a tourist hotspot, Benidorm is a thriving year-round city with a permanent population of ~70,000 and millions of tourists annually.</p>
                 </>}
               </div>
+
+              {/* Pull quote */}
+              <blockquote className="mt-8 border-l-4 border-gold pl-5">
+                <p className="font-serif text-lg text-navy/80 italic leading-relaxed">
+                  &ldquo;{(b as any).pullQuote ?? "Once a small fishing village, now one of Spain's most visited cities — with the skyline to prove it."}&rdquo;
+                </p>
+              </blockquote>
             </div>
-            <div className="reveal">
+
+            {/* Image — 2/5 */}
+            <div className="lg:col-span-2 reveal">
               <div
-                className="aspect-[4/5] bg-cover bg-center shadow-2xl"
-                style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1512813195386-6cf811ad3542?w=600&q=80)' }}
+                className="aspect-[3/4] bg-cover bg-center shadow-2xl"
+                style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=700&q=80)' }}
               />
               <div className="mt-4 bg-sand p-5">
-                <p className="font-accent text-[10px] tracking-[0.25em] uppercase text-gold mb-2">
-                  {locale === 'ru' ? 'Наши районы' : locale === 'hy' ? 'Մ. թ-ն.' : 'Our Areas'}
+                <p className="font-accent text-[10px] tracking-[0.25em] uppercase text-gold mb-1">
+                  {isRu ? 'Наши районы' : isHy ? 'Մ. թ.' : 'Our Areas'}
                 </p>
                 <p className="font-sans text-sm text-navy/70 leading-relaxed">{b.areas}</p>
               </div>
@@ -148,7 +242,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
         </div>
       </section>
 
-      {/* ── The Beaches ── */}
+      {/* ── THE BEACHES ── */}
       <section className="section-pad bg-sand">
         <div className="container-site">
           <div className="text-center mb-14 reveal">
@@ -156,25 +250,30 @@ export default function BenidormPage({ params: { locale } }: Props) {
             <h2 className="section-title text-navy mb-4">{b.beachesTitle}</h2>
             <div className="gold-divider mx-auto" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
             {/* Levante */}
-            <div className="reveal bg-white shadow-card overflow-hidden">
+            <div className="reveal bg-white shadow-card overflow-hidden group">
               <div
-                className="aspect-[16/9] bg-cover bg-center"
+                className="aspect-[16/9] bg-cover bg-center group-hover:scale-105 transition-transform duration-700 overflow-hidden"
                 style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80)' }}
               />
-              <div className="p-8">
+              <div className="p-6 md:p-8">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-gold/10 rounded-full flex items-center justify-center text-gold font-serif text-lg">L</div>
-                  <h3 className="font-serif text-2xl text-navy">Playa de Levante</h3>
+                  <div className="w-10 h-10 bg-gold/10 rounded-full flex items-center justify-center text-gold font-serif text-lg shrink-0">L</div>
+                  <div>
+                    <h3 className="font-serif text-xl text-navy">Playa de Levante</h3>
+                    <p className="font-sans text-xs text-gold mt-0.5">
+                      {isRu ? 'Восточный пляж · 1.9 км' : isHy ? 'Ա. Լ. · 1.9 կ.' : 'East Beach · 1.9km'}
+                    </p>
+                  </div>
                 </div>
                 <div className="gold-divider mb-5" />
                 <ul className="space-y-2 font-sans text-sm text-navy/70">
-                  {(locale === 'ru'
-                    ? ['1,9 км золотого песка', 'На восток, утреннее солнце', 'Активная атмосфера, водные виды спорта', 'Ближайший пляж к La Cala', 'Отличное вложение — высокий туристический спрос']
-                    : locale === 'hy'
-                    ? ['1.9 կ. ա. ա.', 'Ա., ա. ա.', 'Կ. մ., ջ. ս.', 'La Cala-ին Ն. լ.', 'Ա. կ. — Բ. պ.']
-                    : ['1.9km of golden sand', 'East-facing, morning sun', 'Lively atmosphere, water sports', 'Closest beach to La Cala district', 'Perfect for rental investment — highest tourist demand']
+                  {(isRu
+                    ? ['1,9 км золотого песка', 'На восток, утреннее солнце', 'Активная атмосфера, водные виды спорта', 'Самая высокая туристическая плотность', 'Лучшие показатели краткосрочной аренды']
+                    : isHy
+                    ? ['1.9 կ. ա. ա.', 'Ա., ա. ա.', 'Կ. մ., ջ. ս.', 'Ամ. ա. ն/տ.', 'Վ/կ. ե.']
+                    : ['1.9km of golden sand', 'East-facing, morning sun', 'Lively atmosphere, water sports', 'Highest tourist density in Benidorm', 'Best short-term rental yields']
                   ).map((item, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <span className="text-gold mt-0.5 shrink-0">→</span>
@@ -182,27 +281,35 @@ export default function BenidormPage({ params: { locale } }: Props) {
                     </li>
                   ))}
                 </ul>
+                <p className="mt-4 text-xs font-accent tracking-wide text-gold uppercase">
+                  {isRu ? 'Идеально для инвестиций в аренду' : isHy ? 'Ա. ն/ն.' : 'Most popular with tourists & investors'}
+                </p>
               </div>
             </div>
 
             {/* Poniente */}
-            <div className="reveal bg-white shadow-card overflow-hidden">
+            <div className="reveal bg-white shadow-card overflow-hidden group">
               <div
-                className="aspect-[16/9] bg-cover bg-center"
+                className="aspect-[16/9] bg-cover bg-center group-hover:scale-105 transition-transform duration-700 overflow-hidden"
                 style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1533760881669-80db4d7b4c15?w=800&q=80)' }}
               />
-              <div className="p-8">
+              <div className="p-6 md:p-8">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-gold/10 rounded-full flex items-center justify-center text-gold font-serif text-lg">P</div>
-                  <h3 className="font-serif text-2xl text-navy">Playa de Poniente</h3>
+                  <div className="w-10 h-10 bg-gold/10 rounded-full flex items-center justify-center text-gold font-serif text-lg shrink-0">P</div>
+                  <div>
+                    <h3 className="font-serif text-xl text-navy">Playa de Poniente</h3>
+                    <p className="font-sans text-xs text-gold mt-0.5">
+                      {isRu ? 'Западный пляж · 3 км' : isHy ? 'Ա. Պ. · 3 կ.' : 'West Beach · 3km'}
+                    </p>
+                  </div>
                 </div>
                 <div className="gold-divider mb-5" />
                 <ul className="space-y-2 font-sans text-sm text-navy/70">
-                  {(locale === 'ru'
-                    ? ['3 км золотого песка', 'На запад, захватывающие закаты', 'Спокойная, жилая атмосфера', 'Предпочитают семьи и долгосрочные жители', 'Идеально для постоянного проживания']
-                    : locale === 'hy'
-                    ? ['3 կ. ա. ա.', 'Ա., ա. ա.', 'Հ., բ/կ. մ.', 'Ու. ե. բ/կ.', 'Ա. մ. բ.']
-                    : ['3km of golden sand', 'West-facing, spectacular sunsets', 'Calmer, more residential feel', 'Preferred by families and long-stay visitors', 'Excellent for permanent residence']
+                  {(isRu
+                    ? ['3 км золотого песка', 'На запад, захватывающие закаты', 'Спокойная, жилая атмосфера', 'Предпочитают семьи и долгосрочные жители', 'Рядом — современный район Ла Кала']
+                    : isHy
+                    ? ['3 կ. ա. ա.', 'Ա., ա. ա.', 'Հ., բ/կ. մ.', 'Ու. ե. բ/կ.', 'La Cala — Ն.']
+                    : ['3km of golden sand', 'West-facing, spectacular sunsets', 'Calmer, more residential atmosphere', 'Preferred by families & long-stay residents', 'La Cala district directly adjacent']
                   ).map((item, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <span className="text-gold mt-0.5 shrink-0">→</span>
@@ -210,44 +317,130 @@ export default function BenidormPage({ params: { locale } }: Props) {
                     </li>
                   ))}
                 </ul>
+                <p className="mt-4 text-xs font-accent tracking-wide text-gold uppercase">
+                  {isRu ? 'Предпочитают семьи и долгосрочные жители' : isHy ? 'Ու. ե. բ/կ.' : 'Preferred by families & long-term residents'}
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Climate ── */}
+      {/* ── LA CALA — NEW PROMINENT SECTION ── */}
+      <section className="section-pad" style={{ background: '#0D1F2D', borderTop: '3px solid #C9A84C' }}>
+        <div className="container-site">
+          {/* Header */}
+          <div className="text-center mb-14 reveal">
+            <p className="eyebrow text-gold mb-3">
+              {(b as any).laCalaEyebrow ?? 'Where Most Our Properties Are Located'}
+            </p>
+            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-white font-light mb-4">
+              {(b as any).laCalaTitle ?? 'La Cala District'}
+            </h2>
+            <div className="gold-divider mx-auto mb-4" />
+            <p className="font-sans text-white/55 text-lg max-w-xl mx-auto">
+              {(b as any).laCalaSubtitle ?? "Benidorm's Newest & Most Modern Residential Area"}
+            </p>
+          </div>
+
+          {/* Two column */}
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-start">
+            {/* Left — info 3/5 */}
+            <div className="lg:col-span-3 space-y-8 reveal">
+              <p className="font-sans text-white/70 leading-relaxed text-[15px]">
+                {(b as any).laCalaText ?? 'La Cala is Benidorm\'s most modern residential district, located on the western side of the city next to Poniente beach. Unlike older parts of Benidorm, La Cala was developed entirely from scratch — construction began in 2005 and all buildings were completed between 2008 and 2015.'}
+              </p>
+
+              {/* Features grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {laCalaFeatures.map((f, i) => (
+                  <div key={i} className="flex items-start gap-3 bg-white/5 border border-white/8 rounded-lg px-4 py-3 hover:bg-white/8 transition-colors">
+                    <span className="text-xl shrink-0">{f.icon}</span>
+                    <p className="font-sans text-sm text-white/75 leading-relaxed">{f.text}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* CTA */}
+              <Link href={`/${locale}/spain`} className="inline-flex btn-primary">
+                {(b as any).ctaLaCala ?? 'View La Cala Properties'}
+              </Link>
+            </div>
+
+            {/* Right — timeline 2/5 */}
+            <div className="lg:col-span-2 reveal">
+              <div
+                className="aspect-[4/3] bg-cover bg-center rounded-sm shadow-2xl mb-6"
+                style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1512813195386-6cf811ad3542?w=600&q=80)' }}
+              />
+
+              {/* Timeline */}
+              <div className="space-y-0">
+                <p className="font-accent text-[10px] tracking-[0.3em] uppercase text-gold mb-4">
+                  {isRu ? 'История застройки' : isHy ? 'Կ. պ.' : 'Development Timeline'}
+                </p>
+                {timeline.map((item, i) => (
+                  <div key={i} className="flex gap-4 group">
+                    <div className="flex flex-col items-center">
+                      <div className="w-2 h-2 rounded-full bg-gold mt-1.5 shrink-0 group-hover:scale-150 transition-transform" />
+                      {i < timeline.length - 1 && <div className="w-px flex-1 bg-white/15 my-1" />}
+                    </div>
+                    <div className="pb-4">
+                      <p className="font-accent text-[10px] tracking-widest text-gold uppercase">{item.year}</p>
+                      <p className="font-sans text-sm text-white/60 leading-relaxed">{item.text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CLIMATE ── */}
       <section className="section-pad bg-navy">
         <div className="container-site">
           <div className="text-center mb-14 reveal">
             <p className="eyebrow text-gold mb-3">🌡️ Benidorm</p>
             <h2 className="section-title text-white mb-4">{b.climateTitle}</h2>
-            <div className="gold-divider mx-auto" />
+            <div className="gold-divider mx-auto mb-4" />
+            <p className="font-sans text-white/45 max-w-xl mx-auto text-sm">
+              {(b as any).climateSub ?? '320+ sunny days per year — more than anywhere else in mainland Europe'}
+            </p>
           </div>
-          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-12 gap-2 reveal">
-            {TEMPS.map((temp, i) => {
-              const heightPct = Math.round((temp / MAX_TEMP) * 100)
-              return (
-                <div key={i} className="flex flex-col items-center gap-2">
-                  <span className="font-sans text-xs text-white/60">{temp}°</span>
-                  <div className="w-full flex items-end justify-center h-16">
-                    <div
-                      className="w-full rounded-t bg-gold/70 transition-all"
-                      style={{ height: `${heightPct}%`, minHeight: '4px' }}
-                    />
+
+          {/* Month cards — horizontal scroll on mobile */}
+          <div className="overflow-x-auto scrollbar-none -webkit-overflow-scrolling-touch reveal">
+            <div className="flex gap-2 min-w-max md:grid md:grid-cols-12 md:min-w-0 md:gap-1.5">
+              {TEMPS.map((temp, i) => {
+                const isHot  = temp >= 28
+                const isWarm = temp >= 22
+                return (
+                  <div
+                    key={i}
+                    className={[
+                      'flex flex-col items-center gap-2 px-3 py-4 rounded-lg shrink-0 md:shrink w-16 md:w-auto',
+                      isHot  ? 'bg-gold/20 border border-gold/30' :
+                      isWarm ? 'bg-white/8 border border-white/10' :
+                               'bg-white/4 border border-white/6',
+                    ].join(' ')}
+                  >
+                    <span className="text-lg">{isHot ? '☀️' : isWarm ? '🌤️' : '⛅'}</span>
+                    <p className={`font-serif text-lg font-light ${isHot ? 'text-gold' : 'text-white/80'}`}>{temp}°</p>
+                    <p className="font-accent text-[9px] tracking-wide text-white/40 uppercase">{months[i]}</p>
                   </div>
-                  <span className="font-accent text-[9px] tracking-wide text-white/50 uppercase">{months[i]}</span>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
-          <p className="text-center font-sans text-sm text-white/40 mt-6">
-            {locale === 'ru' ? 'Средняя максимальная температура °C' : locale === 'hy' ? 'Ջ. °C' : 'Average maximum temperature °C'}
+
+          <p className="text-center font-sans text-sm text-white/35 mt-8 max-w-lg mx-auto">
+            {(b as any).climateNote ?? 'Even in January, Benidorm enjoys mild 17°C temperatures — perfect for year-round visits and rental income.'}
           </p>
         </div>
       </section>
 
-      {/* ── Districts ── */}
+      {/* ── DISTRICTS ── */}
       <section className="section-pad bg-sand">
         <div className="container-site">
           <div className="text-center mb-14 reveal">
@@ -257,29 +450,53 @@ export default function BenidormPage({ params: { locale } }: Props) {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {districts.map((d, i) => (
-              <div key={i} className="reveal bg-white p-6 border-l-4 border-gold shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
-                <h3 className="font-serif text-xl text-navy mb-2">{d.name}</h3>
-                <div className="w-8 h-px bg-gold/50 mb-3" />
-                <p className="font-sans text-sm text-navy/65 leading-relaxed">{d.desc}</p>
+              <div
+                key={i}
+                className={`reveal bg-white p-6 border-l-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 ${
+                  i === 0 ? 'border-gold sm:col-span-2 lg:col-span-1' : 'border-sand-300'
+                }`}
+              >
+                <h3 className="font-serif text-xl text-navy mb-1">{d.name}</h3>
+                <p className="font-sans text-xs italic text-gold mb-3">{d.tag}</p>
+                <div className="w-6 h-px bg-gold/40 mb-3" />
+                <ul className="space-y-1.5">
+                  {d.bullets.map((b2, j) => (
+                    <li key={j} className="flex items-start gap-2 font-sans text-xs text-navy/65">
+                      <span className="text-gold mt-0.5 shrink-0">•</span>
+                      {b2}
+                    </li>
+                  ))}
+                </ul>
+                {i === 0 && (
+                  <Link
+                    href={`/${locale}/spain`}
+                    className="mt-4 inline-flex font-accent text-[10px] tracking-widest uppercase text-gold hover:text-gold/70 transition-colors"
+                  >
+                    {isRu ? 'Смотреть объекты →' : isHy ? 'Դ. գ. →' : 'View Properties →'}
+                  </Link>
+                )}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Why Invest ── */}
-      <section className="section-pad bg-navy-900">
+      {/* ── WHY INVEST ── */}
+      <section className="section-pad" style={{ background: '#0D2030' }}>
         <div className="container-site">
           <div className="text-center mb-14 reveal">
             <p className="eyebrow text-gold mb-3">
-              {locale === 'ru' ? 'Инвестиционный потенциал' : locale === 'hy' ? 'Ն. Ն.' : 'Investment Case'}
+              {isRu ? 'Инвестиционный потенциал' : isHy ? 'Ն. Ն.' : 'Investment Case'}
             </p>
             <h2 className="section-title text-white mb-4">{b.why}</h2>
             <div className="gold-divider mx-auto" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {whyCards.map((card, i) => (
-              <div key={i} className="bg-white/5 border border-white/8 p-6 reveal hover:bg-white/8 hover:border-gold/30 transition-all duration-300">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {whyItems.map((card, i) => (
+              <div
+                key={i}
+                className="reveal bg-white/5 border border-white/8 p-6 hover:bg-white/8 hover:border-gold/30 transition-all duration-300"
+              >
                 <div className="text-3xl mb-4">{card.icon}</div>
                 <h3 className="font-serif text-lg text-white font-light mb-3">{card.title}</h3>
                 <div className="w-8 h-px bg-gold/40 mb-3" />
@@ -290,7 +507,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
         </div>
       </section>
 
-      {/* ── Getting There ── */}
+      {/* ── GETTING THERE ── */}
       <section className="section-pad bg-white">
         <div className="container-site">
           <div className="text-center mb-14 reveal">
@@ -302,33 +519,27 @@ export default function BenidormPage({ params: { locale } }: Props) {
             {[
               {
                 icon: '✈️',
-                title: locale === 'ru' ? 'На самолёте' : locale === 'hy' ? 'Ա/կ-ով' : 'By Air',
-                desc: locale === 'ru'
-                  ? 'Аэропорт Аликанте (ALC) — 60 км, 45 мин на машине. Прямые рейсы из Еревана через стыковочные хабы. Ryanair, EasyJet, Vueling и другие.'
-                  : locale === 'hy'
-                  ? 'Ա. (ALC) — 60 կ., 45 ր. մ/ք-ով. Ryanair, EasyJet, Vueling.'
-                  : 'Alicante Airport (ALC) — 60km, 45 min by car. Direct flights from Yerevan available via connecting hubs. Ryanair, Easyjet, Vueling and others serve the airport.',
+                title: isRu ? 'На самолёте' : isHy ? 'Ա/կ-ով' : 'By Air',
+                desc:  isRu ? 'Аэропорт Аликанте (ALC) — 60 км, 45 мин. Ryanair, EasyJet, Vueling.'
+                             : isHy ? 'Ա. (ALC) — 60 կ., 45 ր. Ryanair, EasyJet.'
+                             : 'Alicante Airport (ALC) — 60km, 45 min by car. Ryanair, EasyJet, Vueling and others.',
               },
               {
                 icon: '🚗',
-                title: locale === 'ru' ? 'На машине' : locale === 'hy' ? 'Մ/կ-ով' : 'By Car',
-                desc: locale === 'ru'
-                  ? 'Из центра Аликанте — 50 км по шоссе AP-7. Из Валенсии — 120 км. Из Мадрида — 440 км.'
-                  : locale === 'hy'
-                  ? 'Ա. կ-ից — 50 կ. AP-7-ով. Վ-ից — 120 կ. Մ-ից — 440 կ.'
-                  : 'From Alicante city centre — 50km on the AP-7 motorway. From Valencia — 120km. From Madrid — 440km.',
+                title: isRu ? 'На машине' : isHy ? 'Մ/կ-ով' : 'By Car',
+                desc:  isRu ? 'Из Аликанте — 50 км по AP-7. Из Валенсии — 120 км. Из Мадрида — 440 км.'
+                             : isHy ? 'Ա. կ-ից — 50 կ. AP-7-ով. Վ-ից — 120 կ.'
+                             : 'From Alicante — 50km on the AP-7 motorway. From Valencia — 120km. From Madrid — 440km.',
               },
               {
                 icon: '🚌',
-                title: locale === 'ru' ? 'На автобусе' : locale === 'hy' ? 'Ա/բ-ով' : 'By Bus',
-                desc: locale === 'ru'
-                  ? 'Регулярные автобусы ALSA из Аликанте, Валенсии и Мадрида прямо до автовокзала Бенидорма.'
-                  : locale === 'hy'
-                  ? 'ALSA ա/բ Ա., Վ. ե. Մ-ից Բ. կ.'
-                  : 'Regular ALSA bus services from Alicante, Valencia, and Madrid directly to Benidorm bus station.',
+                title: isRu ? 'На автобусе' : isHy ? 'Ա/բ-ով' : 'By Bus',
+                desc:  isRu ? 'Регулярные ALSA из Аликанте, Валенсии и Мадрида прямо до Бенидорма.'
+                             : isHy ? 'ALSA Ա., Վ. ե. Մ-ից Բ. կ.'
+                             : 'Regular ALSA bus services from Alicante, Valencia, and Madrid directly to Benidorm.',
               },
             ].map((item, i) => (
-              <div key={i} className="reveal bg-sand p-8 border-l-4 border-gold">
+              <div key={i} className="reveal bg-sand p-8 border-l-4 border-gold hover:shadow-md transition-shadow">
                 <div className="text-3xl mb-4">{item.icon}</div>
                 <h3 className="font-serif text-xl text-navy mb-3">{item.title}</h3>
                 <p className="font-sans text-sm text-navy/65 leading-relaxed">{item.desc}</p>
@@ -338,27 +549,26 @@ export default function BenidormPage({ params: { locale } }: Props) {
         </div>
       </section>
 
-      {/* ── Map ── */}
-      <section className="bg-sand pb-20">
-        <div className="container-site">
+      {/* ── MAP ── */}
+      <section className="bg-sand pb-0">
+        <div className="container-site pb-20">
           <div className="overflow-hidden shadow-lg">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d50255.86537!2d-0.1338!3d38.5432!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd61f0059e51b6a5%3A0x400b7e2a6e7a3d0!2sBenidorm%2C%20Alicante%2C%20Spain!5e0!3m2!1sen!2s!4v1"
               width="100%"
-              height="350"
+              height="320"
               style={{ border: 0 }}
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Benidorm on the map"
+              title="Benidorm location"
             />
           </div>
         </div>
       </section>
 
-      {/* ── Final CTA ── */}
-      <section className="relative overflow-hidden py-24 px-4 bg-navy-900">
-        <div className="absolute inset-0 bg-gradient-to-r from-navy-900 via-[#0D1F2D] to-navy-900" />
+      {/* ── FINAL CTA ── */}
+      <section className="relative overflow-hidden py-24 px-4" style={{ background: '#0D1F2D' }}>
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -367,22 +577,23 @@ export default function BenidormPage({ params: { locale } }: Props) {
           }}
         />
         <div className="relative container-site text-center">
+          <div className="w-16 h-px bg-gold mx-auto mb-6" />
           <p className="eyebrow text-gold mb-4">Casa del Mar</p>
           <h2 className="font-serif text-3xl md:text-5xl font-light text-white mb-4 leading-tight">
             {b.ctaTitle}
           </h2>
-          <p className="font-sans text-white/55 text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+          <p className="font-sans text-white/50 text-base md:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
             {b.ctaSub}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
-            <Link href={`/${locale}/spain`} className="btn-primary px-8 py-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10 px-4 sm:px-0">
+            <Link href={`/${locale}/spain`} className="btn-primary w-full sm:w-auto justify-center py-4 sm:py-3.5">
               {b.cta}
             </Link>
-            <Link href={`/${locale}/contact`} className="btn-outline-white px-8 py-4">
+            <Link href={`/${locale}/contact`} className="btn-outline-white w-full sm:w-auto justify-center py-4 sm:py-3.5">
               {b.ctaFree}
             </Link>
           </div>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-white/40">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 text-white/35">
             <a href={`tel:${c.tel1}`} className="font-sans text-sm hover:text-gold transition-colors">{c.tel1}</a>
             <span className="hidden sm:block w-px h-4 bg-white/20" />
             <a href={`mailto:${c.emailAddr}`} className="font-sans text-sm hover:text-gold transition-colors">{c.emailAddr}</a>

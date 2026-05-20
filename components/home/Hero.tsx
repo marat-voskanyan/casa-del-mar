@@ -17,7 +17,7 @@ export default function Hero({ locale, page = 'home' }: Props) {
   const isHome = page === 'home'
 
   return (
-    <section className={`relative flex items-center overflow-hidden ${isHome ? 'min-h-screen' : 'min-h-[55vh]'}`}>
+    <section className={`relative flex items-center overflow-hidden ${isHome ? 'min-h-[100svh]' : 'min-h-[55vh]'}`}>
       {/* Animated gradient background */}
       <div className="absolute inset-0 hero-bg" />
 
@@ -63,7 +63,7 @@ export default function Hero({ locale, page = 'home' }: Props) {
         </div>
 
         {/* Title */}
-        <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-light text-white leading-[1.05] mb-6 opacity-0 animate-fade-up whitespace-pre-line max-w-4xl">
+        <h1 className="font-serif text-[clamp(2rem,8vw,5.5rem)] font-light text-white leading-[1.05] mb-6 opacity-0 animate-fade-up whitespace-pre-line max-w-4xl">
           {hero.title}
         </h1>
 
@@ -71,17 +71,17 @@ export default function Hero({ locale, page = 'home' }: Props) {
         <div className="w-16 h-px bg-gold my-6 opacity-0 animate-fade-up-d1" />
 
         {/* Subtitle */}
-        <p className="font-sans text-lg md:text-xl text-white/65 max-w-2xl leading-relaxed mb-10 opacity-0 animate-fade-up-d1">
+        <p className="font-sans text-[clamp(1rem,4vw,1.25rem)] text-white/65 max-w-2xl leading-relaxed mb-10 opacity-0 animate-fade-up-d1 px-2 sm:px-0">
           {hero.subtitle}
         </p>
 
         {/* CTAs — home only */}
         {isHome && (
-          <div className="flex flex-col sm:flex-row gap-4 mb-8 opacity-0 animate-fade-up-d2">
-            <Link href={`/${locale}/spain`} className="btn-primary">
+          <div className="flex flex-col sm:flex-row gap-4 mb-8 opacity-0 animate-fade-up-d2 w-full sm:w-auto px-4 sm:px-0">
+            <Link href={`/${locale}/spain`} className="btn-primary w-full sm:w-auto justify-center py-4 sm:py-3.5 text-sm sm:text-xs">
               {(hero as typeof t.hero.home).cta}
             </Link>
-            <Link href={`/${locale}/cyprus`} className="btn-outline-white">
+            <Link href={`/${locale}/cyprus`} className="btn-outline-white w-full sm:w-auto justify-center py-4 sm:py-3.5 text-sm sm:text-xs">
               {(hero as typeof t.hero.home).ctaContact}
             </Link>
           </div>

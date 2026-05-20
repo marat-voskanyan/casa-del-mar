@@ -3,10 +3,23 @@
 @tailwind utilities;
 
 @layer base {
-  html { scroll-behavior: smooth; }
-  body { @apply font-sans bg-sand text-dark antialiased; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body { @apply font-sans bg-sand text-dark antialiased; overflow-x: hidden; }
   h1, h2, h3, h4, h5, h6 { @apply font-serif; }
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  /* Prevent iOS auto-zoom on input focus */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+
+  /* Touch targets */
+  button, a, [role="button"] {
+    touch-action: manipulation;
+  }
+
+  /* Prevent horizontal overflow on all screen sizes */
+  img, video { max-width: 100%; }
 }
 
 @layer components {

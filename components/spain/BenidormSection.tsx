@@ -92,12 +92,15 @@ export default function BenidormSection({ locale }: Props) {
               <div>
                 <h4 className="font-serif text-xl text-navy font-light mb-4">{b.why}</h4>
                 <ul className="space-y-3">
-                  {b.whyItems.map((item, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <span className="text-gold font-bold text-lg leading-none mt-0.5 shrink-0">{i + 1}</span>
-                      <p className="font-sans text-sm text-navy/70 leading-relaxed">{item}</p>
-                    </li>
-                  ))}
+                  {b.whyItems.map((item, i) => {
+                    const label = typeof item === 'string' ? item : (item as { title: string }).title
+                    return (
+                      <li key={i} className="flex items-start gap-3">
+                        <span className="text-gold font-bold text-lg leading-none mt-0.5 shrink-0">{i + 1}</span>
+                        <p className="font-sans text-sm text-navy/70 leading-relaxed">{label}</p>
+                      </li>
+                    )
+                  })}
                 </ul>
 
                 <div className="mt-6 pt-6 border-t border-sand-300 flex flex-col sm:flex-row gap-3">
