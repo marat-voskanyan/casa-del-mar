@@ -16,10 +16,10 @@ export const metadata: Metadata = {
   description: 'Casa del Mar — premier international real estate agency based in Yerevan, Armenia. Exclusive coastal properties in Spain and Cyprus, curated for discerning buyers worldwide.',
 }
 
-export default function HomePage({ params: { locale } }: Props) {
+export default async function HomePage({ params: { locale } }: Props) {
   let properties: Property[] = []
   try {
-    properties = getFeaturedProperties(6) as unknown as Property[]
+    properties = await getFeaturedProperties(6) as unknown as Property[]
   } catch {
     // DB not yet initialised during build
   }

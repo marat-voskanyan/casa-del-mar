@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { getPropertyById, updateProperty, deleteProperty } from '@/lib/db'
 import { verifyToken } from '@/lib/auth'
-import type { SQLInputValue } from 'node:sqlite'
+import type { SQLInputValue } from '@/lib/db'
 
 export const runtime = 'nodejs'
 
@@ -13,7 +13,7 @@ async function auth() {
 
 export async function GET(_: Request, { params }: { params: { id: string } }) {
   try {
-    const property = getPropertyById(Number(params.id))
+    const property = await getPropertyById(Number(params.id))
     if (!property) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     return NextResponse.json({ property })
   } catch (err) {
@@ -57,7 +57,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       longitude:      body.longitude ?? null,
     }
 
-    updateProperty(Number(params.id), data)
+    await updateProperty(Number(params.id), data)
     return NextResponse.json({ ok: true })
   } catch (err) {
     console.error(err)
@@ -69,7 +69,7 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
   if (!(await auth())) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
   try {
-    deleteProperty(Number(params.id))
+    await deleteProperty(Number(params.id))
     return NextResponse.json({ ok: true })
   } catch (err) {
     console.error(err)

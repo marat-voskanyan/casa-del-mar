@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { getAllProperties, createProperty } from '@/lib/db'
 import { verifyToken } from '@/lib/auth'
-import type { SQLInputValue } from 'node:sqlite'
+import type { SQLInputValue } from '@/lib/db'
 
 export const runtime = 'nodejs'
 
@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const country = searchParams.get('country') || undefined
-    const properties = getAllProperties(country)
+    const properties = await getAllProperties(country)
     return NextResponse.json({ properties })
   } catch (err) {
     console.error('GET /api/properties error:', err)
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
       longitude:      body.longitude ?? null,
     }
 
-    const id = createProperty(data)
+    const id = await createProperty(data)
     return NextResponse.json({ id }, { status: 201 })
   } catch (err) {
     console.error('POST /api/properties error:', err)

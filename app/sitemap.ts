@@ -4,7 +4,7 @@ import { getAllProperties } from '@/lib/db'
 const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://casadelmar.eu'
 const LOCALES = ['en', 'ru', 'hy'] as const
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()
 
   // Static pages
@@ -17,7 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Property pages
   let properties: { id: number; updated_at: string }[] = []
-  try { properties = getAllProperties() as unknown as { id: number; updated_at: string }[] } catch { /* */ }
+  try { properties = await getAllProperties() as unknown as { id: number; updated_at: string }[] } catch { /* */ }
 
   const propertyRoutes: MetadataRoute.Sitemap = properties.flatMap(p =>
     LOCALES.map(locale => ({

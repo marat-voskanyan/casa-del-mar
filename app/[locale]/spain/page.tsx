@@ -13,11 +13,11 @@ export const metadata: Metadata = {
   description: 'Browse apartments and villas in Benidorm, Altea Hills, and the Costa Blanca. Expert guidance from Casa del Mar.',
 }
 
-export default function SpainPage({ params: { locale } }: Props) {
+export default async function SpainPage({ params: { locale } }: Props) {
   const t = getT(locale)
   let properties: Property[] = []
   try {
-    properties = getAllProperties('spain') as unknown as Property[]
+    properties = await getAllProperties('spain') as unknown as Property[]
   } catch {
     // DB not yet initialised
   }

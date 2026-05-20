@@ -9,11 +9,11 @@ interface Props { params: { locale: Locale } }
 
 export const metadata: Metadata = { title: 'Cyprus Properties' }
 
-export default function CyprusPage({ params: { locale } }: Props) {
+export default async function CyprusPage({ params: { locale } }: Props) {
   const t = getT(locale)
   let properties: Property[] = []
   try {
-    properties = getAllProperties('cyprus') as unknown as Property[]
+    properties = await getAllProperties('cyprus') as unknown as Property[]
   } catch {
     // DB not yet initialised
   }

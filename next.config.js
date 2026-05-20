@@ -6,8 +6,7 @@ const nextConfig = {
       { protocol: 'http', hostname: 'localhost' },
     ],
   },
-  // node:sqlite is a built-in Node.js module — no webpack exclusion needed.
-  // It is never imported on the client because all DB calls are server-only.
+  // Server-only DB access via @libsql/client (Turso in prod, file: locally).
 }
 
 module.exports = nextConfig

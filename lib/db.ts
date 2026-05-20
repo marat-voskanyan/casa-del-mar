@@ -1,29 +1,48 @@
-import { DatabaseSync, type SQLInputValue } from 'node:sqlite'
+import { createClient, type Client, type InValue } from '@libsql/client'
 import path from 'path'
 import fs from 'fs'
 import type { Property } from '@/types'
 
-const DB_PATH =
-  process.env.DATABASE_PATH || path.join(process.cwd(), 'data', 'casa.db')
+// Re-export type so existing callers that import `SQLInputValue` keep working.
+export type SQLInputValue = InValue
 
-let _db: DatabaseSync | null = null
+let _db: Client | null = null
+let _schemaReady: Promise<void> | null = null
 
-export function getDb(): DatabaseSync {
+/**
+ * Returns a libsql client. In production it connects to Turso via
+ * TURSO_DATABASE_URL + TURSO_AUTH_TOKEN. Locally it falls back to a
+ * file-based SQLite db at data/casa.db.
+ */
+export function getDb(): Client {
   if (_db) return _db
 
-  const dir = path.dirname(DB_PATH)
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
+  const url = process.env.TURSO_DATABASE_URL
+  const authToken = process.env.TURSO_AUTH_TOKEN
 
-  _db = new DatabaseSync(DB_PATH)
-  _db.exec('PRAGMA journal_mode = WAL')
-  _db.exec('PRAGMA foreign_keys = ON')
-  initSchema(_db)
+  if (url) {
+    _db = createClient({ url, authToken })
+  } else {
+    // Local fallback — file: URL
+    const dbPath = process.env.DATABASE_PATH || path.join(process.cwd(), 'data', 'casa.db')
+    const dir = path.dirname(dbPath)
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
+    _db = createClient({ url: `file:${dbPath}` })
+  }
+
   return _db
 }
 
-function initSchema(db: DatabaseSync) {
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS properties (
+/** Idempotent schema creation; cached so it only runs once per cold start. */
+export function ensureSchema(): Promise<void> {
+  if (_schemaReady) return _schemaReady
+  _schemaReady = initSchema(getDb())
+  return _schemaReady
+}
+
+async function initSchema(db: Client) {
+  await db.batch([
+    `CREATE TABLE IF NOT EXISTS properties (
       id              INTEGER PRIMARY KEY AUTOINCREMENT,
       name            TEXT    NOT NULL,
       location        TEXT    NOT NULL,
@@ -48,44 +67,34 @@ function initSchema(db: DatabaseSync) {
       longitude       REAL,
       created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
-
-    CREATE TABLE IF NOT EXISTS admin_users (
+    )`,
+    `CREATE TABLE IF NOT EXISTS admin_users (
       id            INTEGER PRIMARY KEY AUTOINCREMENT,
       username      TEXT UNIQUE NOT NULL,
       password_hash TEXT        NOT NULL,
       created_at    DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
-
-    CREATE TRIGGER IF NOT EXISTS trg_properties_updated_at
+    )`,
+    `CREATE TRIGGER IF NOT EXISTS trg_properties_updated_at
       AFTER UPDATE ON properties FOR EACH ROW
       BEGIN
         UPDATE properties SET updated_at = CURRENT_TIMESTAMP WHERE id = OLD.id;
-      END;
-  `)
+      END`,
+  ], 'write')
 
-  // ── Migrations for existing DBs ──
-  const cols = db.prepare('PRAGMA table_info(properties)').all() as { name: string }[]
-  const names = new Set(cols.map(c => c.name))
+  // ── Lightweight migrations for older DBs ───────────────────────────────────
+  const info = await db.execute('PRAGMA table_info(properties)')
+  const names = new Set(info.rows.map(r => (r as Record<string, unknown>).name as string))
 
-  if (!names.has('images')) {
-    db.exec("ALTER TABLE properties ADD COLUMN images TEXT NOT NULL DEFAULT '[]'")
-    const rows = db.prepare('SELECT id, image1, image2, image3 FROM properties').all() as {
-      id: number; image1: string | null; image2: string | null; image3: string | null
-    }[]
-    const upd = db.prepare('UPDATE properties SET images = $images WHERE id = $id')
-    for (const row of rows) {
-      const imgs = [row.image1, row.image2, row.image3].filter(Boolean)
-      upd.run({ images: JSON.stringify(imgs), id: row.id })
-    }
-  }
-  if (!names.has('latitude'))       { db.exec('ALTER TABLE properties ADD COLUMN latitude REAL') }
-  if (!names.has('longitude'))      { db.exec('ALTER TABLE properties ADD COLUMN longitude REAL') }
-  if (!names.has('ref'))            { db.exec('ALTER TABLE properties ADD COLUMN ref TEXT') }
-  if (!names.has('features_en'))    { db.exec('ALTER TABLE properties ADD COLUMN features_en TEXT') }
-  if (!names.has('features_ru'))    { db.exec('ALTER TABLE properties ADD COLUMN features_ru TEXT') }
-  if (!names.has('features_hy'))    { db.exec('ALTER TABLE properties ADD COLUMN features_hy TEXT') }
-  if (!names.has('internal_notes')) { db.exec('ALTER TABLE properties ADD COLUMN internal_notes TEXT') }
+  const alters: string[] = []
+  if (!names.has('images'))         alters.push("ALTER TABLE properties ADD COLUMN images TEXT NOT NULL DEFAULT '[]'")
+  if (!names.has('latitude'))       alters.push('ALTER TABLE properties ADD COLUMN latitude REAL')
+  if (!names.has('longitude'))      alters.push('ALTER TABLE properties ADD COLUMN longitude REAL')
+  if (!names.has('ref'))            alters.push('ALTER TABLE properties ADD COLUMN ref TEXT')
+  if (!names.has('features_en'))    alters.push('ALTER TABLE properties ADD COLUMN features_en TEXT')
+  if (!names.has('features_ru'))    alters.push('ALTER TABLE properties ADD COLUMN features_ru TEXT')
+  if (!names.has('features_hy'))    alters.push('ALTER TABLE properties ADD COLUMN features_hy TEXT')
+  if (!names.has('internal_notes')) alters.push('ALTER TABLE properties ADD COLUMN internal_notes TEXT')
+  if (alters.length) await db.batch(alters, 'write')
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -108,81 +117,115 @@ function toProperty(row: Record<string, unknown>): Property {
 
 // ── Property queries ──────────────────────────────────────────────────────────
 
-export function getAllProperties(country?: string): Property[] {
+export async function getAllProperties(country?: string): Promise<Property[]> {
+  await ensureSchema()
   const db = getDb()
-  const rows = country
-    ? db.prepare('SELECT * FROM properties WHERE country = $country ORDER BY created_at DESC').all({ country })
-    : db.prepare('SELECT * FROM properties ORDER BY created_at DESC').all()
-  return (rows as Record<string, unknown>[]).map(toProperty)
+  const res = country
+    ? await db.execute({
+        sql: 'SELECT * FROM properties WHERE country = ? ORDER BY created_at DESC',
+        args: [country],
+      })
+    : await db.execute('SELECT * FROM properties ORDER BY created_at DESC')
+  return res.rows.map(r => toProperty(r as Record<string, unknown>))
 }
 
-export function getPropertyById(id: number): Property | null {
-  const row = getDb().prepare('SELECT * FROM properties WHERE id = $id').get({ id })
+export async function getPropertyById(id: number): Promise<Property | null> {
+  await ensureSchema()
+  const res = await getDb().execute({
+    sql: 'SELECT * FROM properties WHERE id = ?',
+    args: [id],
+  })
+  const row = res.rows[0]
   return row ? toProperty(row as Record<string, unknown>) : null
 }
 
-export function getFeaturedProperties(limit = 6): Property[] {
-  const rows = getDb()
-    .prepare("SELECT * FROM properties WHERE status = 'available' ORDER BY created_at DESC LIMIT $limit")
-    .all({ limit })
-  return (rows as Record<string, unknown>[]).map(toProperty)
+export async function getFeaturedProperties(limit = 6): Promise<Property[]> {
+  await ensureSchema()
+  const res = await getDb().execute({
+    sql: "SELECT * FROM properties WHERE status = 'available' ORDER BY created_at DESC LIMIT ?",
+    args: [limit],
+  })
+  return res.rows.map(r => toProperty(r as Record<string, unknown>))
 }
 
-export function getSimilarProperties(id: number, country: string, limit = 4): Property[] {
-  const rows = getDb()
-    .prepare('SELECT * FROM properties WHERE country = $country AND id != $id ORDER BY created_at DESC LIMIT $limit')
-    .all({ country, id, limit })
-  return (rows as Record<string, unknown>[]).map(toProperty)
+export async function getSimilarProperties(id: number, country: string, limit = 4): Promise<Property[]> {
+  await ensureSchema()
+  const res = await getDb().execute({
+    sql: 'SELECT * FROM properties WHERE country = ? AND id != ? ORDER BY created_at DESC LIMIT ?',
+    args: [country, id, limit],
+  })
+  return res.rows.map(r => toProperty(r as Record<string, unknown>))
 }
 
-export function createProperty(data: Record<string, SQLInputValue>): number {
-  return Number(
-    getDb().prepare(`
-      INSERT INTO properties
+export async function createProperty(data: Record<string, SQLInputValue>): Promise<number> {
+  await ensureSchema()
+  const res = await getDb().execute({
+    sql: `INSERT INTO properties
         (name, location, price, bedrooms, bathrooms, floor, size_sqm, parking,
          status, country, ref, description_en, description_ru, description_hy,
          features_en, features_ru, features_hy, internal_notes,
          images, latitude, longitude)
-      VALUES
-        ($name, $location, $price, $bedrooms, $bathrooms, $floor, $size_sqm, $parking,
-         $status, $country, $ref, $description_en, $description_ru, $description_hy,
-         $features_en, $features_ru, $features_hy, $internal_notes,
-         $images, $latitude, $longitude)
-    `).run(data).lastInsertRowid
-  )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    args: [
+      data.name, data.location, data.price, data.bedrooms, data.bathrooms,
+      data.floor, data.size_sqm, data.parking, data.status, data.country,
+      data.ref, data.description_en, data.description_ru, data.description_hy,
+      data.features_en, data.features_ru, data.features_hy, data.internal_notes,
+      data.images, data.latitude, data.longitude,
+    ],
+  })
+  return Number(res.lastInsertRowid)
 }
 
-export function updateProperty(id: number, data: Record<string, SQLInputValue>): void {
-  getDb().prepare(`
-    UPDATE properties SET
-      name = $name, location = $location, price = $price,
-      bedrooms = $bedrooms, bathrooms = $bathrooms, floor = $floor,
-      size_sqm = $size_sqm, parking = $parking, status = $status,
-      country = $country, ref = $ref,
-      description_en = $description_en, description_ru = $description_ru,
-      description_hy = $description_hy,
-      features_en = $features_en, features_ru = $features_ru,
-      features_hy = $features_hy, internal_notes = $internal_notes,
-      images = $images, latitude = $latitude, longitude = $longitude
-    WHERE id = $id
-  `).run({ ...data, id })
+export async function updateProperty(id: number, data: Record<string, SQLInputValue>): Promise<void> {
+  await ensureSchema()
+  await getDb().execute({
+    sql: `UPDATE properties SET
+        name = ?, location = ?, price = ?,
+        bedrooms = ?, bathrooms = ?, floor = ?,
+        size_sqm = ?, parking = ?, status = ?,
+        country = ?, ref = ?,
+        description_en = ?, description_ru = ?, description_hy = ?,
+        features_en = ?, features_ru = ?, features_hy = ?, internal_notes = ?,
+        images = ?, latitude = ?, longitude = ?
+      WHERE id = ?`,
+    args: [
+      data.name, data.location, data.price, data.bedrooms, data.bathrooms,
+      data.floor, data.size_sqm, data.parking, data.status, data.country,
+      data.ref, data.description_en, data.description_ru, data.description_hy,
+      data.features_en, data.features_ru, data.features_hy, data.internal_notes,
+      data.images, data.latitude, data.longitude, id,
+    ],
+  })
 }
 
-export function deleteProperty(id: number): void {
-  getDb().prepare('DELETE FROM properties WHERE id = $id').run({ id })
+export async function deleteProperty(id: number): Promise<void> {
+  await ensureSchema()
+  await getDb().execute({ sql: 'DELETE FROM properties WHERE id = ?', args: [id] })
 }
 
 // ── Admin user queries ────────────────────────────────────────────────────────
 
-export function getAdminUser(username: string): Record<string, unknown> | null {
-  return (getDb().prepare('SELECT * FROM admin_users WHERE username = $username').get({ username }) ?? null) as Record<string, unknown> | null
+export async function getAdminUser(username: string): Promise<Record<string, unknown> | null> {
+  await ensureSchema()
+  const res = await getDb().execute({
+    sql: 'SELECT * FROM admin_users WHERE username = ?',
+    args: [username],
+  })
+  return (res.rows[0] as Record<string, unknown> | undefined) ?? null
 }
 
-export function getAdminCount(): number {
-  const row = getDb().prepare('SELECT COUNT(*) as count FROM admin_users').get() as { count: number }
-  return row.count
+export async function getAdminCount(): Promise<number> {
+  await ensureSchema()
+  const res = await getDb().execute('SELECT COUNT(*) as count FROM admin_users')
+  const row = res.rows[0] as unknown as { count: number } | undefined
+  return row ? Number(row.count) : 0
 }
 
-export function createAdminUser(username: string, passwordHash: string): void {
-  getDb().prepare('INSERT INTO admin_users (username, password_hash) VALUES ($username, $password_hash)').run({ username, password_hash: passwordHash })
+export async function createAdminUser(username: string, passwordHash: string): Promise<void> {
+  await ensureSchema()
+  await getDb().execute({
+    sql: 'INSERT INTO admin_users (username, password_hash) VALUES (?, ?)',
+    args: [username, passwordHash],
+  })
 }

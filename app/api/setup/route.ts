@@ -6,7 +6,7 @@ export const runtime = 'nodejs'
 
 export async function GET() {
   try {
-    const count = getAdminCount()
+    const count = await getAdminCount()
     return NextResponse.json({ needsSetup: count === 0 })
   } catch (err) {
     console.error('Setup check error:', err)
@@ -16,7 +16,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const count = getAdminCount()
+    const count = await getAdminCount()
     if (count > 0) {
       return NextResponse.json({ error: 'Admin already configured' }, { status: 409 })
     }
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     }
 
     const hash = await hashPassword(password)
-    createAdminUser(username.trim(), hash)
+    await createAdminUser(username.trim(), hash)
 
     return NextResponse.json({ ok: true })
   } catch (err) {

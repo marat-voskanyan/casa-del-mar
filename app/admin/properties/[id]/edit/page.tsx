@@ -10,9 +10,9 @@ interface Props { params: { id: string } }
 
 export const metadata: Metadata = { title: 'Edit Property' }
 
-export default function EditPropertyPage({ params: { id } }: Props) {
+export default async function EditPropertyPage({ params: { id } }: Props) {
   let property: Property | null = null
-  try { property = getPropertyById(Number(id)) as unknown as Property } catch { /* */ }
+  try { property = await getPropertyById(Number(id)) as unknown as Property } catch { /* */ }
   if (!property) notFound()
 
   return (

@@ -13,7 +13,7 @@ interface Props { params: { locale: Locale; id: string } }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   let property: Property | null = null
-  try { property = getPropertyById(Number(params.id)) as unknown as Property } catch { /* */ }
+  try { property = await getPropertyById(Number(params.id)) as unknown as Property } catch { /* */ }
   if (!property) return { title: 'Property Not Found' }
 
   const descKey = `description_${params.locale}` as `description_${Locale}`
@@ -30,15 +30,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default function PropertyDetailPage({ params: { locale, id } }: Props) {
+export default async function PropertyDetailPage({ params: { locale, id } }: Props) {
   const t = getT(locale)
   let property: Property | null = null
   let similar: Property[] = []
 
   try {
-    property = getPropertyById(Number(id)) as unknown as Property
+    property = await getPropertyById(Number(id)) as unknown as Property
     if (property) {
-      similar = getSimilarProperties(property.id, property.country, 4) as unknown as Property[]
+      similar = await getSimilarProperties(property.id, property.country, 4) as unknown as Property[]
     }
   } catch { /* */ }
 
