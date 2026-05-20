@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import type { Locale } from '@/types'
 import { getT } from '@/lib/i18n'
+import { BENIDORM_IMAGES, IMAGE_ALT } from '@/lib/images'
 
 interface Props { params: { locale: Locale } }
 
@@ -120,9 +122,14 @@ export default function BenidormPage({ params: { locale } }: Props) {
       {/* ── HERO ── */}
       <section className="relative flex flex-col items-center justify-center min-h-[100svh] overflow-hidden text-center">
         {/* Background */}
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1555993539-1732b0258235?w=1600&q=80)' }}
+        <Image
+          src={BENIDORM_IMAGES.hero.benidorm_skyline}
+          alt={IMAGE_ALT.benidorm_skyline}
+          fill
+          priority
+          quality={85}
+          className="object-cover"
+          sizes="100vw"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-navy/70 via-navy/50 to-navy/80" />
 
@@ -227,10 +234,17 @@ export default function BenidormPage({ params: { locale } }: Props) {
 
             {/* Image — 2/5 */}
             <div className="lg:col-span-2 reveal">
-              <div
-                className="aspect-[3/4] bg-cover bg-center shadow-2xl"
-                style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=700&q=80)' }}
-              />
+              <div className="aspect-[3/4] relative shadow-2xl overflow-hidden">
+                <Image
+                  src={BENIDORM_IMAGES.sections.about_benidorm}
+                  alt={IMAGE_ALT.about_benidorm}
+                  fill
+                  loading="lazy"
+                  quality={80}
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                />
+              </div>
               <div className="mt-4 bg-sand p-5">
                 <p className="font-accent text-[10px] tracking-[0.25em] uppercase text-gold mb-1">
                   {isRu ? 'Наши районы' : isHy ? 'Մ. թ.' : 'Our Areas'}
@@ -253,10 +267,17 @@ export default function BenidormPage({ params: { locale } }: Props) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
             {/* Levante */}
             <div className="reveal bg-white shadow-card overflow-hidden group">
-              <div
-                className="aspect-[16/9] bg-cover bg-center group-hover:scale-105 transition-transform duration-700 overflow-hidden"
-                style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80)' }}
-              />
+              <div className="aspect-[16/9] relative overflow-hidden">
+                <Image
+                  src={BENIDORM_IMAGES.sections.levante_beach}
+                  alt={IMAGE_ALT.levante_beach}
+                  fill
+                  loading="lazy"
+                  quality={80}
+                  className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              </div>
               <div className="p-6 md:p-8">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 bg-gold/10 rounded-full flex items-center justify-center text-gold font-serif text-lg shrink-0">L</div>
@@ -289,10 +310,17 @@ export default function BenidormPage({ params: { locale } }: Props) {
 
             {/* Poniente */}
             <div className="reveal bg-white shadow-card overflow-hidden group">
-              <div
-                className="aspect-[16/9] bg-cover bg-center group-hover:scale-105 transition-transform duration-700 overflow-hidden"
-                style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1533760881669-80db4d7b4c15?w=800&q=80)' }}
-              />
+              <div className="aspect-[16/9] relative overflow-hidden">
+                <Image
+                  src={BENIDORM_IMAGES.sections.poniente_beach}
+                  alt={IMAGE_ALT.poniente_beach}
+                  fill
+                  loading="lazy"
+                  quality={80}
+                  className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              </div>
               <div className="p-6 md:p-8">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 bg-gold/10 rounded-full flex items-center justify-center text-gold font-serif text-lg shrink-0">P</div>
@@ -369,10 +397,17 @@ export default function BenidormPage({ params: { locale } }: Props) {
 
             {/* Right — timeline 2/5 */}
             <div className="lg:col-span-2 reveal">
-              <div
-                className="aspect-[4/3] bg-cover bg-center rounded-sm shadow-2xl mb-6"
-                style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1512813195386-6cf811ad3542?w=600&q=80)' }}
-              />
+              <div className="aspect-[4/3] relative rounded-sm shadow-2xl mb-6 overflow-hidden">
+                <Image
+                  src={BENIDORM_IMAGES.sections.la_cala_apartments}
+                  alt={IMAGE_ALT.la_cala_apartments}
+                  fill
+                  loading="lazy"
+                  quality={80}
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                />
+              </div>
 
               {/* Timeline */}
               <div className="space-y-0">

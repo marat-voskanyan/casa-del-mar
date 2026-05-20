@@ -1,51 +1,76 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import type { Locale } from '@/types'
 import { getT } from '@/lib/i18n'
 
 interface Props {
   locale: Locale
   page?: 'home' | 'spain' | 'cyprus'
+  /** Optional background photo shown behind the gradient (non-home pages) */
+  bgImage?: string
+  bgAlt?:   string
 }
 
-export default function Hero({ locale, page = 'home' }: Props) {
-  const t = getT(locale)
+export default function Hero({ locale, page = 'home', bgImage, bgAlt }: Props) {
+  const t    = getT(locale)
   const hero = t.hero[page]
-
   const isHome = page === 'home'
 
   return (
-    <section className={`relative flex items-center overflow-hidden ${isHome ? 'min-h-[100svh]' : 'min-h-[55vh]'}`}>
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 hero-bg" />
+    <section className={`relative flex items-center overflow-hidden ${isHome ? 'min-h-[100svh]' : 'min-h-[60vh]'}`}>
 
-      {/* Floating orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div
-          className="absolute w-[600px] h-[600px] rounded-full opacity-[0.07] animate-[hero-pulse_18s_ease-in-out_infinite]"
-          style={{ background: 'radial-gradient(circle, #C9A84C 0%, transparent 70%)', top: '-10%', right: '-5%' }}
+      {/* Background photo (inner pages) */}
+      {bgImage && (
+        <Image
+          src={bgImage}
+          alt={bgAlt ?? ''}
+          fill
+          priority
+          quality={85}
+          className="object-cover"
+          sizes="100vw"
         />
-        <div
-          className="absolute w-[400px] h-[400px] rounded-full opacity-[0.05] animate-[float_12s_ease-in-out_infinite]"
-          style={{ background: 'radial-gradient(circle, #C9A84C 0%, transparent 70%)', bottom: '10%', left: '-8%' }}
-        />
-        <div
-          className="absolute w-[300px] h-[300px] rounded-full opacity-[0.04] animate-[float_8s_ease-in-out_infinite_3s]"
-          style={{ background: 'radial-gradient(circle, #9faebd 0%, transparent 70%)', top: '30%', left: '30%' }}
-        />
-      </div>
+      )}
 
-      {/* Subtle grid overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(201,168,76,0.5) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(201,168,76,0.5) 1px, transparent 1px)`,
-          backgroundSize: '80px 80px',
-        }}
-      />
+      {/* Animated gradient — full overlay on home, dark tint on inner pages */}
+      <div className={`absolute inset-0 ${bgImage ? 'bg-navy/65' : 'hero-bg'}`} />
+
+      {/* Floating orbs — home only */}
+      {isHome && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div
+            className="absolute w-[600px] h-[600px] rounded-full opacity-[0.07] animate-[hero-pulse_18s_ease-in-out_infinite]"
+            style={{ background: 'radial-gradient(circle, #C9A84C 0%, transparent 70%)', top: '-10%', right: '-5%' }}
+          />
+          <div
+            className="absolute w-[400px] h-[400px] rounded-full opacity-[0.05] animate-[float_12s_ease-in-out_infinite]"
+            style={{ background: 'radial-gradient(circle, #C9A84C 0%, transparent 70%)', bottom: '10%', left: '-8%' }}
+          />
+          <div
+            className="absolute w-[300px] h-[300px] rounded-full opacity-[0.04] animate-[float_8s_ease-in-out_infinite_3s]"
+            style={{ background: 'radial-gradient(circle, #9faebd 0%, transparent 70%)', top: '30%', left: '30%' }}
+          />
+        </div>
+      )}
+
+      {/* Subtle grid overlay — home only */}
+      {isHome && (
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `linear-gradient(rgba(201,168,76,0.5) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(201,168,76,0.5) 1px, transparent 1px)`,
+            backgroundSize: '80px 80px',
+          }}
+        />
+      )}
+
+      {/* Bottom gradient for inner pages */}
+      {!isHome && (
+        <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-transparent to-transparent" />
+      )}
 
       {/* Gold vertical accent */}
       <div className="absolute left-0 top-1/4 bottom-1/4 w-px bg-gradient-to-b from-transparent via-gold/40 to-transparent" />

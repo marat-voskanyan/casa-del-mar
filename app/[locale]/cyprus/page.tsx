@@ -4,6 +4,7 @@ import { getAllProperties } from '@/lib/db'
 import Hero from '@/components/home/Hero'
 import PropertiesGrid from '@/components/properties/PropertiesGrid'
 import { getT } from '@/lib/i18n'
+import { BENIDORM_IMAGES, IMAGE_ALT } from '@/lib/images'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,7 +23,12 @@ export default async function CyprusPage({ params: { locale } }: Props) {
 
   return (
     <>
-      <Hero locale={locale} page="cyprus" />
+      <Hero
+        locale={locale}
+        page="cyprus"
+        bgImage={BENIDORM_IMAGES.banners.cyprus_page}
+        bgAlt={IMAGE_ALT.cyprus_destination}
+      />
       <PropertiesGrid
         properties={properties}
         locale={locale}

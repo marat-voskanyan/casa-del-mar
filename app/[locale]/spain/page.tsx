@@ -5,6 +5,7 @@ import Hero from '@/components/home/Hero'
 import PropertiesGrid from '@/components/properties/PropertiesGrid'
 import BenidormSection from '@/components/spain/BenidormSection'
 import { getT } from '@/lib/i18n'
+import { BENIDORM_IMAGES, IMAGE_ALT } from '@/lib/images'
 
 export const dynamic = 'force-dynamic'
 
@@ -26,7 +27,12 @@ export default async function SpainPage({ params: { locale } }: Props) {
 
   return (
     <>
-      <Hero locale={locale} page="spain" />
+      <Hero
+        locale={locale}
+        page="spain"
+        bgImage={BENIDORM_IMAGES.banners.spain_page}
+        bgAlt={IMAGE_ALT.benidorm_skyline}
+      />
       <BenidormSection locale={locale} />
       <PropertiesGrid
         properties={properties}

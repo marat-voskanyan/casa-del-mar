@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { Property, Locale } from '@/types'
 import { getT, formatPrice } from '@/lib/i18n'
+import { BENIDORM_IMAGES, IMAGE_ALT } from '@/lib/images'
 
 interface Props {
   property: Property
@@ -76,11 +77,18 @@ export default function PropertyCard({ property, locale, onQuickView }: Props) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-navy-800 to-navy-700 flex items-center justify-center">
-            <svg className="w-16 h-16 text-white/10" fill="none" stroke="currentColor" strokeWidth={1} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-            </svg>
-          </div>
+          <>
+            <Image
+              src={BENIDORM_IMAGES.property_fallback}
+              alt={IMAGE_ALT.property_fallback}
+              fill
+              loading="lazy"
+              quality={70}
+              className="object-cover opacity-60"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+            <div className="absolute inset-0 bg-navy/40" />
+          </>
         )}
 
         {/* Gradient overlay */}
