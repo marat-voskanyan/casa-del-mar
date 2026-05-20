@@ -9,6 +9,8 @@ import PropertyMap from '@/components/properties/PropertyMap'
 import SimilarProperties from '@/components/properties/SimilarProperties'
 import ShareButtonClient from './ShareButtonClient'
 
+export const dynamic = 'force-dynamic'
+
 interface Props { params: { locale: Locale; id: string } }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

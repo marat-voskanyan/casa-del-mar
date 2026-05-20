@@ -5,6 +5,8 @@ import Hero from '@/components/home/Hero'
 import PropertiesGrid from '@/components/properties/PropertiesGrid'
 import { getT } from '@/lib/i18n'
 
+export const dynamic = 'force-dynamic'
+
 interface Props { params: { locale: Locale } }
 
 export const metadata: Metadata = { title: 'Cyprus Properties' }

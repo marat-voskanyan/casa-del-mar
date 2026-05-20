@@ -7,9 +7,9 @@ import RevealObserver from '@/components/layout/RevealObserver'
 
 const LOCALES: Locale[] = ['en', 'ru', 'hy']
 
-export async function generateStaticParams() {
-  return LOCALES.map(locale => ({ locale }))
-}
+// Force dynamic rendering so new DB data (properties) is always fetched fresh.
+// The [locale] layout still validates locale params at runtime.
+export const dynamic = 'force-dynamic'
 
 interface Props {
   children: React.ReactNode

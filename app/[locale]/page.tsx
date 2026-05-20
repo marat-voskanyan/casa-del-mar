@@ -9,6 +9,9 @@ import AboutServices from '@/components/home/AboutServices'
 import Testimonials from '@/components/home/Testimonials'
 import ContactStrip from '@/components/home/ContactStrip'
 
+// Force server-render on every request so new properties appear immediately
+export const dynamic = 'force-dynamic'
+
 interface Props { params: { locale: Locale } }
 
 export const metadata: Metadata = {

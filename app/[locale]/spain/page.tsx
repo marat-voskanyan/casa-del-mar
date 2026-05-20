@@ -6,6 +6,8 @@ import PropertiesGrid from '@/components/properties/PropertiesGrid'
 import BenidormSection from '@/components/spain/BenidormSection'
 import { getT } from '@/lib/i18n'
 
+export const dynamic = 'force-dynamic'
+
 interface Props { params: { locale: Locale } }
 
 export const metadata: Metadata = {
