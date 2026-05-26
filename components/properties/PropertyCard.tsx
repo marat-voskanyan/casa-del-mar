@@ -63,8 +63,10 @@ function HeartButton({ id }: { id: number }) {
 export default function PropertyCard({ property, locale, onQuickView }: Props) {
   const t = getT(locale)
   const image = property.images?.[0] || null
+  const href = `/${locale}/properties/${property.id}`
 
   return (
+    <Link href={href} className="block cursor-pointer">
     <article className="group relative bg-white shadow-card hover:shadow-card-hover hover:-translate-y-1.5 transition-all duration-400 overflow-hidden">
       {/* Image */}
       <div className="relative aspect-[4/3] bg-navy-100 overflow-hidden">
@@ -124,7 +126,7 @@ export default function PropertyCard({ property, locale, onQuickView }: Props) {
         {onQuickView && (
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <button
-              onClick={e => { e.preventDefault(); onQuickView(property) }}
+              onClick={e => { e.preventDefault(); e.stopPropagation(); onQuickView(property) }}
               className="bg-white/10 backdrop-blur-sm border border-white/30 text-white font-accent text-[10px] tracking-[0.2em] uppercase px-5 py-2.5 hover:bg-white/20 transition-all duration-200"
             >
               {t.property.quickView}
@@ -178,20 +180,18 @@ export default function PropertyCard({ property, locale, onQuickView }: Props) {
         </div>
       </div>
 
-      {/* Footer CTA */}
+      {/* Footer CTA — styled as button, navigation handled by outer Link */}
       <div className="px-5 pb-5">
-        <Link
-          href={`/${locale}/properties/${property.id}`}
-          className="flex items-center justify-between w-full border border-sand-300 px-4 py-2.5 hover:border-gold hover:bg-gold/5 transition-all duration-200 group/cta"
-        >
-          <span className="font-accent text-[10px] tracking-[0.2em] uppercase text-navy/60 group-hover/cta:text-gold transition-colors">
+        <div className="flex items-center justify-between w-full border border-sand-300 px-4 py-2.5 group-hover:border-gold group-hover:bg-gold/5 transition-all duration-200">
+          <span className="font-accent text-[10px] tracking-[0.2em] uppercase text-navy/60 group-hover:text-gold transition-colors">
             {t.property.viewDetails}
           </span>
-          <svg className="w-4 h-4 text-gold group-hover/cta:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-gold group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
           </svg>
-        </Link>
+        </div>
       </div>
     </article>
+    </Link>
   )
 }
