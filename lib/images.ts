@@ -1,8 +1,8 @@
 /**
  * Casa del Mar — Real Benidorm Photo Library
  *
- * All images are real photos of Benidorm uploaded by the client.
- * Stored in /public/images/
+ * All Spain/Benidorm images are real client photos stored in /public/images/
+ * Cyprus images use Unsplash until real Cyprus photos are provided.
  */
 
 // Local helper — returns a root-relative path served by Next.js static file handler
@@ -22,62 +22,77 @@ export const BENIDORM_IMAGES = {
   // ── Section images (below fold) ─────────────────────────────────────────────
   sections: {
     /** Benidorm city overview */
-    about_benidorm:     L('benidorm-skyline-1.jpg'),       // clean name ✓
+    about_benidorm:     L('benidorm.jpg'),
     /** Playa de Levante — east-facing 1.9 km golden beach */
-    levante_beach:      L('benidorm-levante-2.jpg'),       // clean name ✓
+    levante_beach:      L('benidorm-levante-2.jpg'),
     /** Playa de Poniente — west-facing 3 km beach, sunsets */
-    poniente_beach:     L('benidorm-poniente-1.jpg'),      // clean name ✓
-    /** La Cala area — heart of Benidorm */
-    la_cala_apartments: L('benidorm-lacala-1.jpg'),        // clean name ✓
-    /** View from apartment — sea view */
-    la_cala_pool:       L('view-from-apartment.jpg'),      // needs rename script
+    poniente_beach:     L('poniente-beach.jpg'),
     /** Poniente beach with palm trees */
-    getting_there:      L('poniente-beach-palmas.jpg'),    // needs rename script
+    poniente_palms:     L('poniente-beach-palmas.jpg'),
+    /** La Cala area — heart of Benidorm */
+    la_cala_section:    L('benidorm-lacala-1.jpg'),
+    /** La Cala beach */
+    la_cala_beach:      L('la-cala-beach.jpg'),
+    /** La Cala pool / apartments */
+    la_cala_pool:       L('la-cala.jpg'),
+    /** View from apartment — sea view */
+    view_from_apartment: L('view-from-apartment.jpg'),
+    /** Benidorm tallest residential tower */
+    tallest_building:   L('tallest-building.jpg'),
+    /** Getting there / transport */
+    getting_there:      L('poniente-beach-palmas.jpg'),
+    /** La Cala apartments (legacy alias) */
+    la_cala_apartments: L('benidorm-lacala-1.jpg'),
   },
 
   // ── Page banners ─────────────────────────────────────────────────────────────
   banners: {
     /** Spain listing page hero — Benidorm skyline panorama */
-    spain_page:    L('benidorm-skyline-1.jpg'),            // clean name ✓
+    spain_page:    L('benidorm-skyline-1.jpg'),
     /** Benidorm guide page — aerial coastal view */
-    benidorm_page: L('benidorm-aerial-1.jpg'),             // clean name ✓
-    /** Cyprus listing page — keep Unsplash until Cyprus photos are uploaded */
+    benidorm_page: L('benidorm-aerial-1.jpg'),
+    /** Cyprus listing page — Unsplash until Cyprus photos are uploaded */
     cyprus_page:   'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=1400&q=85&fit=crop&auto=format',
   },
 
   // ── Destination / feature cards ───────────────────────────────────────────────
   cards: {
-    /** Spain destination card */
-    spain_destination:   L('benidorm-skyline-1.jpg'),      // clean name ✓
-    /** Cyprus destination card — keep Unsplash until Cyprus photos are uploaded */
-    cyprus_destination:  'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&q=85&fit=crop&auto=format',
+    /** Spain destination card — Poniente beach */
+    spain_destination:  L('benidorm-poniente-1.jpg'),
+    /** Cyprus destination card — Unsplash until Cyprus photos are uploaded */
+    cyprus_destination: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&q=85&fit=crop&auto=format',
     /** Altea Hills card — Benidorm tallest residential tower */
-    altea_hills:         L('tallest-building.jpg'),        // needs rename script
+    altea_hills:        L('tallest-building.jpg'),
     /** Finestrat card — Poniente beach view */
-    finestrat:           L('benidorm-poniente-2.jpg'),     // clean name ✓
+    finestrat:          L('benidorm-poniente-2.jpg'),
     /** Villa / apartment with sea view */
-    villa_pool:          L('view-from-apartment.jpg'),     // needs rename script
+    villa_pool:         L('view-from-apartment.jpg'),
   },
 
   // ── Fallback when a property has no uploaded image ────────────────────────────
   /** La Cala — shown when property has no photos */
-  property_fallback: L('benidorm-lacala-1.jpg'),           // clean name ✓
+  property_fallback: L('la-cala.jpg'),
 } as const
 
 // ── Alt text map — SEO friendly descriptions ──────────────────────────────
 export const IMAGE_ALT = {
-  benidorm_skyline:    'Benidorm skyline with iconic high-rise apartments, Costa Blanca, Spain',
-  benidorm_beach:      'Playa de Levante, Benidorm — golden sandy beach with Mediterranean sea',
-  benidorm_aerial:     'Aerial view of Benidorm city and coastline, Alicante province, Spain',
-  about_benidorm:      'Benidorm city overview, Costa Blanca, Spain',
-  levante_beach:       "Playa de Levante, Benidorm's famous eastern beach, 1.9km of golden sand",
-  poniente_beach:      "Playa de Poniente, Benidorm's western beach, Costa Blanca, Spain",
-  la_cala_apartments:  'La Cala area, heart of Benidorm — popular for apartment purchases',
-  la_cala_pool:        'Sea view from apartment in Benidorm, Costa Blanca, Spain',
-  getting_there:       'Poniente beach with palm trees, Benidorm, Costa Blanca',
-  spain_destination:   'Benidorm skyline and coastline, Costa Blanca, Spain',
-  cyprus_destination:  'Mediterranean coastline of Cyprus',
-  altea_hills:         'Benidorm tallest residential tower, Costa Blanca Spain',
-  finestrat:           'Poniente beach view near Benidorm, Costa Blanca, Spain',
-  property_fallback:   'La Cala beach, Benidorm, Costa Blanca, Spain',
+  benidorm_skyline:     'Benidorm skyline with iconic high-rise apartments, Costa Blanca, Spain',
+  benidorm_beach:       'Playa de Levante, Benidorm — golden sandy beach with Mediterranean sea',
+  benidorm_aerial:      'Aerial view of Benidorm city and coastline, Alicante province, Spain',
+  about_benidorm:       'Benidorm city overview, Costa Blanca, Spain',
+  levante_beach:        "Playa de Levante, Benidorm's famous eastern beach, 1.9km of golden sand",
+  poniente_beach:       "Playa de Poniente, Benidorm's western beach, Costa Blanca, Spain",
+  poniente_palms:       'Poniente beach with palm trees, Benidorm, Costa Blanca',
+  la_cala_section:      'La Cala area, heart of Benidorm — popular for apartment purchases',
+  la_cala_beach:        'La Cala beach, Benidorm, Costa Blanca, Spain',
+  la_cala_pool:         'La Cala apartments and pool, Benidorm, Costa Blanca, Spain',
+  view_from_apartment:  'Sea view from apartment in Benidorm, Costa Blanca, Spain',
+  tallest_building:     'Benidorm tallest residential tower, Costa Blanca, Spain',
+  la_cala_apartments:   'La Cala area, heart of Benidorm — popular for apartment purchases',
+  getting_there:        'Poniente beach with palm trees, Benidorm, Costa Blanca',
+  spain_destination:    'Poniente beach, Benidorm, Costa Blanca, Spain',
+  cyprus_destination:   'Mediterranean coastline of Cyprus',
+  altea_hills:          'Benidorm tallest residential tower, Costa Blanca, Spain',
+  finestrat:            'Poniente beach view near Benidorm, Costa Blanca, Spain',
+  property_fallback:    'La Cala, Benidorm, Costa Blanca, Spain',
 } as const
