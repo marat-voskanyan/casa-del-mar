@@ -81,7 +81,7 @@ export default function Header({ locale }: Props) {
                 height={45}
                 width={180}
                 priority
-                className="h-[38px] md:h-[45px] w-auto object-contain"
+                className="h-[38px] md:h-[45px] w-auto object-contain brightness-0 invert"
               />
             </Link>
 
@@ -170,7 +170,7 @@ export default function Header({ locale }: Props) {
               alt="Casa del Mar International Real Estate"
               height={38}
               width={152}
-              className="h-[38px] w-auto object-contain"
+              className="h-[38px] w-auto object-contain brightness-0 invert"
             />
           </Link>
           <button
