@@ -4,7 +4,13 @@
 
 @layer base {
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-  body { @apply font-sans bg-sand text-dark antialiased; overflow-x: hidden; }
+  body {
+    @apply font-sans bg-sand text-dark antialiased;
+    overflow-x: hidden;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+      'Segoe UI Emoji', 'Segoe UI Symbol', 'Apple Color Emoji',
+      'Noto Color Emoji', 'Android Emoji', sans-serif;
+  }
   h1, h2, h3, h4, h5, h6 { @apply font-serif; }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
@@ -236,4 +242,22 @@
 @keyframes heroScrollBounce {
   0%, 100% { transform: translateY(0);   opacity: 1; }
   50%       { transform: translateY(8px); opacity: 0.5; }
+}
+
+/* ── Emoji font fallback ── */
+.emoji {
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+  font-style: normal;
+}
+
+/* ── WhatsApp button animations ── */
+@keyframes slideInRight {
+  from { transform: translateX(100px); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+@keyframes whatsappPulse {
+  0%   { box-shadow: 0 4px 20px rgba(37,211,102,0.40); }
+  50%  { box-shadow: 0 4px 35px rgba(37,211,102,0.70), 0 0 0 8px rgba(37,211,102,0.10); }
+  100% { box-shadow: 0 4px 20px rgba(37,211,102,0.40); }
 }

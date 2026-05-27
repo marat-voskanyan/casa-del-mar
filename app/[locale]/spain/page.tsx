@@ -4,6 +4,7 @@ import { getAllProperties } from '@/lib/db'
 import Hero from '@/components/home/Hero'
 import PropertiesGrid from '@/components/properties/PropertiesGrid'
 import BenidormSection from '@/components/spain/BenidormSection'
+import WhatsAppButton from '@/components/WhatsAppButton'
 import { getT } from '@/lib/i18n'
 import { BENIDORM_IMAGES, IMAGE_ALT } from '@/lib/images'
 
@@ -41,6 +42,7 @@ export default async function SpainPage({ params: { locale } }: Props) {
         flag="🇪🇸 España"
         subtitle={t.hero.spain.title}
       />
+      <WhatsAppButton locale={locale} />
     </>
   )
 }

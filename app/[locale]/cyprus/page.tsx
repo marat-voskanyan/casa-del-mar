@@ -3,6 +3,7 @@ import type { Locale, Property } from '@/types'
 import { getAllProperties } from '@/lib/db'
 import Hero from '@/components/home/Hero'
 import PropertiesGrid from '@/components/properties/PropertiesGrid'
+import WhatsAppButton from '@/components/WhatsAppButton'
 import { getT } from '@/lib/i18n'
 import { BENIDORM_IMAGES, IMAGE_ALT } from '@/lib/images'
 
@@ -36,6 +37,7 @@ export default async function CyprusPage({ params: { locale } }: Props) {
         flag="🇨🇾 Κύπρος"
         subtitle={t.hero.cyprus.title}
       />
+      <WhatsAppButton locale={locale} />
     </>
   )
 }

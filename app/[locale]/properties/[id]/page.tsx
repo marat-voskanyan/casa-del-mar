@@ -8,6 +8,7 @@ import PropertyGallery from '@/components/properties/PropertyGallery'
 import PropertyMap from '@/components/properties/PropertyMap'
 import SimilarProperties from '@/components/properties/SimilarProperties'
 import ShareButtonClient from './ShareButtonClient'
+import WhatsAppButton from '@/components/WhatsAppButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -217,6 +218,7 @@ export default async function PropertyDetailPage({ params: { locale, id } }: Pro
 
       {/* Similar properties */}
       <SimilarProperties properties={similar} locale={locale} />
+      <WhatsAppButton locale={locale} />
 
       {/* Mobile sticky bottom bar */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-navy border-t border-white/10 shadow-lg px-4 py-3 flex items-center gap-3">
