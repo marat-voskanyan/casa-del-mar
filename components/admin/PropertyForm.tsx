@@ -72,10 +72,59 @@ export default function PropertyForm({ initial, mode }: Props) {
   const [form, setForm] = useState<PropertyFormData>({ ...EMPTY, ...toForm(initial || {}) })
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
-  const [uploading, setUploading] = useState<number | null>(null) // slot index being uploaded
+  const [uploading, setUploading] = useState<number | null>(null)
   const [dragOver, setDragOver] = useState<number | null>(null)
   const [showMapPicker, setShowMapPicker] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // ── AI Description Generator ─────────────────────────────────────────────────
+  const [isGenerating,          setIsGenerating]          = useState(false)
+  const [generateError,         setGenerateError]         = useState('')
+  const [generateSuccess,       setGenerateSuccess]       = useState(false)
+  const [showRegenerateConfirm, setShowRegenerateConfirm] = useState(false)
+
+  async function handleGenerateDescriptions() {
+    if ((form.description_en || form.description_ru || form.description_hy) && !showRegenerateConfirm) {
+      setShowRegenerateConfirm(true)
+      return
+    }
+    setIsGenerating(true)
+    setGenerateError('')
+    setGenerateSuccess(false)
+    setShowRegenerateConfirm(false)
+    try {
+      const res = await fetch('/api/admin/generate-description', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({
+          name:      form.name,
+          location:  form.location,
+          price:     form.price,
+          bedrooms:  form.bedrooms,
+          bathrooms: form.bathrooms,
+          floor:     form.floor,
+          size:      form.size_sqm,
+          parking:   form.parking,
+          status:    form.status,
+          features:  form.features_en ? form.features_en.split('\n').filter(Boolean) : [],
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Generation failed')
+      setForm(prev => ({
+        ...prev,
+        description_en: data.descriptions.en,
+        description_ru: data.descriptions.ru,
+        description_hy: data.descriptions.hy,
+      }))
+      setGenerateSuccess(true)
+      setTimeout(() => setGenerateSuccess(false), 5000)
+    } catch (err) {
+      setGenerateError(err instanceof Error ? err.message : 'Generation failed')
+    } finally {
+      setIsGenerating(false)
+    }
+  }
 
   function setField<K extends keyof PropertyFormData>(key: K, value: PropertyFormData[K]) {
     setForm(prev => ({ ...prev, [key]: value }))
@@ -358,7 +407,79 @@ export default function PropertyForm({ initial, mode }: Props) {
       {/* ─── Description ─── */}
       {tab === 'Description' && (
         <div className="space-y-8">
-          <div className="space-y-5">
+
+          {/* ── AI Generator ── */}
+          <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <h3 className="font-semibold text-gray-800 text-sm">✨ AI Description Writer</h3>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Generates professional descriptions in English, Russian and Armenian
+                </p>
+              </div>
+
+              {showRegenerateConfirm ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-amber-700">Replace existing?</span>
+                  <button
+                    type="button"
+                    onClick={handleGenerateDescriptions}
+                    className="px-3 py-1.5 bg-amber-500 text-white text-xs rounded hover:bg-amber-600 transition-colors"
+                  >
+                    Yes, replace
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowRegenerateConfirm(false)}
+                    className="px-3 py-1.5 bg-gray-200 text-gray-700 text-xs rounded hover:bg-gray-300 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleGenerateDescriptions}
+                  disabled={isGenerating || !form.name || !form.location || !form.price || !form.bedrooms}
+                  title={
+                    !form.name || !form.location || !form.price || !form.bedrooms
+                      ? 'Fill in name, location, price and bedrooms first'
+                      : 'Generate AI descriptions'
+                  }
+                  className="flex items-center gap-2 px-4 py-2 bg-[#C9A84C] text-[#0D1F2D] font-semibold text-sm rounded hover:bg-[#E0C99A] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                  {isGenerating ? (
+                    <>
+                      <span className="inline-block animate-spin">⟳</span>
+                      Generating…
+                    </>
+                  ) : (
+                    '✨ Generate with AI'
+                  )}
+                </button>
+              )}
+            </div>
+
+            {generateSuccess && (
+              <div className="p-2 bg-green-50 border border-green-200 rounded text-green-700 text-xs">
+                ✅ Descriptions generated! Review and edit before saving.
+              </div>
+            )}
+            {generateError && (
+              <div className="p-2 bg-red-50 border border-red-200 rounded text-red-700 text-xs">
+                ❌ {generateError}
+              </div>
+            )}
+          </div>
+
+          <div className="relative space-y-5">
+            {isGenerating && (
+              <div className="absolute inset-0 bg-amber-50/70 rounded-lg flex items-center justify-center z-10">
+                <div className="text-amber-700 text-sm animate-pulse font-medium">
+                  ✨ AI is writing your descriptions…
+                </div>
+              </div>
+            )}
             <h3 className="font-sans text-sm font-semibold text-gray-700 border-b border-gray-200 pb-2">Descriptions</h3>
             {[
               { key: 'description_en' as const, label: '🇬🇧 English', placeholder: 'Describe the property in English…' },
@@ -376,7 +497,7 @@ export default function PropertyForm({ initial, mode }: Props) {
                 />
               </div>
             ))}
-          </div>
+          </div>{/* end relative space-y-5 wrapper */}
 
           <div className="space-y-5">
             <div>
@@ -409,7 +530,7 @@ export default function PropertyForm({ initial, mode }: Props) {
           <div className="flex items-start justify-between">
             <div>
               <p className="font-sans text-sm text-gray-600">Upload up to {MAX_IMAGES} images. Drag to reorder — first image is the cover.</p>
-              <p className="font-sans text-xs text-gray-400 mt-1">JPEG · PNG · WebP · max 10 MB each</p>
+              <p className="font-sans text-xs text-gray-400 mt-1">JPG · PNG · WebP · AVIF · max 10 MB each</p>
             </div>
             {form.images.length < MAX_IMAGES && (
               <button
@@ -429,7 +550,7 @@ export default function PropertyForm({ initial, mode }: Props) {
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/jpeg,image/png,image/webp"
+            accept="image/jpeg,image/jpg,image/png,image/webp,image/avif"
             multiple
             className="hidden"
             onChange={async e => {

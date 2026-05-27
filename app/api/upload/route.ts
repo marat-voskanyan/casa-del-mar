@@ -8,7 +8,7 @@ import fs from 'fs'
 export const runtime = 'nodejs'
 
 const MAX_SIZE = 10 * 1024 * 1024 // 10 MB
-const ALLOWED  = ['image/jpeg', 'image/png', 'image/webp']
+const ALLOWED  = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/avif']
 
 export async function POST(request: Request) {
   // Auth check
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     if (!file) return NextResponse.json({ error: 'No file provided' }, { status: 400 })
 
     if (!ALLOWED.includes(file.type)) {
-      return NextResponse.json({ error: 'Only JPEG, PNG and WebP are allowed' }, { status: 400 })
+      return NextResponse.json({ error: 'Accepted formats: JPG, PNG, WebP, AVIF. Max size: 10MB' }, { status: 400 })
     }
     if (file.size > MAX_SIZE) {
       return NextResponse.json({ error: 'File too large (max 10 MB)' }, { status: 400 })
