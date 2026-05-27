@@ -13,7 +13,7 @@ interface Props {
 const LOCALES: { code: Locale; label: string }[] = [
   { code: 'en', label: 'EN' },
   { code: 'ru', label: 'RU' },
-  { code: 'hy', label: 'HY' },
+  { code: 'hy', label: 'AM' },
 ]
 
 export default function Header({ locale }: Props) {
