@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import type { Locale } from '@/types'
 import { getT } from '@/lib/i18n'
@@ -73,13 +74,15 @@ export default function Header({ locale }: Props) {
           <div className="flex items-center justify-between h-16 md:h-24">
 
             {/* Logo */}
-            <Link href={`/${locale}`} className="flex flex-col leading-none shrink-0">
-              <span className="font-serif text-xl md:text-2xl font-normal text-white tracking-wide">
-                Casa del Mar
-              </span>
-              <span className="font-accent text-[9px] tracking-[0.35em] uppercase text-gold/80 mt-0.5">
-                International Real Estate
-              </span>
+            <Link href={`/${locale}`} className="flex items-center shrink-0">
+              <Image
+                src="/logo.png"
+                alt="Casa del Mar International Real Estate"
+                height={45}
+                width={180}
+                priority
+                className="h-[38px] md:h-[45px] w-auto object-contain"
+              />
             </Link>
 
             {/* Desktop nav */}
@@ -161,11 +164,14 @@ export default function Header({ locale }: Props) {
       >
         {/* Top bar */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
-          <Link href={`/${locale}`} onClick={() => setMenuOpen(false)} className="flex flex-col leading-none">
-            <span className="font-serif text-xl font-normal text-white tracking-wide">Casa del Mar</span>
-            <span className="font-accent text-[9px] tracking-[0.35em] uppercase text-gold/80 mt-0.5">
-              International Real Estate
-            </span>
+          <Link href={`/${locale}`} onClick={() => setMenuOpen(false)} className="flex items-center">
+            <Image
+              src="/logo.png"
+              alt="Casa del Mar International Real Estate"
+              height={38}
+              width={152}
+              className="h-[38px] w-auto object-contain"
+            />
           </Link>
           <button
             onClick={() => setMenuOpen(false)}

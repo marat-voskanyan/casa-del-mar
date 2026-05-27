@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 export default function AdminLoginPage() {
   const router = useRouter()
@@ -44,9 +45,16 @@ export default function AdminLoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-navy p-4">
       <div className="w-full max-w-sm">
         {/* Logo */}
-        <div className="text-center mb-10">
-          <p className="font-serif text-3xl font-light text-white tracking-wide">Casa del Mar</p>
-          <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-gold mt-1">Admin Panel</p>
+        <div className="flex flex-col items-center mb-10 gap-3">
+          <Image
+            src="/logo.png"
+            alt="Casa del Mar"
+            height={60}
+            width={240}
+            className="h-[60px] w-auto object-contain"
+            priority
+          />
+          <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-gold">Admin Panel</p>
         </div>
 
         <form onSubmit={onSubmit} className="bg-white p-8 shadow-2xl">

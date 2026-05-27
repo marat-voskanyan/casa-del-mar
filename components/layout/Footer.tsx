@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import type { Locale } from '@/types'
 import { getT } from '@/lib/i18n'
 
@@ -26,10 +27,13 @@ export default function Footer({ locale }: { locale: Locale }) {
           {/* Brand */}
           <div className="lg:col-span-1">
             <div className="mb-5">
-              <p className="font-serif text-2xl font-normal text-white tracking-wide">Casa del Mar</p>
-              <p className="font-accent text-[9px] tracking-[0.35em] uppercase text-gold/80 mt-1">
-                International Real Estate
-              </p>
+              <Image
+                src="/logo.png"
+                alt="Casa del Mar"
+                height={40}
+                width={160}
+                className="h-[40px] w-auto object-contain"
+              />
             </div>
             <div className="w-10 h-px bg-gold mb-5" />
             <p className="font-sans text-sm leading-relaxed text-white/55">{t.footer.desc}</p>

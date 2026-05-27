@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -65,16 +66,22 @@ export default function AdminNav() {
     <>
       {/* Desktop sidebar */}
       <aside className="hidden md:flex w-60 bg-navy min-h-screen flex-col shrink-0">
-        <div className="px-6 py-7 border-b border-white/10">
-          <p className="font-serif text-xl font-light text-white tracking-wide">Casa del Mar</p>
-          <p className="font-sans text-[9px] tracking-[0.3em] uppercase text-gold mt-0.5">Admin</p>
+        <div className="px-6 py-5 border-b border-white/10 flex flex-col gap-1.5">
+          <Image
+            src="/logo.png"
+            alt="Casa del Mar"
+            height={40}
+            width={160}
+            className="h-[40px] w-auto object-contain"
+          />
+          <p className="font-sans text-[9px] tracking-[0.3em] uppercase text-gold">Admin</p>
         </div>
         <NavLinks />
       </aside>
 
       {/* Mobile top bar */}
       <div className="md:hidden bg-navy text-white flex items-center justify-between px-4 py-3 fixed top-0 left-0 right-0 z-40 shadow-lg">
-        <p className="font-serif text-lg font-light tracking-wide">Casa del Mar</p>
+        <Image src="/logo.png" alt="Casa del Mar" height={32} width={128} className="h-[32px] w-auto object-contain" />
         <button
           onClick={() => setMenuOpen(v => !v)}
           className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors"
@@ -106,10 +113,10 @@ export default function AdminNav() {
           menuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="px-6 py-7 border-b border-white/10 flex items-center justify-between">
-          <div>
-            <p className="font-serif text-xl font-light text-white tracking-wide">Casa del Mar</p>
-            <p className="font-sans text-[9px] tracking-[0.3em] uppercase text-gold mt-0.5">Admin</p>
+        <div className="px-6 py-5 border-b border-white/10 flex items-center justify-between">
+          <div className="flex flex-col gap-1">
+            <Image src="/logo.png" alt="Casa del Mar" height={36} width={144} className="h-[36px] w-auto object-contain" />
+            <p className="font-sans text-[9px] tracking-[0.3em] uppercase text-gold">Admin</p>
           </div>
           <button
             onClick={() => setMenuOpen(false)}
