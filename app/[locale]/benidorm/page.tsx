@@ -15,12 +15,12 @@ export function generateMetadata({ params }: Props): Metadata {
     title: isRu
       ? 'Недвижимость в Бенидорме — Гид по Ла Кала | Casa del Mar'
       : isHy
-        ? 'Բ. Գ. La Cala | Casa del Mar'
+        ? 'Բենիդորմ — Գույք La Cala թաղամասում | Casa del Mar'
         : 'Benidorm Property Guide — La Cala Apartments | Casa del Mar',
     description: isRu
       ? 'Полный гид по покупке недвижимости в Бенидорме, Испания. Район Ла Кала — современные апартаменты 2008–2015 г.п. с бассейнами и теннисными кортами. Консультация из Еревана.'
       : isHy
-        ? 'Բ. գ. La Cala ա. 2008–2015 բ. հ. թ. կ. Casa del Mar.'
+        ? 'Բենիդորմի գույքի ամբողջական ուղեցույց։ La Cala-ի ժամանակակից բնակարաններ 2008–2015 թթ., լողավազաններով և թենիսի կորտերով։ Անվճար խորհրդատվություն Երևանից։'
         : 'Complete guide to buying property in Benidorm, Spain. La Cala modern apartments (2008–2015) with pools & tennis courts. Free consultation from Yerevan.',
   }
 }
@@ -48,12 +48,12 @@ const LA_CALA_TIMELINE_RU = [
   { year: 'Сегодня', text: 'Самый востребованный район для международных покупателей' },
 ]
 const LA_CALA_TIMELINE_HY = [
-  { year: '2005', text: 'La Cala-ի կ.' },
-  { year: '2008', text: 'Ա. բ. ա.' },
-  { year: '2010', text: 'Կ. ա. բ.' },
-  { year: '2012', text: 'La Cala — ա. թ.' },
-  { year: '2015', text: 'Ա. բ. ա.' },
-  { year: 'Այ.', text: 'Մ. ն. ա. գ.' },
+  { year: '2005', text: 'La Cala-ի շինարարությունն սկսվեց' },
+  { year: '2008', text: 'Առաջին բնակելի շենքերն ավարտվեցին' },
+  { year: '2010', text: 'Կոմերցիոն գոտու բացում' },
+  { year: '2012', text: 'La Cala-ն ճանաչվեց որպես հեղինակավոր թաղամաս' },
+  { year: '2015', text: 'Վերջին շենքերն ավարտվեցին — թաղամասն ամբողջությամբ կառուցվեց' },
+  { year: 'Այժմ', text: 'Ամենապահանջված թաղամասն է միջազգային գնորդների շրջանում' },
 ]
 
 export default function BenidormPage({ params: { locale } }: Props) {
@@ -78,9 +78,9 @@ export default function BenidormPage({ params: { locale } }: Props) {
   const quickFacts = [
     { icon: '🌞', value: '320+', label: isRu ? 'Солнечных дней' : isHy ? 'Արևային օր' : 'Sunny Days' },
     { icon: '🏖️', value: '2',   label: isRu ? 'Пляжа' : isHy ? 'Լողափ' : 'Famous Beaches' },
-    { icon: '✈️', value: '60km', label: isRu ? 'До аэропорта' : isHy ? 'Ա. օ/կ' : 'To Airport' },
-    { icon: '🌡️', value: '20°C', label: isRu ? 'Средняя темп.' : isHy ? 'Ջ. °C' : 'Avg Temperature' },
-    { icon: '🏙️', value: '1960s', label: isRu ? 'Курорт с' : isHy ? 'Կ. հ.' : 'Resort Since' },
+    { icon: '✈️', value: '60km', label: isRu ? 'До аэропорта' : isHy ? 'Օդանավակայան' : 'To Airport' },
+    { icon: '🌡️', value: '20°C', label: isRu ? 'Средняя темп.' : isHy ? 'Միջ. ջերմաստ.' : 'Avg Temperature' },
+    { icon: '🏙️', value: '1960s', label: isRu ? 'Курорт с' : isHy ? 'Հանգստավայր' : 'Resort Since' },
   ]
 
   const districts = isRu ? [
@@ -92,13 +92,13 @@ export default function BenidormPage({ params: { locale } }: Props) {
     { name: 'Altea Hills',    tag: 'Элитное жильё',        bullets: ['15 км от Бенидорма', 'Закрытый посёлок', 'Роскошные виллы', 'Самый престижный адрес'] },
     { name: 'Finestrat',      tag: 'Новый и растущий',     bullets: ['5 км от Бенидорма', 'Новостройки', 'Горный пейзаж', 'Лучшее соотношение цены'] },
   ] : [
-    { name: 'La Cala',        tag: isHy ? 'Ժ. ս.' : "Benidorm's Modern Heart",   bullets: isHy ? ['2008–2015 կ.','Բ. +թ. կ.','Poniente ծ.','Casa del Mar'] : ['Built 2008–2015, all modern','Pool & tennis in every complex','Next to Poniente beach','Most Casa del Mar properties here'] },
-    { name: 'Levante',        tag: isHy ? 'Կ. ա.' : 'The Lively East',            bullets: isHy ? ['1.9 կ.','Բ. ն/տ.','Վ/կ. ե.','Ա. ժ.'] : ['Longest beach (1.9km)','Highest tourist density','Best short-term rental yields','Most vibrant nightlife & dining'] },
-    { name: 'Poniente',       tag: isHy ? 'Հ. ա.' : 'The Peaceful West',          bullets: isHy ? ['3 կ.','Ա. ա.','Ու. ե.','Բ/կ. մ.'] : ['3km of golden sand','Stunning sunset views','Preferred by families','More residential atmosphere'] },
-    { name: 'Vila Park',      tag: isHy ? 'Կ. ե.' : 'Established & Reliable',    bullets: isHy ? ['Ա. բ. ա.','Ե. ե.','Կ. հ.','Ե. գ.'] : ['Popular residential complex','Good facilities','Well-established community','Excellent value'] },
-    { name: 'Sierra Cortina', tag: isHy ? 'Բ. հ.' : 'Hillside Prestige',         bullets: isHy ? ['Բ. դ.','Հ., ա.','Ե. ե. ս.','Ա. գ.'] : ['Elevated position with views','Quiet and prestigious','Mountain & sea panoramas','Premium properties'] },
-    { name: 'Altea Hills',    tag: isHy ? 'Ե. կ.' : 'Elite Living',              bullets: isHy ? ['15 կ.','Ե. փ. հ.','Շ. վ.','Ա. հ.'] : ['15km north of Benidorm','Exclusive gated community','Luxury villas & penthouses','Most prestigious address'] },
-    { name: 'Finestrat',      tag: isHy ? 'Ն. ե.' : 'New & Growing',             bullets: isHy ? ['5 կ.','Ն. կ.','Լ. ն.','Ե. գ.'] : ['5km from Benidorm','Brand new developments','Mountain backdrop','Best value for new-builds'] },
+    { name: 'La Cala',        tag: isHy ? 'Ժամանակակից սիրտ'     : "Benidorm's Modern Heart",   bullets: isHy ? ['Կառուցված 2008–2015 թթ.', 'Լողավազան և թենիս յուր. համ.', 'Poniente լողափի կողքին', 'Casa del Mar-ի գույքերի մեծ մասը'] : ['Built 2008–2015, all modern','Pool & tennis in every complex','Next to Poniente beach','Most Casa del Mar properties here'] },
+    { name: 'Levante',        tag: isHy ? 'Կենդանի արևելք'        : 'The Lively East',            bullets: isHy ? ['Ամենաերկար լողափ (1.9 կմ)', 'Ամենաբարձր զբոսաշրջային խտությունը', 'Լավագույն կարճաժամկետ վ/կ. եկամուտ', 'Ամենաактив գիշերային կյանք'] : ['Longest beach (1.9km)','Highest tourist density','Best short-term rental yields','Most vibrant nightlife & dining'] },
+    { name: 'Poniente',       tag: isHy ? 'Հանդարտ արևմուտք'      : 'The Peaceful West',          bullets: isHy ? ['3 կմ ոսկեգույն ավազ', 'Շքեղ մայրամուտի տեսարան', 'Ընտանիքների կողմից նախընտրվող', 'Ավելի բնակելի մթնոլորտ'] : ['3km of golden sand','Stunning sunset views','Preferred by families','More residential atmosphere'] },
+    { name: 'Vila Park',      tag: isHy ? 'Կայացած և հուսալի'     : 'Established & Reliable',    bullets: isHy ? ['Հայտնի բնակելի համալիր', 'Լավ ենթակառուցվածք', 'Կայացած համայնք', 'Գերազանց արժե-գին հարաբերություն'] : ['Popular residential complex','Good facilities','Well-established community','Excellent value'] },
+    { name: 'Sierra Cortina', tag: isHy ? 'Բլրային հեղինակություն': 'Hillside Prestige',         bullets: isHy ? ['Բարձրադիր դիրք', 'Հանգիստ և հեղինակավոր', 'Ծով-լեռ պանորամա', 'Պրեմիում գույքեր'] : ['Elevated position with views','Quiet and prestigious','Mountain & sea panoramas','Premium properties'] },
+    { name: 'Altea Hills',    tag: isHy ? 'Էլիտ կյանք'            : 'Elite Living',              bullets: isHy ? ['15 կմ Բենիդորմի հյուսիս', 'Փակ ու պահպանվող բնակ. համ.', 'Շքեղ վիլլաներ և պենտհաուսներ', 'Ամենահեղինակավոր հասցեն'] : ['15km north of Benidorm','Exclusive gated community','Luxury villas & penthouses','Most prestigious address'] },
+    { name: 'Finestrat',      tag: isHy ? 'Նոր և աճող'            : 'New & Growing',             bullets: isHy ? ['5 կմ Բենիդորմից', 'Նոր կառուցապատում', 'Լեռնային բնապատկեր', 'Լավագույն արժե-գին հարաբերությունը'] : ['5km from Benidorm','Brand new developments','Mountain backdrop','Best value for new-builds'] },
   ]
 
   const whyItems = Array.isArray(b.whyItems)
@@ -212,10 +212,10 @@ export default function BenidormPage({ params: { locale } }: Props) {
                   <p>Отличная инфраструктура включает больницы, международные школы, супермаркеты и общественный транспорт. Аэропорт Аликанте — всего 60 км.</p>
                   <p>Бенидорм — настоящий круглогодичный город с постоянным населением ~70 000 человек и миллионами туристов ежегодно.</p>
                 </> : isHy ? <>
-                  <p>Բ. Ի. ա. ծ. ք. Կ. Բ., Ա. ն. 320+ ա. ե. 20°C ջ. Ե. լ. կ.</p>
-                  <p>Ք. բ. ե. Հ. ծ. Levante (ա., ե. լ.) ե. Poniente (ա., հ.). La Cala-ն Poniente-ի ա. — Բ. ա. ժ. բ. թ.</p>
-                  <p>Ե/կ.: ժ. հ., մ. դ., ե. ս. Ա. (ALC) — 60 կ.</p>
-                  <p>Բ. ն. ~70,000 բ. ե. մ. ն. ն/տ.</p>
+                  <p>Բենիդորմը Իսպանիայի ամենահայտնի ծովափնյա քաղաքներից մեկն է, որը գտնվում է Կոստա Բլանկայում, Ալիկանտե նահանգում։ Տարեկան 320+ արևային օրով և 20°C միջին ջերմաստիճանով այն Եվրոպայի լավագույն կլիմայական վայրերից մեկն է։</p>
+                  <p>Քաղաքը բաժանված է պատմական ծայրամասով երկու լողափի. <strong className="text-navy">Playa de Levante</strong> (արևելք, ամենաերկարը) և <strong className="text-navy">Playa de Poniente</strong> (արևմուտք, ավելի հանգիստ)։ Poniente-ի կողքին գտնվում է <strong className="text-navy">La Cala</strong> — Բենիդորմի ամենաժամանակակից բնակելի թաղամասը։</p>
+                  <p>Բենիդորմի գերազանց ենթակառուցվածքը ներառում է ժամանակակից հիվանդանոցներ, միջազգային դպրոցներ, սուպերմարկետներ և հասարակական տրանսպորտ։ Ալիկանտե օդանավակայանը ընդամենը 60 կմ հեռավորության վրա է՝ Երևանից ուղիղ չվերթներով։</p>
+                  <p>Բենիդորմն ունի ~70,000 մշտական բնակիչ և ամեն տարի ընդունում է միլիոնավոր զբոսաշրջիկ՝ ապահովելով ամբողջ տարի կայուն վարձակալային եկամուտ։</p>
                 </> : <>
                   <p>Benidorm is one of Spain's most iconic coastal cities, located on the Costa Blanca in the Alicante province of southeast Spain. With over 320 sunny days per year and an average temperature of 20°C, it offers one of Europe's most enviable climates.</p>
                   <p>The city is divided by a historic headland into two beaches: <strong className="text-navy">Playa de Levante</strong> (east-facing, the longest and most lively) and <strong className="text-navy">Playa de Poniente</strong> (west-facing, calmer and more residential). To the west, beyond Poniente, lies <strong className="text-navy">La Cala</strong> — Benidorm's newest and most modern residential district.</p>
@@ -247,7 +247,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
               </div>
               <div className="mt-4 bg-sand p-5">
                 <p className="font-accent text-[10px] tracking-[0.25em] uppercase text-gold mb-1">
-                  {isRu ? 'Наши районы' : isHy ? 'Մ. թ.' : 'Our Areas'}
+                  {isRu ? 'Наши районы' : isHy ? 'Մեր թաղամասերը' : 'Our Areas'}
                 </p>
                 <p className="font-sans text-sm text-navy/70 leading-relaxed">{b.areas}</p>
               </div>
@@ -284,7 +284,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
                   <div>
                     <h3 className="font-serif text-xl text-navy">Playa de Levante</h3>
                     <p className="font-sans text-xs text-gold mt-0.5">
-                      {isRu ? 'Восточный пляж · 1.9 км' : isHy ? 'Ա. Լ. · 1.9 կ.' : 'East Beach · 1.9km'}
+                      {isRu ? 'Восточный пляж · 1.9 км' : isHy ? 'Արևելյան լողափ · 1.9 կմ' : 'East Beach · 1.9km'}
                     </p>
                   </div>
                 </div>
@@ -293,7 +293,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
                   {(isRu
                     ? ['1,9 км золотого песка', 'На восток, утреннее солнце', 'Активная атмосфера, водные виды спорта', 'Самая высокая туристическая плотность', 'Лучшие показатели краткосрочной аренды']
                     : isHy
-                    ? ['1.9 կ. ա. ա.', 'Ա., ա. ա.', 'Կ. մ., ջ. ս.', 'Ամ. ա. ն/տ.', 'Վ/կ. ե.']
+                    ? ['1.9 կմ ոսկե ավազ', 'Արևելյան, առավոտյան արև', 'Կենդ. մթնոլ., ջրային սպորտ', 'Ամ. բ. զբ. խտություն', 'Լ. կ/ժ. վ/կ. եկամուտ']
                     : ['1.9km of golden sand', 'East-facing, morning sun', 'Lively atmosphere, water sports', 'Highest tourist density in Benidorm', 'Best short-term rental yields']
                   ).map((item, i) => (
                     <li key={i} className="flex items-start gap-2">
@@ -303,7 +303,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
                   ))}
                 </ul>
                 <p className="mt-4 text-xs font-accent tracking-wide text-gold uppercase">
-                  {isRu ? 'Идеально для инвестиций в аренду' : isHy ? 'Ա. ն/ն.' : 'Most popular with tourists & investors'}
+                  {isRu ? 'Идеально для инвестиций в аренду' : isHy ? 'Ամ. տ. ն/ն-ի ու ն-ների' : 'Most popular with tourists & investors'}
                 </p>
               </div>
             </div>
@@ -327,7 +327,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
                   <div>
                     <h3 className="font-serif text-xl text-navy">Playa de Poniente</h3>
                     <p className="font-sans text-xs text-gold mt-0.5">
-                      {isRu ? 'Западный пляж · 3 км' : isHy ? 'Ա. Պ. · 3 կ.' : 'West Beach · 3km'}
+                      {isRu ? 'Западный пляж · 3 км' : isHy ? 'Արևմտյան լողափ · 3 կմ' : 'West Beach · 3km'}
                     </p>
                   </div>
                 </div>
@@ -336,7 +336,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
                   {(isRu
                     ? ['3 км золотого песка', 'На запад, захватывающие закаты', 'Спокойная, жилая атмосфера', 'Предпочитают семьи и долгосрочные жители', 'Рядом — современный район Ла Кала']
                     : isHy
-                    ? ['3 կ. ա. ա.', 'Ա., ա. ա.', 'Հ., բ/կ. մ.', 'Ու. ե. բ/կ.', 'La Cala — Ն.']
+                    ? ['3 կմ ոսկե ավազ', 'Արևմտյան, շքեղ մայրամուտ', 'Հանգիստ, բնակ. մթնոլ.', 'Ընտ. ու երկ. բ/կ. կողմ.', 'La Cala թ. — կողք-կողքի']
                     : ['3km of golden sand', 'West-facing, spectacular sunsets', 'Calmer, more residential atmosphere', 'Preferred by families & long-stay residents', 'La Cala district directly adjacent']
                   ).map((item, i) => (
                     <li key={i} className="flex items-start gap-2">
@@ -346,7 +346,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
                   ))}
                 </ul>
                 <p className="mt-4 text-xs font-accent tracking-wide text-gold uppercase">
-                  {isRu ? 'Предпочитают семьи и долгосрочные жители' : isHy ? 'Ու. ե. բ/կ.' : 'Preferred by families & long-term residents'}
+                  {isRu ? 'Предпочитают семьи и долгосрочные жители' : isHy ? 'Ն. ե. ընտ. ու երկ/ժ. բ/կ.' : 'Preferred by families & long-term residents'}
                 </p>
               </div>
             </div>
@@ -412,7 +412,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
               {/* Timeline */}
               <div className="space-y-0">
                 <p className="font-accent text-[10px] tracking-[0.3em] uppercase text-gold mb-4">
-                  {isRu ? 'История застройки' : isHy ? 'Կ. պ.' : 'Development Timeline'}
+                  {isRu ? 'История застройки' : isHy ? 'Կառուցման պատմություն' : 'Development Timeline'}
                 </p>
                 {timeline.map((item, i) => (
                   <div key={i} className="flex gap-4 group">
@@ -507,7 +507,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
                     href={`/${locale}/spain`}
                     className="mt-4 inline-flex font-accent text-[10px] tracking-widest uppercase text-gold hover:text-gold/70 transition-colors"
                   >
-                    {isRu ? 'Смотреть объекты →' : isHy ? 'Դ. գ. →' : 'View Properties →'}
+                    {isRu ? 'Смотреть объекты →' : isHy ? 'Դիտել գույքերը →' : 'View Properties →'}
                   </Link>
                 )}
               </div>
@@ -521,7 +521,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
         <div className="container-site">
           <div className="text-center mb-14 reveal">
             <p className="eyebrow text-gold mb-3">
-              {isRu ? 'Инвестиционный потенциал' : isHy ? 'Ն. Ն.' : 'Investment Case'}
+              {isRu ? 'Инвестиционный потенциал' : isHy ? 'Ներդրումային ներուժ' : 'Investment Case'}
             </p>
             <h2 className="section-title text-white mb-4">{b.why}</h2>
             <div className="gold-divider mx-auto" />
@@ -554,23 +554,23 @@ export default function BenidormPage({ params: { locale } }: Props) {
             {[
               {
                 icon: '✈️',
-                title: isRu ? 'На самолёте' : isHy ? 'Ա/կ-ով' : 'By Air',
+                title: isRu ? 'На самолёте' : isHy ? 'Ինքնաթիռով' : 'By Air',
                 desc:  isRu ? 'Аэропорт Аликанте (ALC) — 60 км, 45 мин. Ryanair, EasyJet, Vueling.'
-                             : isHy ? 'Ա. (ALC) — 60 կ., 45 ր. Ryanair, EasyJet.'
+                             : isHy ? 'Ալիկանտե օդ/կ (ALC) — 60 կմ, 45 ր. ավ/մ-ով։ Ryanair, EasyJet, Vueling.'
                              : 'Alicante Airport (ALC) — 60km, 45 min by car. Ryanair, EasyJet, Vueling and others.',
               },
               {
                 icon: '🚗',
-                title: isRu ? 'На машине' : isHy ? 'Մ/կ-ով' : 'By Car',
+                title: isRu ? 'На машине' : isHy ? 'Ավտոմեքենայով' : 'By Car',
                 desc:  isRu ? 'Из Аликанте — 50 км по AP-7. Из Валенсии — 120 км. Из Мадрида — 440 км.'
-                             : isHy ? 'Ա. կ-ից — 50 կ. AP-7-ով. Վ-ից — 120 կ.'
+                             : isHy ? 'Ալիկանտեից — 50 կմ AP-7 ճ-ով։ Վալ-ից — 120 կմ։ Մ-ից — 440 կմ։'
                              : 'From Alicante — 50km on the AP-7 motorway. From Valencia — 120km. From Madrid — 440km.',
               },
               {
                 icon: '🚌',
-                title: isRu ? 'На автобусе' : isHy ? 'Ա/բ-ով' : 'By Bus',
+                title: isRu ? 'На автобусе' : isHy ? 'Ավտոբուսով' : 'By Bus',
                 desc:  isRu ? 'Регулярные ALSA из Аликанте, Валенсии и Мадрида прямо до Бенидорма.'
-                             : isHy ? 'ALSA Ա., Վ. ե. Մ-ից Բ. կ.'
+                             : isHy ? 'ALSA ավ/բ-ներ Ալ-ից, Վ-ից ու Մ-ից — ուղ. Բ-որմ։'
                              : 'Regular ALSA bus services from Alicante, Valencia, and Madrid directly to Benidorm.',
               },
             ].map((item, i) => (
