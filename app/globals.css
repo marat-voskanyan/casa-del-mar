@@ -223,3 +223,17 @@
   from { transform: translateY(100%); opacity: 0; }
   to   { transform: translateY(0); opacity: 1; }
 }
+
+/* ── Hero: floating gold particles ── */
+@keyframes heroParticleFloat {
+  0%   { transform: translateY(0px);    opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(-120px); opacity: 0; }
+}
+
+/* ── Hero: scroll indicator bounce ── */
+@keyframes heroScrollBounce {
+  0%, 100% { transform: translateY(0);   opacity: 1; }
+  50%       { transform: translateY(8px); opacity: 0.5; }
+}
