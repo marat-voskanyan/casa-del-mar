@@ -102,7 +102,7 @@ export default function ContactPage({ params: { locale } }: Props) {
                       <span className="font-sans text-sm">{c.viewFacebook}</span>
                     </a>
                     <a
-                      href="https://www.instagram.com/casadelmar.am/"
+                      href="https://www.instagram.com/casadelmar_armenia/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 text-white/55 hover:text-gold transition-colors"

@@ -252,7 +252,7 @@ export default function Header({ locale }: Props) {
               Facebook
             </a>
             <a
-              href="https://www.instagram.com/casadelmar.am/"
+              href="https://www.instagram.com/casadelmar_armenia/"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 font-sans text-sm text-white/60 hover:text-gold transition-colors"

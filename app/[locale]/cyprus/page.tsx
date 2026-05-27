@@ -34,7 +34,7 @@ export default async function CyprusPage({ params: { locale } }: Props) {
         properties={properties}
         locale={locale}
         country="cyprus"
-        flag="🇨🇾 Κύπρος"
+        flag="Κύπρος"
         subtitle={t.hero.cyprus.title}
       />
       <WhatsAppButton locale={locale} />

@@ -67,7 +67,6 @@ export default function Destinations({ locale }: Props) {
               <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
                 <div className="flex items-end justify-between">
                   <div>
-                    <span className="text-3xl mb-3 block">{card.flag}</span>
                     <h3 className="font-serif text-3xl md:text-4xl font-light text-white mb-2 group-hover:text-gold transition-colors duration-300">
                       {card.title}
                     </h3>

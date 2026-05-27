@@ -31,7 +31,7 @@ Use this data everywhere — contact page, footer, about section, metadata:
 - **Email:** info@casadelmar.am
 - **Address:** 37 Mashtots Ave, Yerevan, Armenia
 - **Facebook:** https://www.facebook.com/Casadelmar.am
-- **Instagram:** https://www.instagram.com/casadelmar.am/
+- **Instagram:** https://www.instagram.com/casadelmar_armenia/
 - **WhatsApp:** https://wa.me/37444203008
 - **Website:** https://www.casadelmar.am
 

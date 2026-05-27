@@ -58,7 +58,7 @@ export default function Footer({ locale }: { locale: Locale }) {
                 </a>
                 {/* Instagram */}
                 <a
-                  href="https://www.instagram.com/casadelmar.am/"
+                  href="https://www.instagram.com/casadelmar_armenia/"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Instagram"

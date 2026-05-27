@@ -39,7 +39,7 @@ export default async function SpainPage({ params: { locale } }: Props) {
         properties={properties}
         locale={locale}
         country="spain"
-        flag="🇪🇸 España"
+        flag="España"
         subtitle={t.hero.spain.title}
       />
       <WhatsAppButton locale={locale} />

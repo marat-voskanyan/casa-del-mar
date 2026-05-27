@@ -36,10 +36,10 @@ export default function FeaturedProperties({ locale, properties }: Props) {
         <div className="text-center mt-12">
           <div className="flex justify-center gap-4">
             <Link href={`/${locale}/spain`} className="btn-outline">
-              🇪🇸 {t.nav.spain}
+              {t.nav.spain}
             </Link>
             <Link href={`/${locale}/cyprus`} className="btn-outline">
-              🇨🇾 {t.nav.cyprus}
+              {t.nav.cyprus}
             </Link>
           </div>
         </div>
