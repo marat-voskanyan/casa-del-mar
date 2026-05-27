@@ -108,8 +108,8 @@ export default function Hero({ locale, page = 'home', bgImage, bgAlt }: Props) {
       {isHome && (
         <div ref={imgWrapRef} className="absolute inset-0 z-0" style={{ top: '-10%', bottom: '-10%' }}>
           <Image
-            src="/images/benidorm-aerial-1.jpg"
-            alt="Benidorm aerial view, Costa Blanca Spain"
+            src="/images/view-from-apartment.jpg"
+            alt="Sea view from apartment in Benidorm, Costa Blanca Spain"
             fill
             priority
             quality={85}
