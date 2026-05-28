@@ -153,7 +153,7 @@ IMPORTANT: Return ONLY the JSON object. Start with { and end with }. No markdown
     const client = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
     const completion = await client.chat.completions.create({
-      model:           'llama3-8b-8192',
+      model:           'llama-3.1-8b-instant',
       max_tokens:      1400,
       temperature:     0.7,
       // response_format forces JSON output at API level (supported on this model)
