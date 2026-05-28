@@ -147,7 +147,13 @@ Property details:
 Write three descriptions using the instructions above.
 
 IMPORTANT: Return ONLY the JSON object. Start with { and end with }. No markdown, no backticks, no explanation.
-{"en":"...","ru":"...","hy":"..."}`
+You MUST use exactly these JSON keys:
+{
+  "en": "English description here",
+  "ru": "Russian description here",
+  "hy": "Armenian description here"
+}
+The keys must be exactly: en, ru, hy - nothing else.`
 
     // 7. Call Groq API — llama3-8b-8192 follows JSON instructions more reliably
     const client = new Groq({ apiKey: process.env.GROQ_API_KEY })
@@ -191,9 +197,9 @@ IMPORTANT: Return ONLY the JSON object. Start with { and end with }. No markdown
 
     const jsonStr = cleaned.slice(jsonStart, jsonEnd + 1)
 
-    let descriptions: { en: string; ru: string; hy: string }
+    let rawParsed: Record<string, string>
     try {
-      descriptions = JSON.parse(jsonStr)
+      rawParsed = JSON.parse(jsonStr)
     } catch (parseError) {
       console.error('JSON parse error:', parseError)
       console.error('Attempted to parse:', jsonStr)
@@ -203,9 +209,27 @@ IMPORTANT: Return ONLY the JSON object. Start with { and end with }. No markdown
       )
     }
 
-    // 9. Validate required keys
+    // 9. Log what the AI actually returned
+    console.log('AI returned fields:', Object.keys(rawParsed))
+
+    // 10. Normalize field names — handle any variation the model might use
+    const normalize = (obj: Record<string, string>) => ({
+      en: obj.en || obj.english || obj.English || obj.EN || obj['en-US'] || '',
+      ru: obj.ru || obj.russian || obj.Russian || obj.RU || obj.rus || '',
+      hy: obj.hy || obj.armenian || obj.Armenian || obj.HY || obj.am || obj.AM || obj.hyarmenian || '',
+    })
+
+    const descriptions = normalize(rawParsed)
+
+    console.log('Normalized:', {
+      en: descriptions.en?.slice(0, 50),
+      ru: descriptions.ru?.slice(0, 50),
+      hy: descriptions.hy?.slice(0, 50),
+    })
+
+    // 11. Validate all three fields are present after normalization
     if (!descriptions.en || !descriptions.ru || !descriptions.hy) {
-      console.error('Missing language keys in response:', Object.keys(descriptions))
+      console.error('Missing language keys after normalization. Raw keys:', Object.keys(rawParsed))
       return NextResponse.json(
         { error: 'AI response missing language fields (en/ru/hy). Please try again.' },
         { status: 500 }
