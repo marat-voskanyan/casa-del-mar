@@ -82,6 +82,41 @@ export default function PropertyForm({ initial, mode }: Props) {
   const [generateError,         setGenerateError]         = useState('')
   const [generateSuccess,       setGenerateSuccess]       = useState(false)
   const [showRegenerateConfirm, setShowRegenerateConfirm] = useState(false)
+  const [selectedStyle,         setSelectedStyle]         = useState('casa-del-mar')
+
+  // ── Feature selectors (state persists across tab switches) ───────────────────
+  const [selectedView,           setSelectedView]           = useState<string[]>([])
+  const [selectedDistance,       setSelectedDistance]       = useState('')
+  const [selectedFacilities,     setSelectedFacilities]     = useState<string[]>([])
+  const [selectedCondition,      setSelectedCondition]      = useState('')
+  const [selectedFloorType,      setSelectedFloorType]      = useState('')
+  const [selectedSpecialFeatures,setSelectedSpecialFeatures]= useState<string[]>([])
+  const [selectedInvestment,     setSelectedInvestment]     = useState<string[]>([])
+
+  const toggleMultiple = (value: string, current: string[], setter: (v: string[]) => void) => {
+    setter(current.includes(value) ? current.filter(v => v !== value) : [...current, value])
+  }
+  const toggleSingle = (value: string, current: string, setter: (v: string) => void) => {
+    setter(current === value ? '' : value)
+  }
+  const handleClearAll = () => {
+    setSelectedView([])
+    setSelectedDistance('')
+    setSelectedFacilities([])
+    setSelectedCondition('')
+    setSelectedFloorType('')
+    setSelectedSpecialFeatures([])
+    setSelectedInvestment([])
+  }
+
+  const STYLES = [
+    { id: 'casa-del-mar', label: 'Casa del Mar', tag: '(Default)' },
+    { id: 'luxury',       label: 'Luxury',       tag: '' },
+    { id: 'investment',   label: 'Investment',   tag: '' },
+    { id: 'family',       label: 'Family',       tag: '' },
+    { id: 'short',        label: 'Short',        tag: '' },
+    { id: 'detailed',     label: 'Detailed',     tag: '' },
+  ]
 
   async function handleGenerateDescriptions() {
     if ((form.description_en || form.description_ru || form.description_hy) && !showRegenerateConfirm) {
@@ -93,6 +128,15 @@ export default function PropertyForm({ initial, mode }: Props) {
     setGenerateSuccess(false)
     setShowRegenerateConfirm(false)
     try {
+      const featureData = {
+        view:           selectedView,
+        distanceToSea:  selectedDistance,
+        facilities:     selectedFacilities,
+        condition:      selectedCondition,
+        floorType:      selectedFloorType,
+        specialFeatures:selectedSpecialFeatures,
+        investment:     selectedInvestment,
+      }
       const res = await fetch('/api/admin/generate-description', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -106,11 +150,14 @@ export default function PropertyForm({ initial, mode }: Props) {
           size:      form.size_sqm,
           parking:   form.parking,
           status:    form.status,
-          features:  form.features_en ? form.features_en.split('\n').filter(Boolean) : [],
+          features:  featureData,
+          style:     selectedStyle,
         }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Generation failed')
+      if (res.status === 401) throw new Error('Session expired. Please log out and log in again.')
+      if (res.status === 429) throw new Error('Rate limit reached. Try again in an hour.')
+      if (!res.ok)           throw new Error(data.error || 'Generation failed')
       setForm(prev => ({
         ...prev,
         description_en: data.descriptions.en,
@@ -408,68 +455,173 @@ export default function PropertyForm({ initial, mode }: Props) {
       {tab === 'Description' && (
         <div className="space-y-8">
 
-          {/* ── AI Generator ── */}
-          <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <h3 className="font-semibold text-gray-800 text-sm">✨ AI Description Writer</h3>
-                <p className="text-xs text-gray-500 mt-0.5">
-                  Generates professional descriptions in English, Russian and Armenian
-                </p>
+          {/* ── AI Generator Panel ── */}
+          <div className="border border-amber-200 rounded-lg overflow-hidden">
+
+            {/* ── Feature Selectors ── */}
+            <div className="p-4 bg-white border-b border-amber-100">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-700">Property Features</h3>
+                  <p className="text-xs text-gray-400">Select to improve AI accuracy</p>
+                </div>
+                <button type="button" onClick={handleClearAll}
+                  className="text-xs text-gray-400 hover:text-red-500 transition-colors underline">
+                  Clear all
+                </button>
               </div>
 
-              {showRegenerateConfirm ? (
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-amber-700">Replace existing?</span>
+              {/* Helper pill component */}
+              {([
+                {
+                  label: 'View', multi: true,
+                  options: ['Sea View','Partial Sea View','Pool View','Garden View','Mountain View','City View'],
+                  selected: selectedView, setter: setSelectedView,
+                },
+                {
+                  label: 'Distance to Sea', multi: false,
+                  options: ['Beachfront','50m','100m','200m','300m','500m','1km+','Not specified'],
+                  selected: selectedDistance, setter: setSelectedDistance,
+                },
+                {
+                  label: 'Complex Facilities', multi: true,
+                  options: ['Swimming Pool','Tennis Court','Gym','Spa','Underground Parking','24h Security','Concierge','Garden','BBQ Area','Kids Playground'],
+                  selected: selectedFacilities, setter: setSelectedFacilities,
+                },
+                {
+                  label: 'Condition', multi: false,
+                  options: ['Brand New','Modern Renovated','Good Condition','Original Condition','Needs Renovation'],
+                  selected: selectedCondition, setter: setSelectedCondition,
+                },
+                {
+                  label: 'Floor Type', multi: false,
+                  options: ['Ground Floor + Garden','Low Floor (1-3)','Mid Floor (4-8)','High Floor (9-15)','Penthouse','Duplex','Top Floor'],
+                  selected: selectedFloorType, setter: setSelectedFloorType,
+                },
+                {
+                  label: 'Special Features', multi: true,
+                  options: ['Terrace','Large Balcony','Air Conditioning','Fitted Kitchen','Furnished','Storage Room','Lift/Elevator','Smart Home','Sea Facing Bedroom'],
+                  selected: selectedSpecialFeatures, setter: setSelectedSpecialFeatures,
+                },
+                {
+                  label: 'Investment', multi: true,
+                  options: ['High Rental Yield','Tourist Area','Year-Round Rental','Currently Rented','Rental License','Near Airport','New Development'],
+                  selected: selectedInvestment, setter: setSelectedInvestment,
+                },
+              ] as Array<{
+                label: string; multi: boolean; options: string[];
+                selected: string | string[]; setter: ((v: string) => void) | ((v: string[]) => void);
+              }>).map(group => {
+                const isMulti = group.multi
+                const sel = group.selected
+                const hasSelection = isMulti ? (sel as string[]).length > 0 : (sel as string) !== ''
+                return (
+                  <div key={group.label} className="mb-3">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[11px] font-medium tracking-wide uppercase text-gray-400">{group.label}</span>
+                      {hasSelection && (
+                        <button type="button"
+                          onClick={() => isMulti ? (group.setter as (v: string[]) => void)([]) : (group.setter as (v: string) => void)('')}
+                          className="text-[10px] text-gray-300 hover:text-gray-500 transition-colors">clear</button>
+                      )}
+                    </div>
+                    <div className="flex flex-wrap">
+                      {group.options.map(opt => {
+                        const active = isMulti
+                          ? (sel as string[]).includes(opt)
+                          : (sel as string) === opt
+                        return (
+                          <button
+                            key={opt}
+                            type="button"
+                            onClick={() => isMulti
+                              ? toggleMultiple(opt, sel as string[], group.setter as (v: string[]) => void)
+                              : toggleSingle(opt, sel as string, group.setter as (v: string) => void)
+                            }
+                            className={[
+                              'inline-flex items-center px-3 py-1 rounded-full border text-xs cursor-pointer m-0.5 transition-all duration-150 select-none',
+                              active
+                                ? 'bg-[#C9A84C] border-[#C9A84C] text-[#0D1F2D] font-medium'
+                                : 'bg-white border-gray-200 text-gray-500 hover:border-[#C9A84C] hover:text-[#C9A84C]',
+                            ].join(' ')}
+                          >
+                            {opt}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* ── Style selector + Generate button ── */}
+            <div className="p-4 bg-amber-50">
+              {/* Style pills */}
+              <div className="flex flex-wrap items-center gap-1.5 mb-4">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-gray-400 mr-1">Style:</span>
+                {STYLES.map(s => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => setSelectedStyle(s.id)}
+                    className={[
+                      'px-3 py-1 rounded-full border text-xs transition-all duration-150',
+                      selectedStyle === s.id
+                        ? 'bg-[#0D1F2D] border-[#0D1F2D] text-white font-medium'
+                        : 'bg-white border-gray-200 text-gray-500 hover:border-[#0D1F2D] hover:text-[#0D1F2D]',
+                    ].join(' ')}
+                  >
+                    {s.label}{s.tag ? ` ${s.tag}` : ''}
+                  </button>
+                ))}
+              </div>
+
+              {/* Generate / confirm row */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-gray-500">Generates EN + RU + AM descriptions</p>
+                </div>
+                {showRegenerateConfirm ? (
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-amber-700">Replace existing?</span>
+                    <button type="button" onClick={handleGenerateDescriptions}
+                      className="px-3 py-1.5 bg-amber-500 text-white text-xs rounded hover:bg-amber-600 transition-colors">
+                      Yes, replace
+                    </button>
+                    <button type="button" onClick={() => setShowRegenerateConfirm(false)}
+                      className="px-3 py-1.5 bg-gray-200 text-gray-700 text-xs rounded hover:bg-gray-300 transition-colors">
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
                   <button
                     type="button"
                     onClick={handleGenerateDescriptions}
-                    className="px-3 py-1.5 bg-amber-500 text-white text-xs rounded hover:bg-amber-600 transition-colors"
+                    disabled={isGenerating || !form.name || !form.location}
+                    title={!form.name || !form.location ? 'Fill in name and location first' : 'Generate AI descriptions'}
+                    className="flex items-center gap-2 px-4 py-2 bg-[#C9A84C] text-[#0D1F2D] font-semibold text-sm rounded hover:bg-[#d4b55a] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   >
-                    Yes, replace
+                    {isGenerating ? (
+                      <><span className="inline-block animate-spin">⟳</span> Generating…</>
+                    ) : (
+                      `✨ Generate — ${STYLES.find(s => s.id === selectedStyle)?.label ?? 'AI'} Style`
+                    )}
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowRegenerateConfirm(false)}
-                    className="px-3 py-1.5 bg-gray-200 text-gray-700 text-xs rounded hover:bg-gray-300 transition-colors"
-                  >
-                    Cancel
-                  </button>
+                )}
+              </div>
+
+              {generateSuccess && (
+                <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded text-green-700 text-xs">
+                  ✅ Descriptions generated! Review and edit before saving.
                 </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleGenerateDescriptions}
-                  disabled={isGenerating || !form.name || !form.location || !form.price || !form.bedrooms}
-                  title={
-                    !form.name || !form.location || !form.price || !form.bedrooms
-                      ? 'Fill in name, location, price and bedrooms first'
-                      : 'Generate AI descriptions'
-                  }
-                  className="flex items-center gap-2 px-4 py-2 bg-[#C9A84C] text-[#0D1F2D] font-semibold text-sm rounded hover:bg-[#E0C99A] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                >
-                  {isGenerating ? (
-                    <>
-                      <span className="inline-block animate-spin">⟳</span>
-                      Generating…
-                    </>
-                  ) : (
-                    '✨ Generate with AI'
-                  )}
-                </button>
+              )}
+              {generateError && (
+                <div className="mt-3 p-2 bg-red-50 border border-red-200 rounded text-red-700 text-xs">
+                  ❌ {generateError}
+                </div>
               )}
             </div>
-
-            {generateSuccess && (
-              <div className="p-2 bg-green-50 border border-green-200 rounded text-green-700 text-xs">
-                ✅ Descriptions generated! Review and edit before saving.
-              </div>
-            )}
-            {generateError && (
-              <div className="p-2 bg-red-50 border border-red-200 rounded text-red-700 text-xs">
-                ❌ {generateError}
-              </div>
-            )}
           </div>
 
           <div className="relative space-y-5">
