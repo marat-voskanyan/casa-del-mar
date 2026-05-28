@@ -183,27 +183,51 @@ export async function POST(request: NextRequest) {
       .replace(/Property Highlights:/gi, 'Преимущества квартиры:')
 
     // ── STEP 3: Translate English → Armenian with Groq ─────────────────────────
-    const armenianCompletion = await groq.chat.completions.create({
-      model:      'llama-3.1-8b-instant',
-      max_tokens: 700,
-      temperature: 0.3,
+    // Helper: count bullet points in a text
+    const countBullets = (text: string) => (text.match(/^\s*\*/gm) || []).length
+
+    const armenianSystemPrompt = `You are an expert Armenian translator. You MUST use proper Armenian Unicode characters only. Never use Latin letters or transliteration. Translate ONLY. Return ONLY the Armenian text. If text has "Property highlights:" translate as "Գույքի առավելությունները:" Keep bullet points with *`
+
+    const armenianUserPrompt = (text: string) =>
+      `Translate the COMPLETE text. Do not stop until you have translated every single sentence and every single bullet point. Complete translation only.\n\nTranslate this to Armenian using only Armenian Unicode:\n\n${text}`
+
+    const doArmenianCall = async () => groq.chat.completions.create({
+      model:       'llama-3.3-70b-versatile',
+      max_tokens:  1500,
+      temperature: 0.1,
       messages: [
-        {
-          role:    'system',
-          content: `You are an expert Armenian translator. You MUST use proper Armenian Unicode characters only. Never use Latin letters or transliteration. Translate ONLY. Return ONLY the Armenian text. If text has "Property highlights:" translate as "Գույքի առավելությունները:" Keep bullet points with *`,
-        },
-        {
-          role:    'user',
-          content: `Translate this to Armenian using only Armenian Unicode:\n\n${englishText}`,
-        },
+        { role: 'system', content: armenianSystemPrompt },
+        { role: 'user',   content: armenianUserPrompt(englishText) },
       ],
     })
 
-    let armenianText = (armenianCompletion.choices[0]?.message?.content || '').trim()
+    let armenianCompletion = await doArmenianCall()
+    let armenianText       = (armenianCompletion.choices[0]?.message?.content || '').trim()
+
     // Fix bullet header if model didn't translate it
-    armenianText = armenianText
-      .replace(/Property highlights:/gi, 'Գույքի առավելությունները:')
-      .replace(/Property Highlights:/gi, 'Գույքի առավելությունները:')
+    const fixArmenianHeaders = (t: string) =>
+      t.replace(/Property highlights:/gi, 'Գույքի առավելությունները:')
+       .replace(/Property Highlights:/gi,  'Գույքի առավելությունները:')
+
+    armenianText = fixArmenianHeaders(armenianText)
+
+    // Bullet count check — retry once if translation looks incomplete
+    const enBullets = countBullets(englishText)
+    const hyBullets = countBullets(armenianText)
+
+    if (enBullets > 0 && hyBullets < enBullets) {
+      console.warn(`Armenian bullet mismatch: EN has ${enBullets}, HY has ${hyBullets}. Retrying...`)
+      const retryCompletion = await doArmenianCall()
+      const retryText       = fixArmenianHeaders((retryCompletion.choices[0]?.message?.content || '').trim())
+      const retryBullets    = countBullets(retryText)
+      if (retryBullets >= hyBullets) {
+        // Retry is better or equal — use it
+        armenianText = retryText
+      }
+      if (countBullets(armenianText) < enBullets) {
+        console.warn(`Armenian still incomplete after retry: EN=${enBullets}, HY=${countBullets(armenianText)}`)
+      }
+    }
 
     if (!armenianText) {
       throw new Error('Groq returned empty Armenian text. Please try again.')
