@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyToken } from '@/lib/auth'
 import Groq from 'groq-sdk'
+import * as deepl from 'deepl-node'
 
 export const runtime = 'nodejs'
 
@@ -27,60 +28,67 @@ function buildFeaturesText(features: Record<string, unknown>): string {
   if (Array.isArray(features.investment)      && features.investment.length)
     lines.push(`Investment notes: ${(features.investment as string[]).join(', ')}`)
   return lines.length > 0
-    ? `\nSelected property features:\n${lines.map(l => `- ${l}`).join('\n')}\n\nInclude ALL of these features naturally in the description and bullet points.`
+    ? `\n\nSelected property features:\n${lines.map(l => `- ${l}`).join('\n')}\n\nInclude ALL of these features in the description and bullet points.`
     : ''
 }
 
-// ── Strict JSON-only system prompt prefix (applies to all styles) ────────────
-const JSON_STRICT = `You are a real estate copywriter. You MUST respond with ONLY a valid JSON object. No markdown. No code blocks. No explanation. No text before or after the JSON. Start your response with { and end with }. The JSON must have exactly these keys: en, ru, hy.`
-
-// ── Style-specific writing instructions ─────────────────────────────────────
-function getStyleInstructions(style: string): string {
+// ── Style-specific writing instructions ──────────────────────────────────────
+function getStylePrompt(style: string): string {
   switch (style) {
     case 'casa-del-mar':
-      return `Write property descriptions in this exact structure:
-1. Opening sentence: [property type] with [X] bedrooms and [X] bathrooms in [location area]
-2. Second sentence: overall character, style and purpose
-3. Third sentence: the most unique or special feature of this property
-4. Fourth sentence: one key lifestyle benefit (terrace, views, pool access, beach proximity)
-5. Section header (write EXACTLY):
-   - English: "Property highlights:"
-   - Russian: "Преимущества квартиры:"
-   - Armenian: "Գույքի առավելությունները՝"
-6. Bullet list with * of 4-6 specific factual features
-Rules: professional and factual tone, no superlatives, use exact numbers, 80-120 words each, Armenian Unicode only.`
+      return `Write in this exact structure:
+1. Opening: property type with X bed and X bath in location
+2. Overall character and purpose
+3. Most unique feature
+4. One key lifestyle benefit
+5. Section header: Property highlights:
+6. Bullet list with * of 4-6 specific facts
+Tone: professional and factual. No superlatives. 80-120 words.`
 
     case 'luxury':
-      return `Write aspirational luxury descriptions for high-end buyers. Use elegant evocative language. Mention exclusivity, prime location, prestige, and investment value. 80-100 words each. Armenian Unicode only.`
+      return `Premium aspirational tone. Focus on lifestyle and exclusivity. 80-100 words.`
 
     case 'investment':
-      return `Focus on ROI, rental yields, occupancy rates, and capital appreciation. Use data-driven language. Mention Benidorm's year-round tourism, La Cala's 2008-2015 construction, Alicante airport proximity. 80-100 words each. Armenian Unicode only.`
+      return `Professional investment tone. Mention rental yields 6-10%, ROI potential. Use numbers. 80-100 words.`
 
     case 'family':
-      return `Emphasize safety, space, community, schools, beaches, pool, parks, and practical living. Warm reassuring tone. Mention local amenities and family-friendly features. 80-100 words each. Armenian Unicode only.`
+      return `Warm practical tone. Focus on family lifestyle, space, safety, pool, beach proximity. 80-100 words.`
 
     case 'short':
-      return `Write concise punchy descriptions. 40-60 words maximum. Key facts only: location, size, main feature, one benefit. No filler. Armenian Unicode only.`
+      return `Maximum 2-3 short punchy sentences. Bold and direct. Under 50 words.`
 
     case 'detailed':
-      return `Write comprehensive descriptions covering: construction year, floor, measurements, all amenities, transport links, nearby services, investment metrics, and lifestyle benefits. 150-180 words each. Armenian Unicode only.`
+      return `Comprehensive description covering every feature and angle. 120-150 words.`
 
     default:
-      return `Write professional luxury property descriptions. 80-100 words each. Armenian Unicode only.`
+      return `Write in this exact structure:
+1. Opening: property type with X bed and X bath in location
+2. Overall character and purpose
+3. Most unique feature
+4. One key lifestyle benefit
+5. Section header: Property highlights:
+6. Bullet list with * of 4-6 specific facts
+Tone: professional and factual. No superlatives. 80-120 words.`
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    // 1. Check API key first
+    // 1. Check API keys
     if (!process.env.GROQ_API_KEY) {
       return NextResponse.json(
-        { error: 'API key not configured. Add GROQ_API_KEY to Vercel environment variables.' },
+        { error: 'GROQ_API_KEY not configured. Add it to Vercel environment variables.' },
+        { status: 503 }
+      )
+    }
+    if (!process.env.DEEPL_API_KEY) {
+      return NextResponse.json(
+        { error: 'DEEPL_API_KEY not configured. Add it to Vercel environment variables.' },
         { status: 503 }
       )
     }
 
-    // 2. Auth check — try multiple cookie names for resilience
+    // 2. Auth check
     const token =
       request.cookies.get('admin_token')?.value ||
       request.cookies.get('token')?.value ||
@@ -126,14 +134,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 5. Build features text and style instructions
-    const featuresText      = buildFeaturesText((features as Record<string, unknown>) || {})
-    const styleInstructions = getStyleInstructions((style as string) || 'casa-del-mar')
+    const featuresText = buildFeaturesText((features as Record<string, unknown>) || {})
+    const stylePrompt  = getStylePrompt((style as string) || 'casa-del-mar')
 
-    // 6. Build prompt — ends with strict JSON reminder
-    const prompt = `${styleInstructions}
-
-Property details:
+    const propertyDetails = `Property:
 - Name: ${name}
 - Location: ${location}
 - Price: €${Number(price || 0).toLocaleString()}
@@ -142,103 +146,81 @@ Property details:
 - Floor: ${floor ? `Floor ${floor}` : 'N/A'}
 - Size: ${size ? `${size}m²` : 'N/A'}
 - Parking: ${parking ? 'Yes' : 'No'}
-- Status: ${status || 'available'}${featuresText}
+- Status: ${status || 'available'}${featuresText}`
 
-Write three descriptions using the instructions above.
+    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
-IMPORTANT: Return ONLY the JSON object. Start with { and end with }. No markdown, no backticks, no explanation.
-You MUST use exactly these JSON keys:
-{
-  "en": "English description here",
-  "ru": "Russian description here",
-  "hy": "Armenian description here"
-}
-The keys must be exactly: en, ru, hy - nothing else.`
-
-    // 7. Call Groq API — llama3-8b-8192 follows JSON instructions more reliably
-    const client = new Groq({ apiKey: process.env.GROQ_API_KEY })
-
-    const completion = await client.chat.completions.create({
-      model:           'llama-3.1-8b-instant',
-      max_tokens:      1400,
-      temperature:     0.7,
-      // response_format forces JSON output at API level (supported on this model)
-      response_format: { type: 'json_object' },
+    // ── STEP 1: Generate English with Groq ─────────────────────────────────────
+    const englishCompletion = await groq.chat.completions.create({
+      model:      'llama-3.1-8b-instant',
+      max_tokens: 600,
+      temperature: 0.7,
       messages: [
         {
           role:    'system',
-          content: JSON_STRICT,
+          content: 'You are a real estate copywriter. Write only the requested description text. No JSON. No labels. No extra text. No explanations.',
         },
         {
           role:    'user',
-          content: prompt,
+          content: `${stylePrompt}\n\n${propertyDetails}\n\nWrite the English property description now:`,
         },
       ],
     })
 
-    const rawText = completion.choices[0]?.message?.content || ''
+    const englishText = (englishCompletion.choices[0]?.message?.content || '').trim()
 
-    // 8. Strip markdown code blocks if present, then extract JSON
-    let cleaned = rawText
-      .replace(/```json\n?/gi, '')
-      .replace(/```\n?/gi, '')
-      .trim()
-
-    const jsonStart = cleaned.indexOf('{')
-    const jsonEnd   = cleaned.lastIndexOf('}')
-
-    if (jsonStart === -1 || jsonEnd === -1 || jsonEnd <= jsonStart) {
-      console.error('No JSON found in Groq response:', rawText)
-      return NextResponse.json(
-        { error: 'AI did not return valid JSON. Please try again.' },
-        { status: 500 }
-      )
+    if (!englishText) {
+      throw new Error('Groq returned empty English text. Please try again.')
     }
 
-    const jsonStr = cleaned.slice(jsonStart, jsonEnd + 1)
+    // ── STEP 2: Translate English → Russian with DeepL ─────────────────────────
+    const translator   = new deepl.Translator(process.env.DEEPL_API_KEY)
+    const deeplResult  = await translator.translateText(englishText, 'en', 'ru')
+    let russianText    = deeplResult.text
+    // Fix bullet header for Casa del Mar style
+    russianText = russianText
+      .replace(/Property highlights:/gi, 'Преимущества квартиры:')
+      .replace(/Property Highlights:/gi, 'Преимущества квартиры:')
 
-    let rawParsed: Record<string, string>
-    try {
-      rawParsed = JSON.parse(jsonStr)
-    } catch (parseError) {
-      console.error('JSON parse error:', parseError)
-      console.error('Attempted to parse:', jsonStr)
-      return NextResponse.json(
-        { error: 'Failed to parse AI response. Please try again.' },
-        { status: 500 }
-      )
-    }
-
-    // 9. Log what the AI actually returned
-    console.log('AI returned fields:', Object.keys(rawParsed))
-
-    // 10. Normalize field names — handle any variation the model might use
-    const normalize = (obj: Record<string, string>) => ({
-      en: obj.en || obj.english || obj.English || obj.EN || obj['en-US'] || '',
-      ru: obj.ru || obj.russian || obj.Russian || obj.RU || obj.rus || '',
-      hy: obj.hy || obj.armenian || obj.Armenian || obj.HY || obj.am || obj.AM || obj.hyarmenian || '',
+    // ── STEP 3: Translate English → Armenian with Groq ─────────────────────────
+    const armenianCompletion = await groq.chat.completions.create({
+      model:      'llama-3.1-8b-instant',
+      max_tokens: 700,
+      temperature: 0.3,
+      messages: [
+        {
+          role:    'system',
+          content: `You are an expert Armenian translator. You MUST use proper Armenian Unicode characters only. Never use Latin letters or transliteration. Translate ONLY. Return ONLY the Armenian text. If text has "Property highlights:" translate as "Գույքի առավելությունները:" Keep bullet points with *`,
+        },
+        {
+          role:    'user',
+          content: `Translate this to Armenian using only Armenian Unicode:\n\n${englishText}`,
+        },
+      ],
     })
 
-    const descriptions = normalize(rawParsed)
+    let armenianText = (armenianCompletion.choices[0]?.message?.content || '').trim()
+    // Fix bullet header if model didn't translate it
+    armenianText = armenianText
+      .replace(/Property highlights:/gi, 'Գույքի առավելությունները:')
+      .replace(/Property Highlights:/gi, 'Գույքի առավելությունները:')
 
-    console.log('Normalized:', {
-      en: descriptions.en?.slice(0, 50),
-      ru: descriptions.ru?.slice(0, 50),
-      hy: descriptions.hy?.slice(0, 50),
-    })
-
-    // 11. Validate all three fields are present after normalization
-    if (!descriptions.en || !descriptions.ru || !descriptions.hy) {
-      console.error('Missing language keys after normalization. Raw keys:', Object.keys(rawParsed))
-      return NextResponse.json(
-        { error: 'AI response missing language fields (en/ru/hy). Please try again.' },
-        { status: 500 }
-      )
+    if (!armenianText) {
+      throw new Error('Groq returned empty Armenian text. Please try again.')
     }
 
     return NextResponse.json({
-      success:   true,
-      descriptions,
+      success: true,
+      descriptions: {
+        en: englishText,
+        ru: russianText,
+        hy: armenianText,
+      },
+      steps: {
+        english:  'Generated by Groq Llama',
+        russian:  'Translated by DeepL',
+        armenian: 'Translated by Groq (DeepL does not support Armenian)',
+      },
       remaining: RATE_LIMIT - rateData.count,
     })
 

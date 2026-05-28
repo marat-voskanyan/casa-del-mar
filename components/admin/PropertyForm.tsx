@@ -83,6 +83,26 @@ export default function PropertyForm({ initial, mode }: Props) {
   const [generateSuccess,       setGenerateSuccess]       = useState(false)
   const [showRegenerateConfirm, setShowRegenerateConfirm] = useState(false)
   const [selectedStyle,         setSelectedStyle]         = useState('casa-del-mar')
+  const [generatingStep,        setGeneratingStep]        = useState('')
+
+  const GENERATE_STEPS = [
+    'Step 1/3: Writing English description…',
+    'Step 2/3: Translating to Russian with DeepL…',
+    'Step 3/3: Translating to Armenian…',
+  ]
+
+  // Cycle step messages while generating
+  useEffect(() => {
+    if (!isGenerating) { setGeneratingStep(''); return }
+    let idx = 0
+    setGeneratingStep(GENERATE_STEPS[0])
+    const interval = setInterval(() => {
+      idx = (idx + 1) % GENERATE_STEPS.length
+      setGeneratingStep(GENERATE_STEPS[idx])
+    }, 2000)
+    return () => clearInterval(interval)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isGenerating])
 
   // ── Feature selectors (state persists across tab switches) ───────────────────
   const [selectedView,           setSelectedView]           = useState<string[]>([])
@@ -626,9 +646,12 @@ export default function PropertyForm({ initial, mode }: Props) {
 
           <div className="relative space-y-5">
             {isGenerating && (
-              <div className="absolute inset-0 bg-amber-50/70 rounded-lg flex items-center justify-center z-10">
-                <div className="text-amber-700 text-sm animate-pulse font-medium">
-                  ✨ AI is writing your descriptions…
+              <div className="absolute inset-0 bg-amber-50/80 rounded-lg flex items-center justify-center z-10">
+                <div className="flex flex-col items-center gap-2">
+                  <div className="w-5 h-5 border-2 border-amber-500/40 border-t-amber-600 rounded-full animate-spin" />
+                  <div className="text-amber-700 text-sm font-medium text-center px-4">
+                    {generatingStep || '✨ AI is writing your descriptions…'}
+                  </div>
                 </div>
               </div>
             )}
