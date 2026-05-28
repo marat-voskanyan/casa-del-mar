@@ -1,20 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyToken } from '@/lib/auth'
-import Anthropic from '@anthropic-ai/sdk'
+import Groq from 'groq-sdk'
 
 export const runtime = 'nodejs'
 
 // Simple in-memory rate limiter
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
-const RATE_LIMIT  = 10
+const RATE_LIMIT  = 20
 const RATE_WINDOW = 60 * 60 * 1000 // 1 hour
 
 export async function POST(request: NextRequest) {
   try {
-    // 1. Check API key first — most common failure
-    if (!process.env.ANTHROPIC_API_KEY) {
+    // 1. Check API key first
+    if (!process.env.GROQ_API_KEY) {
       return NextResponse.json(
-        { error: 'API key not configured. Add ANTHROPIC_API_KEY to Vercel environment variables.' },
+        { error: 'API key not configured. Add GROQ_API_KEY to Vercel environment variables.' },
         { status: 503 }
       )
     }
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     }
     if (rateData.count >= RATE_LIMIT) {
       return NextResponse.json(
-        { error: 'Rate limit reached (10/hour). Try again in an hour.' },
+        { error: 'Rate limit reached. Try again in an hour.' },
         { status: 429 }
       )
     }
@@ -65,12 +65,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 5. Call Anthropic API
-    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-
-    const prompt = `You are a luxury real estate copywriter for Casa del Mar, a premium international real estate agency based in Yerevan, Armenia. Write compelling property descriptions for Spanish and Cypriot properties targeting Armenian and Russian-speaking buyers.
-
-Property details:
+    // 5. Build prompt
+    const prompt = `Property details:
 - Name: ${name}
 - Location: ${location}
 - Price: €${Number(price || 0).toLocaleString()}
@@ -80,54 +76,46 @@ Property details:
 - Size: ${size ? `${size}m²` : 'N/A'}
 - Parking: ${parking ? 'Yes' : 'No'}
 - Status: ${status || 'available'}
-- Special features: ${Array.isArray(features) && (features as string[]).length > 0 ? (features as string[]).join(', ') : 'none listed'}
+- Features: ${Array.isArray(features) && (features as string[]).length > 0 ? (features as string[]).join(', ') : 'none listed'}
 
 Write THREE property descriptions (80-100 words each):
+1. ENGLISH: Luxury tone. Highlight location, views, lifestyle and investment potential. Mention area details if relevant (e.g. La Cala is modern, built 2008-2015, has pool and tennis). End with investment angle.
+2. RUSSIAN: Natural Russian, luxury tone. Write for Russian-speaking buyers, not a translation. Mention beach proximity, infrastructure, rental potential.
+3. ARMENIAN: Proper Armenian Unicode ONLY. No Latin letters. Professional tone for Armenian buyers seeking European investment.
 
-1. ENGLISH: Luxury tone. Highlight location, views, lifestyle and investment potential. Mention specific area details (e.g. La Cala is modern, built 2008-2015, has pool and tennis). End with investment angle.
+Return ONLY this JSON with no other text:
+{"en":"...","ru":"...","hy":"..."}`
 
-2. RUSSIAN: Natural Russian, luxury tone. Do not just translate — write for Russian-speaking buyers. Mention beach proximity, infrastructure, rental potential.
+    // 6. Call Groq API
+    const client = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
-3. ARMENIAN: Proper Armenian Unicode characters ONLY. No Latin letters. Professional tone for Armenian buyers seeking European investment property.
-
-Return ONLY a valid JSON object — no markdown, no explanation, no extra text:
-{"en":"English description here","ru":"Russian description here","hy":"Armenian description here"}`
-
-    const message = await client.messages.create({
-      model:    'claude-sonnet-4-20250514',
-      max_tokens: 1024,
-      messages: [{ role: 'user', content: prompt }],
+    const completion = await client.chat.completions.create({
+      model:      'llama-3.3-70b-versatile',
+      max_tokens: 1000,
+      messages: [
+        {
+          role:    'system',
+          content: 'You are a luxury real estate copywriter for Casa del Mar, a premium real estate agency in Yerevan, Armenia selling properties in Spain and Cyprus. Always respond with valid JSON only. No markdown, no explanation.',
+        },
+        {
+          role:    'user',
+          content: prompt,
+        },
+      ],
     })
 
-    // 6. Extract text from response
-    const rawText = message.content
-      .filter(b => b.type === 'text')
-      .map(b => b.type === 'text' ? b.text : '')
-      .join('')
+    const responseText = completion.choices[0]?.message?.content || ''
 
-    // 7. Robust JSON extraction — three fallback methods
-    let descriptions: { en: string; ru: string; hy: string }
-    try {
-      // Method 1: direct parse
-      descriptions = JSON.parse(rawText)
-    } catch {
-      try {
-        // Method 2: extract from markdown code block
-        const codeMatch = rawText.match(/```(?:json)?\s*([\s\S]*?)```/)
-        if (codeMatch) {
-          descriptions = JSON.parse(codeMatch[1].trim())
-        } else {
-          // Method 3: find first { to last }
-          const start = rawText.indexOf('{')
-          const end   = rawText.lastIndexOf('}')
-          if (start === -1 || end === -1) throw new Error('No JSON found in response')
-          descriptions = JSON.parse(rawText.slice(start, end + 1))
-        }
-      } catch (parseErr) {
-        console.error('JSON parse failed. Raw response:', rawText)
-        throw new Error('Failed to parse AI response. Please try again.')
-      }
+    // 7. Robust JSON extraction
+    const jsonStart = responseText.indexOf('{')
+    const jsonEnd   = responseText.lastIndexOf('}')
+
+    if (jsonStart === -1 || jsonEnd === -1) {
+      console.error('No JSON found in Groq response:', responseText)
+      throw new Error('AI response did not contain valid JSON. Please try again.')
     }
+
+    const descriptions = JSON.parse(responseText.slice(jsonStart, jsonEnd + 1))
 
     if (!descriptions.en || !descriptions.ru || !descriptions.hy) {
       throw new Error('AI response missing required language fields (en/ru/hy)')
