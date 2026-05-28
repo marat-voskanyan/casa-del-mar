@@ -1,9 +1,31 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
+import dynamic from 'next/dynamic'
 import type { Locale } from '@/types'
 import { getT } from '@/lib/i18n'
 import { BENIDORM_IMAGES, IMAGE_ALT } from '@/lib/images'
+
+const BenidormMap = dynamic(
+  () => import('@/components/BenidormMap'),
+  {
+    ssr: false,
+    loading: () => (
+      <div style={{
+        width: '100%', height: 'clamp(320px, 40vw, 520px)',
+        background: '#0D1F2D',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        <span style={{
+          color: '#C9A84C', fontFamily: 'Montserrat, sans-serif',
+          fontSize: '11px', letterSpacing: '0.2em', textTransform: 'uppercase',
+        }}>
+          Loading Map…
+        </span>
+      </div>
+    ),
+  }
+)
 
 interface Props { params: { locale: Locale } }
 
@@ -293,7 +315,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
                   {(isRu
                     ? ['1,9 км золотого песка', 'На восток, утреннее солнце', 'Активная атмосфера, водные виды спорта', 'Самая высокая туристическая плотность', 'Лучшие показатели краткосрочной аренды']
                     : isHy
-                    ? ['1.9 կմ ոսկե ավազ', 'Արևելյան, առավոտյան արև', 'Կենդ. մթնոլ., ջրային սպորտ', 'Ամ. բ. զբ. խտություն', 'Լ. կ/ժ. վ/կ. եկամուտ']
+                    ? ['1.9 կմ ոսկե ավազ', 'Արևելյան կողմ, առավոտյան արև', 'Կենդանի մթնոլորտ, ջրային սպորտ', 'Ամենաբարձր զբոսաշրջային խտությունը', 'Լավագույն կարճաժամկետ վարձակալության եկամուտ']
                     : ['1.9km of golden sand', 'East-facing, morning sun', 'Lively atmosphere, water sports', 'Highest tourist density in Benidorm', 'Best short-term rental yields']
                   ).map((item, i) => (
                     <li key={i} className="flex items-start gap-2">
@@ -303,7 +325,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
                   ))}
                 </ul>
                 <p className="mt-4 text-xs font-accent tracking-wide text-gold uppercase">
-                  {isRu ? 'Идеально для инвестиций в аренду' : isHy ? 'Ամ. տ. ն/ն-ի ու ն-ների' : 'Most popular with tourists & investors'}
+                  {isRu ? 'Идеально для инвестиций в аренду' : isHy ? 'Ամենատարածված տուրիստների ու ներդրողների մոտ' : 'Most popular with tourists & investors'}
                 </p>
               </div>
             </div>
@@ -336,7 +358,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
                   {(isRu
                     ? ['3 км золотого песка', 'На запад, захватывающие закаты', 'Спокойная, жилая атмосфера', 'Предпочитают семьи и долгосрочные жители', 'Рядом — современный район Ла Кала']
                     : isHy
-                    ? ['3 կմ ոսկե ավազ', 'Արևմտյան, շքեղ մայրամուտ', 'Հանգիստ, բնակ. մթնոլ.', 'Ընտ. ու երկ. բ/կ. կողմ.', 'La Cala թ. — կողք-կողքի']
+                    ? ['3 կմ ոսկե ավազ', 'Արևմտյան կողմ, շքեղ մայրամուտ', 'Հանգիստ, բնակելի մթնոլորտ', 'Ընտանիքների ու երկարաժամկետ բնակիչների կողմից նախընտրված', 'La Cala թաղամասը — կողք-կողքի']
                     : ['3km of golden sand', 'West-facing, spectacular sunsets', 'Calmer, more residential atmosphere', 'Preferred by families & long-stay residents', 'La Cala district directly adjacent']
                   ).map((item, i) => (
                     <li key={i} className="flex items-start gap-2">
@@ -346,7 +368,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
                   ))}
                 </ul>
                 <p className="mt-4 text-xs font-accent tracking-wide text-gold uppercase">
-                  {isRu ? 'Предпочитают семьи и долгосрочные жители' : isHy ? 'Ն. ե. ընտ. ու երկ/ժ. բ/կ.' : 'Preferred by families & long-term residents'}
+                  {isRu ? 'Предпочитают семьи и долгосрочные жители' : isHy ? 'Նախընտրելի ընտանիքների ու երկարաժամկետ բնակիչների համար' : 'Preferred by families & long-term residents'}
                 </p>
               </div>
             </div>
@@ -584,21 +606,24 @@ export default function BenidormPage({ params: { locale } }: Props) {
         </div>
       </section>
 
-      {/* ── MAP ── */}
-      <section className="bg-sand pb-0">
-        <div className="container-site pb-20">
-          <div className="overflow-hidden shadow-lg">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d50255.86537!2d-0.1338!3d38.5432!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd61f0059e51b6a5%3A0x400b7e2a6e7a3d0!2sBenidorm%2C%20Alicante%2C%20Spain!5e0!3m2!1sen!2s!4v1"
-              width="100%"
-              height="320"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Benidorm location"
-            />
+      {/* ── LUXURY MAP ── */}
+      <section className="py-0">
+        <div className="max-w-none">
+          {/* Section header */}
+          <div className="text-center py-16 px-8 bg-sand">
+            <p className="font-accent text-[11px] tracking-[0.3em] uppercase text-gold mb-3">
+              {(b as any).mapEye ?? 'Explore Benidorm'}
+            </p>
+            <h2 className="font-serif text-4xl font-light text-navy mb-3">
+              {(b as any).mapTitle ?? 'Discover the City'}
+            </h2>
+            <div className="gold-divider mx-auto mb-4" />
+            <p className="font-sans text-sm text-navy/50 max-w-md mx-auto">
+              {(b as any).mapSub ?? "Explore Benidorm's key locations, beaches and districts"}
+            </p>
           </div>
+          {/* Luxury Leaflet map */}
+          <BenidormMap />
         </div>
       </section>
 
