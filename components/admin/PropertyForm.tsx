@@ -8,7 +8,7 @@ import type { Property, PropertyFormData } from '@/types'
 
 const MapPicker = dynamic(() => import('./MapPicker'), { ssr: false })
 
-const MAX_IMAGES = 20
+const MAX_IMAGES = 30
 const TABS = ['Basic', 'Details', 'Description', 'Images', 'Location', 'Notes'] as const
 type Tab = typeof TABS[number]
 
@@ -771,7 +771,7 @@ export default function PropertyForm({ initial, mode }: Props) {
           <div className="flex items-start justify-between">
             <div>
               <p className="font-sans text-sm text-gray-600">Upload up to {MAX_IMAGES} images. Drag to reorder — first image is the cover.</p>
-              <p className="font-sans text-xs text-gray-400 mt-1">JPG · PNG · WebP · AVIF · max 10 MB each</p>
+              <p className="font-sans text-xs text-gray-400 mt-1">JPG · PNG · WebP · AVIF · max 10 MB each · up to {MAX_IMAGES} photos</p>
             </div>
             {form.images.length < MAX_IMAGES && (
               <button

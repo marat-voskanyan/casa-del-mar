@@ -92,7 +92,7 @@ The SQLite database is at data/casa.db and has these tables:
 - parking (boolean/integer 0 or 1)
 - status (text) — "new" | "available" | "sold" | "resale" | "sale"
 - ref (text) — e.g. "3282"
-- images (text) — JSON array of up to 20 image URL strings
+- images (text) — JSON array of up to 30 image URL strings
 - latitude (real) — for map
 - longitude (real) — for map
 - description_en (text)
@@ -198,7 +198,7 @@ Import in layout.tsx from Google Fonts.
 1. **Basic** — name, location, country (Spain/Cyprus), price, status, ref number
 2. **Details** — bedrooms, bathrooms, floor, size, parking checkbox, latitude, longitude
 3. **Description** — three textareas: EN, RU, HY descriptions + features (one per line)
-4. **Images** — 20 upload slots in a grid, drag to reorder, click to upload, X to remove
+4. **Images** — 30 upload slots in a grid, drag to reorder, click to upload, X to remove
 
 ---
 
@@ -276,7 +276,7 @@ Add to every page:
 - [ ] Design overhaul — property detail page
 - [ ] Design overhaul — contact page
 - [ ] Design overhaul — admin panel
-- [ ] Image gallery upgraded to 20 photos
+- [ ] Image gallery upgraded to 30 photos
 - [ ] Map added to property detail page
 - [ ] Map picker added to admin form
 - [ ] Multilingual translations complete
@@ -363,7 +363,7 @@ and create a separate /en/benidorm info page.
 - [ ] Design overhaul — property detail page
 - [ ] Design overhaul — contact page
 - [ ] Design overhaul — admin panel
-- [ ] Image gallery upgraded to 20 photos
+- [ ] Image gallery upgraded to 30 photos
 - [ ] Map added to property detail page
 - [ ] Map picker added to admin form
 - [x] Internal notes field added (admin only, never public)
