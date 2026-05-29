@@ -30,7 +30,7 @@ export const BENIDORM_IMAGES = {
     /** Poniente beach with palm trees */
     poniente_palms:     L('poniente-beach-palmas.jpg'),
     /** La Cala area — heart of Benidorm */
-    la_cala_section:    L('benidorm-lacala-1.jpg'),
+    la_cala_section:    L('la-cala-beach.jpg'),
     /** La Cala beach */
     la_cala_beach:      L('la-cala-beach.jpg'),
     /** La Cala pool / apartments */
