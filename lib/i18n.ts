@@ -435,10 +435,10 @@ const hy: typeof en = {
         { icon: '🏖️', title: 'Ամբողջ տարվա տուրիզմ',           desc: 'Բենիդորմը ակտիվ է տարվա բոլոր 12 ամիսներին, ինչը ապահովում է բարձր վարձակալական եկամուտ։' },
       ],
     },
-    stats: { properties: 'Խorhmrdatvutyun', countries: 'Երkir', clients: 'Гuyqer', years: 'Тarva porj' },
+    stats: { properties: 'Խորհրդատվություն', countries: 'Երկրներ', clients: 'Հաճախորդներ', years: 'Տարվա փորձ' },
   },
   property: {
-    bedrooms: 'Ննջ. սենյակ', bathrooms: 'Լոգ. սենյակ', size: 'Մակերես', floor: 'Հարկ',
+    bedrooms: 'Ննջասենյակ', bathrooms: 'Լոգասենյակ', size: 'Մակերես', floor: 'Հարկ',
     parking: 'Կայանատեղի', price: 'Արժեք',
     status: { available: 'Հասանելի', sold: 'Վաճառված', reserved: 'Ամրագրված' },
     viewDetails: 'Մանրամասներ',
