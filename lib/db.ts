@@ -90,10 +90,14 @@ async function initSchema(db: Client) {
   if (!names.has('latitude'))       alters.push('ALTER TABLE properties ADD COLUMN latitude REAL')
   if (!names.has('longitude'))      alters.push('ALTER TABLE properties ADD COLUMN longitude REAL')
   if (!names.has('ref'))            alters.push('ALTER TABLE properties ADD COLUMN ref TEXT')
+  if (!names.has('description_en')) alters.push('ALTER TABLE properties ADD COLUMN description_en TEXT')
+  if (!names.has('description_ru')) alters.push('ALTER TABLE properties ADD COLUMN description_ru TEXT')
+  if (!names.has('description_hy')) alters.push('ALTER TABLE properties ADD COLUMN description_hy TEXT')
   if (!names.has('features_en'))    alters.push('ALTER TABLE properties ADD COLUMN features_en TEXT')
   if (!names.has('features_ru'))    alters.push('ALTER TABLE properties ADD COLUMN features_ru TEXT')
   if (!names.has('features_hy'))    alters.push('ALTER TABLE properties ADD COLUMN features_hy TEXT')
   if (!names.has('internal_notes')) alters.push('ALTER TABLE properties ADD COLUMN internal_notes TEXT')
+  if (!names.has('size_sqm'))       alters.push('ALTER TABLE properties ADD COLUMN size_sqm REAL')
   if (alters.length) await db.batch(alters, 'write')
 }
 
