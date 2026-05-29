@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Locale, Property } from '@/types'
-import { getPropertyById, getSimilarProperties } from '@/lib/db'
+import { getPropertyByRef, getSimilarProperties } from '@/lib/db'
 import { getT, formatPrice } from '@/lib/i18n'
 import PropertyGallery from '@/components/properties/PropertyGallery'
 import PropertyMap from '@/components/properties/PropertyMap'
@@ -17,15 +17,17 @@ interface Props { params: { locale: Locale; id: string } }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   let property: Property | null = null
-  try { property = await getPropertyById(Number(params.id)) as unknown as Property } catch { /* */ }
+  try { property = await getPropertyByRef(params.id) as unknown as Property } catch { /* */ }
   if (!property) return { title: 'Property Not Found' }
 
   const descKey = `description_${params.locale}` as `description_${Locale}`
   const description = property[descKey] || property.description_en || undefined
+  const slug = property.ref || String(property.id)
 
   return {
-    title: property.name,
+    title: property.ref ? `${property.name} — REF: ${property.ref} | Casa del Mar` : property.name,
     description: description?.slice(0, 160),
+    alternates: { canonical: `/${params.locale}/properties/${slug}` },
     openGraph: {
       title: property.name,
       description: description?.slice(0, 160),
@@ -40,9 +42,9 @@ export default async function PropertyDetailPage({ params: { locale, id } }: Pro
   let similar: Property[] = []
 
   try {
-    property = await getPropertyById(Number(id)) as unknown as Property
+    property = await getPropertyByRef(id) as unknown as Property
     if (property) {
-      similar = await getSimilarProperties(property.id, property.country, 4) as unknown as Property[]
+      similar = await getSimilarProperties(property.id, property.country, 3) as unknown as Property[]
     }
   } catch { /* */ }
 
@@ -68,7 +70,7 @@ export default async function PropertyDetailPage({ params: { locale, id } }: Pro
     '@type': 'RealEstateListing',
     name: property.name,
     description: description || undefined,
-    url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://casadelmar.eu'}/${locale}/properties/${property.id}`,
+    url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://casadelmar.eu'}/${locale}/properties/${property.ref || property.id}`,
     image: property.images,
     offers: {
       '@type': 'Offer',

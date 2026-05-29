@@ -63,7 +63,8 @@ function HeartButton({ id }: { id: number }) {
 export default function PropertyCard({ property, locale, onQuickView }: Props) {
   const t = getT(locale)
   const image = property.images?.[0] || null
-  const href = `/${locale}/properties/${property.id}`
+  const propertySlug = property.ref || String(property.id)
+  const href = `/${locale}/properties/${propertySlug}`
   const displayName = locale === 'ru' ? (property.name_ru || property.name)
                     : locale === 'hy' ? (property.name_hy || property.name)
                     : property.name

@@ -145,6 +145,28 @@ export async function getPropertyById(id: number): Promise<Property | null> {
   return row ? toProperty(row as Record<string, unknown>) : null
 }
 
+/** Fetch by REF code; falls back to numeric ID for backward compatibility */
+export async function getPropertyByRef(ref: string): Promise<Property | null> {
+  await ensureSchema()
+  // Try by ref first
+  const byRef = await getDb().execute({
+    sql: 'SELECT * FROM properties WHERE ref = ? LIMIT 1',
+    args: [ref],
+  })
+  if (byRef.rows[0]) return toProperty(byRef.rows[0] as Record<string, unknown>)
+
+  // Fallback: try treating ref as a numeric ID
+  const numId = Number(ref)
+  if (!Number.isNaN(numId)) {
+    const byId = await getDb().execute({
+      sql: 'SELECT * FROM properties WHERE id = ? LIMIT 1',
+      args: [numId],
+    })
+    if (byId.rows[0]) return toProperty(byId.rows[0] as Record<string, unknown>)
+  }
+  return null
+}
+
 export async function getTotalPropertyCount(): Promise<number> {
   await ensureSchema()
   const res = await getDb().execute('SELECT COUNT(*) as count FROM properties')

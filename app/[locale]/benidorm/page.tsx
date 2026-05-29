@@ -13,7 +13,7 @@ const BenidormMap = dynamic(
     loading: () => (
       <div style={{
         width: '100%', height: 'clamp(320px, 40vw, 520px)',
-        background: '#0D1F2D',
+        background: '#F2EBD9',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
         <span style={{

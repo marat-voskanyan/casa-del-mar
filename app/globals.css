@@ -253,6 +253,16 @@
   @apply bg-navy text-white border-navy;
 }
 
+/* ── Benidorm section trigger shimmer ── */
+@keyframes borderShimmer {
+  0%   { border-color: rgba(201,168,76,0.20); }
+  50%  { border-color: rgba(201,168,76,0.80); }
+  100% { border-color: rgba(201,168,76,0.20); }
+}
+.about-benidorm-trigger:hover {
+  animation: borderShimmer 1.5s ease infinite;
+}
+
 /* ── Number ticker ── */
 @keyframes tick-up {
   from { transform: translateY(100%); opacity: 0; }

@@ -5,12 +5,13 @@ import { getPropertyById, updateProperty, deleteProperty } from '@/lib/db'
 import { verifyToken } from '@/lib/auth'
 import type { SQLInputValue } from '@/lib/db'
 
-function revalidateListingPages(propertyId?: number) {
+function revalidateListingPages(propertyId?: number, propertyRef?: string | null) {
   for (const locale of ['en', 'ru', 'hy']) {
     revalidatePath(`/${locale}/spain`)
     revalidatePath(`/${locale}/cyprus`)
     revalidatePath(`/${locale}`)
-    if (propertyId) revalidatePath(`/${locale}/properties/${propertyId}`)
+    if (propertyRef) revalidatePath(`/${locale}/properties/${propertyRef}`)
+    if (propertyId)  revalidatePath(`/${locale}/properties/${propertyId}`)
   }
 }
 
@@ -77,7 +78,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     }
 
     await updateProperty(Number(params.id), data)
-    revalidateListingPages(Number(params.id))
+    revalidateListingPages(Number(params.id), body.ref as string | null)
     return NextResponse.json({ ok: true })
   } catch (err) {
     console.error(err)
@@ -89,8 +90,14 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
   if (!(await auth())) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
   try {
+    // Fetch ref before deleting so we can revalidate the ref-based URL too
+    let ref: string | null = null
+    try {
+      const prop = await getPropertyById(Number(params.id))
+      ref = prop?.ref ?? null
+    } catch { /* */ }
     await deleteProperty(Number(params.id))
-    revalidateListingPages(Number(params.id))
+    revalidateListingPages(Number(params.id), ref)
     revalidateAllPropertyPages()
     return NextResponse.json({ ok: true })
   } catch (err) {
