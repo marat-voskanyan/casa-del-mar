@@ -480,7 +480,7 @@ export default function PropertyForm({ initial, mode }: Props) {
           </div>
           <div>
             <label className="admin-label">Price (€) *</label>
-            <input type="number" min="0" step="1000" value={form.price} onChange={e => setField('price', e.target.value)} required className="admin-input" placeholder="450000" />
+            <input type="number" min="0" step="any" value={form.price} onChange={e => setField('price', e.target.value)} required className="admin-input" placeholder="450000" />
           </div>
           <div>
             <label className="admin-label">Country *</label>
