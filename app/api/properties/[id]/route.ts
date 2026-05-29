@@ -14,6 +14,13 @@ function revalidateListingPages(propertyId?: number) {
   }
 }
 
+function revalidateAllPropertyPages() {
+  // Revalidate all property detail pages so similar sections refresh immediately
+  for (const locale of ['en', 'ru', 'hy']) {
+    revalidatePath(`/${locale}/properties/[id]`, 'layout')
+  }
+}
+
 export const runtime = 'nodejs'
 
 async function auth() {
@@ -45,6 +52,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 
     const data: Record<string, SQLInputValue> = {
       name:           body.name,
+      name_ru:        body.name_ru  || null,
+      name_hy:        body.name_hy  || null,
       location:       body.location,
       price:          Number(body.price),
       bedrooms:       body.bedrooms  ?? null,
@@ -82,6 +91,7 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
   try {
     await deleteProperty(Number(params.id))
     revalidateListingPages(Number(params.id))
+    revalidateAllPropertyPages()
     return NextResponse.json({ ok: true })
   } catch (err) {
     console.error(err)

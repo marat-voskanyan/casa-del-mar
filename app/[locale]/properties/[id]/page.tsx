@@ -10,7 +10,8 @@ import SimilarProperties from '@/components/properties/SimilarProperties'
 import ShareButtonClient from './ShareButtonClient'
 import WhatsAppButton from '@/components/WhatsAppButton'
 
-export const dynamic = 'force-dynamic'
+export const dynamic   = 'force-dynamic'
+export const revalidate = 0
 
 interface Props { params: { locale: Locale; id: string } }
 
@@ -48,7 +49,10 @@ export default async function PropertyDetailPage({ params: { locale, id } }: Pro
   if (!property) notFound()
 
   const descKey = `description_${locale}` as `description_${Locale}`
-  const description = property[descKey] || property.description_en
+  const description  = property[descKey] || property.description_en
+  const displayName  = locale === 'ru' ? (property.name_ru || property.name)
+                     : locale === 'hy' ? (property.name_hy || property.name)
+                     : property.name
 
   const features = [
     property.bedrooms  != null && { label: t.property.bedrooms,  value: String(property.bedrooms) },
@@ -130,7 +134,7 @@ export default async function PropertyDetailPage({ params: { locale, id } }: Pro
                 </div>
 
                 <h1 className="font-serif text-4xl md:text-5xl text-navy font-light leading-tight mb-3">
-                  {property.name}
+                  {displayName}
                 </h1>
 
                 <p className="font-sans text-sm text-navy/50 flex items-center gap-1.5">

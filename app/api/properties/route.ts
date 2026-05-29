@@ -48,6 +48,8 @@ export async function POST(request: Request) {
 
     const data: Record<string, SQLInputValue> = {
       name:           body.name,
+      name_ru:        body.name_ru  || null,
+      name_hy:        body.name_hy  || null,
       location:       body.location,
       price:          Number(body.price),
       bedrooms:       body.bedrooms  ?? null,

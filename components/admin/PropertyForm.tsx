@@ -28,16 +28,18 @@ const LOCATION_PRESETS = [
 ]
 
 const EMPTY: PropertyFormData = {
-  name: '', location: '', price: '', bedrooms: '', bathrooms: '',
-  floor: '', size_sqm: '', parking: false, status: 'available',
-  country: 'spain', ref: '', description_en: '', description_ru: '',
-  description_hy: '', features_en: '', features_ru: '', features_hy: '',
-  internal_notes: '', images: [], latitude: '', longitude: '',
+  name: '', name_ru: '', name_hy: '', location: '', price: '',
+  bedrooms: '', bathrooms: '', floor: '', size_sqm: '', parking: false,
+  status: 'available', country: 'spain', ref: '', description_en: '',
+  description_ru: '', description_hy: '', features_en: '', features_ru: '',
+  features_hy: '', internal_notes: '', images: [], latitude: '', longitude: '',
 }
 
 function toForm(p: Partial<Property>): Partial<PropertyFormData> {
   return {
     name:           p.name        || '',
+    name_ru:        p.name_ru     || '',
+    name_hy:        p.name_hy     || '',
     location:       p.location    || '',
     price:          p.price       != null ? String(p.price)     : '',
     bedrooms:       p.bedrooms    != null ? String(p.bedrooms)  : '',
@@ -76,6 +78,26 @@ export default function PropertyForm({ initial, mode }: Props) {
   const [dragOver, setDragOver] = useState<number | null>(null)
   const [showMapPicker, setShowMapPicker] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // ── Name Translator ──────────────────────────────────────────────────────────
+  const [isTranslatingName, setIsTranslatingName] = useState(false)
+
+  async function handleTranslateName() {
+    if (!form.name.trim()) return
+    setIsTranslatingName(true)
+    try {
+      const res  = await fetch('/api/admin/translate-name', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ name: form.name }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setForm(prev => ({ ...prev, name_ru: data.ru || prev.name_ru, name_hy: data.hy || prev.name_hy }))
+      }
+    } catch { /* silent */ }
+    finally { setIsTranslatingName(false) }
+  }
 
   // ── AI Description Generator ─────────────────────────────────────────────────
   const [isGenerating,          setIsGenerating]          = useState(false)
@@ -184,6 +206,10 @@ export default function PropertyForm({ initial, mode }: Props) {
         description_ru: data.descriptions.ru,
         description_hy: data.descriptions.hy,
       }))
+      // Auto-translate name if not yet translated
+      if ((!form.name_ru || !form.name_hy) && form.name.trim()) {
+        handleTranslateName()
+      }
       setGenerateSuccess(true)
       setTimeout(() => setGenerateSuccess(false), 5000)
     } catch (err) {
@@ -267,6 +293,8 @@ export default function PropertyForm({ initial, mode }: Props) {
     try {
       const payload = {
         name:           form.name.trim(),
+        name_ru:        form.name_ru  || null,
+        name_hy:        form.name_hy  || null,
         location:       form.location.trim(),
         price:          parseFloat(form.price)      || 0,
         bedrooms:       form.bedrooms  ? parseInt(form.bedrooms)    : null,
@@ -405,8 +433,46 @@ export default function PropertyForm({ initial, mode }: Props) {
       {tab === 'Basic' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="md:col-span-2">
-            <label className="admin-label">Property Name *</label>
-            <input value={form.name} onChange={e => setField('name', e.target.value)} required className="admin-input" placeholder="Beachfront Villa Marbella" />
+            <label className="admin-label">Property Name (English) *</label>
+            <div className="flex gap-2">
+              <input
+                value={form.name}
+                onChange={e => setField('name', e.target.value)}
+                required
+                className="admin-input flex-1"
+                placeholder="Beachfront Villa Marbella"
+              />
+              <button
+                type="button"
+                onClick={handleTranslateName}
+                disabled={!form.name.trim() || isTranslatingName}
+                className="px-3 py-2 bg-[#C9A84C] text-[#0D1F2D] text-xs font-semibold rounded whitespace-nowrap hover:bg-[#d4b55a] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                title="Translate name to Russian and Armenian"
+              >
+                {isTranslatingName ? '⟳' : '🌐 Translate'}
+              </button>
+            </div>
+            {/* Translated name fields */}
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              <div>
+                <label className="text-[10px] text-gray-400 uppercase tracking-wide">Name in Russian</label>
+                <input
+                  value={form.name_ru}
+                  onChange={e => setField('name_ru', e.target.value)}
+                  className="admin-input text-sm"
+                  placeholder="Auto-translated or enter manually"
+                />
+              </div>
+              <div>
+                <label className="text-[10px] text-gray-400 uppercase tracking-wide">Name in Armenian</label>
+                <input
+                  value={form.name_hy}
+                  onChange={e => setField('name_hy', e.target.value)}
+                  className="admin-input text-sm"
+                  placeholder="Auto-translated or enter manually"
+                />
+              </div>
+            </div>
           </div>
           <div className="md:col-span-2">
             <label className="admin-label">Location *</label>

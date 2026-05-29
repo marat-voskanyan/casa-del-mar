@@ -64,6 +64,9 @@ export default function PropertyCard({ property, locale, onQuickView }: Props) {
   const t = getT(locale)
   const image = property.images?.[0] || null
   const href = `/${locale}/properties/${property.id}`
+  const displayName = locale === 'ru' ? (property.name_ru || property.name)
+                    : locale === 'hy' ? (property.name_hy || property.name)
+                    : property.name
 
   return (
     <Link href={href} className="block cursor-pointer">
@@ -139,7 +142,7 @@ export default function PropertyCard({ property, locale, onQuickView }: Props) {
       <div className="p-5">
         <div className="flex items-start justify-between gap-3 mb-1">
           <h3 className="font-serif text-lg text-navy leading-tight group-hover:text-gold transition-colors duration-200">
-            {property.name}
+            {displayName}
           </h3>
           {property.ref && (
             <span className="shrink-0 border border-[#C9A84C]/50 text-[#C9A84C] font-accent text-[10px] tracking-widest uppercase px-2 py-0.5 mt-0.5">

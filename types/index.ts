@@ -6,6 +6,8 @@ export type PropertyCountry = 'spain' | 'cyprus'
 export interface Property {
   id: number
   name: string
+  name_ru: string | null
+  name_hy: string | null
   location: string
   price: number
   bedrooms: number | null
@@ -32,6 +34,8 @@ export interface Property {
 
 export interface PropertyFormData {
   name: string
+  name_ru: string
+  name_hy: string
   location: string
   price: string
   bedrooms: string

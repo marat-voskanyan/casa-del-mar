@@ -93,6 +93,8 @@ async function initSchema(db: Client) {
   if (!names.has('description_en')) alters.push('ALTER TABLE properties ADD COLUMN description_en TEXT')
   if (!names.has('description_ru')) alters.push('ALTER TABLE properties ADD COLUMN description_ru TEXT')
   if (!names.has('description_hy')) alters.push('ALTER TABLE properties ADD COLUMN description_hy TEXT')
+  if (!names.has('name_ru'))        alters.push('ALTER TABLE properties ADD COLUMN name_ru TEXT')
+  if (!names.has('name_hy'))        alters.push('ALTER TABLE properties ADD COLUMN name_hy TEXT')
   if (!names.has('features_en'))    alters.push('ALTER TABLE properties ADD COLUMN features_en TEXT')
   if (!names.has('features_ru'))    alters.push('ALTER TABLE properties ADD COLUMN features_ru TEXT')
   if (!names.has('features_hy'))    alters.push('ALTER TABLE properties ADD COLUMN features_hy TEXT')
@@ -158,10 +160,13 @@ export async function getFeaturedProperties(limit = 6): Promise<Property[]> {
   return res.rows.map(r => toProperty(r as Record<string, unknown>))
 }
 
-export async function getSimilarProperties(id: number, country: string, limit = 4): Promise<Property[]> {
+export async function getSimilarProperties(id: number, country: string, limit = 3): Promise<Property[]> {
   await ensureSchema()
   const res = await getDb().execute({
-    sql: 'SELECT * FROM properties WHERE country = ? AND id != ? ORDER BY created_at DESC LIMIT ?',
+    sql: `SELECT * FROM properties
+          WHERE country = ? AND id != ?
+            AND status NOT IN ('sold', 'reserved')
+          ORDER BY created_at DESC LIMIT ?`,
     args: [country, id, limit],
   })
   return res.rows.map(r => toProperty(r as Record<string, unknown>))
@@ -171,13 +176,14 @@ export async function createProperty(data: Record<string, SQLInputValue>): Promi
   await ensureSchema()
   const res = await getDb().execute({
     sql: `INSERT INTO properties
-        (name, location, price, bedrooms, bathrooms, floor, size_sqm, parking,
+        (name, name_ru, name_hy, location, price, bedrooms, bathrooms, floor, size_sqm, parking,
          status, country, ref, description_en, description_ru, description_hy,
          features_en, features_ru, features_hy, internal_notes,
          images, latitude, longitude)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     args: [
-      data.name, data.location, data.price, data.bedrooms, data.bathrooms,
+      data.name, data.name_ru ?? null, data.name_hy ?? null,
+      data.location, data.price, data.bedrooms, data.bathrooms,
       data.floor, data.size_sqm, data.parking, data.status, data.country,
       data.ref, data.description_en, data.description_ru, data.description_hy,
       data.features_en, data.features_ru, data.features_hy, data.internal_notes,
@@ -191,7 +197,8 @@ export async function updateProperty(id: number, data: Record<string, SQLInputVa
   await ensureSchema()
   await getDb().execute({
     sql: `UPDATE properties SET
-        name = ?, location = ?, price = ?,
+        name = ?, name_ru = ?, name_hy = ?,
+        location = ?, price = ?,
         bedrooms = ?, bathrooms = ?, floor = ?,
         size_sqm = ?, parking = ?, status = ?,
         country = ?, ref = ?,
@@ -200,7 +207,8 @@ export async function updateProperty(id: number, data: Record<string, SQLInputVa
         images = ?, latitude = ?, longitude = ?
       WHERE id = ?`,
     args: [
-      data.name, data.location, data.price, data.bedrooms, data.bathrooms,
+      data.name, data.name_ru ?? null, data.name_hy ?? null,
+      data.location, data.price, data.bedrooms, data.bathrooms,
       data.floor, data.size_sqm, data.parking, data.status, data.country,
       data.ref, data.description_en, data.description_ru, data.description_hy,
       data.features_en, data.features_ru, data.features_hy, data.internal_notes,
