@@ -1,17 +1,31 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
+import { revalidatePath } from 'next/cache'
 import { getAllProperties, createProperty } from '@/lib/db'
 import { verifyToken } from '@/lib/auth'
 import type { SQLInputValue } from '@/lib/db'
 
+function revalidateListingPages() {
+  for (const locale of ['en', 'ru', 'hy']) {
+    revalidatePath(`/${locale}/spain`)
+    revalidatePath(`/${locale}/cyprus`)
+    revalidatePath(`/${locale}`)
+  }
+}
+
 export const runtime = 'nodejs'
+
+const NO_CACHE = {
+  'Cache-Control': 'no-store, no-cache, must-revalidate',
+  'Pragma': 'no-cache',
+}
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const country = searchParams.get('country') || undefined
     const properties = await getAllProperties(country)
-    return NextResponse.json({ properties })
+    return NextResponse.json({ properties }, { headers: NO_CACHE })
   } catch (err) {
     console.error('GET /api/properties error:', err)
     return NextResponse.json({ error: 'Failed to fetch properties' }, { status: 500 })
@@ -57,6 +71,7 @@ export async function POST(request: Request) {
     }
 
     const id = await createProperty(data)
+    revalidateListingPages()
     return NextResponse.json({ id }, { status: 201 })
   } catch (err) {
     console.error('POST /api/properties error:', err)

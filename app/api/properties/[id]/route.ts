@@ -1,8 +1,18 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
+import { revalidatePath } from 'next/cache'
 import { getPropertyById, updateProperty, deleteProperty } from '@/lib/db'
 import { verifyToken } from '@/lib/auth'
 import type { SQLInputValue } from '@/lib/db'
+
+function revalidateListingPages(propertyId?: number) {
+  for (const locale of ['en', 'ru', 'hy']) {
+    revalidatePath(`/${locale}/spain`)
+    revalidatePath(`/${locale}/cyprus`)
+    revalidatePath(`/${locale}`)
+    if (propertyId) revalidatePath(`/${locale}/properties/${propertyId}`)
+  }
+}
 
 export const runtime = 'nodejs'
 
@@ -58,6 +68,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     }
 
     await updateProperty(Number(params.id), data)
+    revalidateListingPages(Number(params.id))
     return NextResponse.json({ ok: true })
   } catch (err) {
     console.error(err)
@@ -70,6 +81,7 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
 
   try {
     await deleteProperty(Number(params.id))
+    revalidateListingPages(Number(params.id))
     return NextResponse.json({ ok: true })
   } catch (err) {
     console.error(err)

@@ -8,7 +8,8 @@ import WhatsAppButton from '@/components/WhatsAppButton'
 import { getT } from '@/lib/i18n'
 import { BENIDORM_IMAGES, IMAGE_ALT } from '@/lib/images'
 
-export const dynamic = 'force-dynamic'
+export const dynamic   = 'force-dynamic'
+export const revalidate = 0
 
 interface Props { params: { locale: Locale } }
 
