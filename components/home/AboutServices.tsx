@@ -38,9 +38,9 @@ export default function AboutServices({ locale }: { locale: Locale }) {
             {/* Mini stats */}
             <div className="grid grid-cols-3 gap-6 mt-10 pt-8 border-t border-sand-200">
               {[
-                { value: '200+', label: t.home.stats.properties },
-                { value: '15+',  label: t.home.stats.years },
-                { value: '500+', label: t.home.stats.clients },
+                { value: '2',    label: t.home.stats.countries },
+                { value: '6+',   label: t.home.stats.years },
+                { value: '200+', label: t.home.stats.clients },
               ].map(stat => (
                 <div key={stat.label} className="text-center">
                   <p className="font-serif text-3xl text-navy font-light">{stat.value}</p>

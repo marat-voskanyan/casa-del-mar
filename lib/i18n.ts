@@ -111,7 +111,7 @@ const en = {
         { icon: '🏖️', title: 'Year-Round Tourism',       desc: 'Unlike many Spanish resorts, Benidorm attracts visitors 12 months a year — maximizing your rental income.' },
       ],
     },
-    stats: { properties: 'Properties', countries: 'Countries', clients: 'Consultation', years: 'Years Experience' },
+    stats: { properties: 'Consultation', countries: 'Countries', clients: 'Happy Clients', years: 'Years Experience' },
   },
   property: {
     bedrooms: 'Bedrooms', bathrooms: 'Bathrooms', size: 'Size', floor: 'Floor',
@@ -273,7 +273,7 @@ const ru: typeof en = {
         { icon: '🏖️', title: 'Круглогодичный туризм',    desc: 'В отличие от многих курортов, Бенидорм принимает гостей 12 месяцев в году — максимальный доход от аренды.' },
       ],
     },
-    stats: { properties: 'Объектов', countries: 'Страны', clients: 'Консультация', years: 'Лет опыта' },
+    stats: { properties: 'Консультация', countries: 'Страны', clients: 'Довольных клиентов', years: 'Лет опыта' },
   },
   property: {
     bedrooms: 'Спальни', bathrooms: 'Ванные', size: 'Площадь', floor: 'Этаж',
@@ -435,7 +435,7 @@ const hy: typeof en = {
         { icon: '🏖️', title: 'Ամբողջ տարվա տուրիզմ',           desc: 'Բենիդորմը ակտիվ է տարվա բոլոր 12 ամիսներին, ինչը ապահովում է բարձր վարձակալական եկամուտ։' },
       ],
     },
-    stats: { properties: 'Գույքեր', countries: 'Երկիր', clients: 'Խorhmrdatvutyun', years: 'Տarva porj' },
+    stats: { properties: 'Խorhmrdatvutyun', countries: 'Երkir', clients: 'Гoh hacakhordner', years: 'Տarva porj' },
   },
   property: {
     bedrooms: 'Ննջ. սենյակ', bathrooms: 'Լոգ. սենյակ', size: 'Մակերես', floor: 'Հարկ',

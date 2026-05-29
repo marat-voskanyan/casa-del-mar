@@ -72,7 +72,7 @@ export default function AdminNav() {
             alt="Casa del Mar"
             height={40}
             width={160}
-            className="h-[40px] w-auto object-contain"
+            className="h-[40px] w-auto object-contain brightness-0 invert"
           />
           <p className="font-sans text-[9px] tracking-[0.3em] uppercase text-gold">Admin</p>
         </div>
@@ -81,7 +81,7 @@ export default function AdminNav() {
 
       {/* Mobile top bar */}
       <div className="md:hidden bg-navy text-white flex items-center justify-between px-4 py-3 fixed top-0 left-0 right-0 z-40 shadow-lg">
-        <Image src="/logo.png" alt="Casa del Mar" height={32} width={128} className="h-[32px] w-auto object-contain" />
+        <Image src="/logo.png" alt="Casa del Mar" height={32} width={128} className="h-[32px] w-auto object-contain brightness-0 invert" />
         <button
           onClick={() => setMenuOpen(v => !v)}
           className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors"
@@ -115,7 +115,7 @@ export default function AdminNav() {
       >
         <div className="px-6 py-5 border-b border-white/10 flex items-center justify-between">
           <div className="flex flex-col gap-1">
-            <Image src="/logo.png" alt="Casa del Mar" height={36} width={144} className="h-[36px] w-auto object-contain" />
+            <Image src="/logo.png" alt="Casa del Mar" height={36} width={144} className="h-[36px] w-auto object-contain brightness-0 invert" />
             <p className="font-sans text-[9px] tracking-[0.3em] uppercase text-gold">Admin</p>
           </div>
           <button

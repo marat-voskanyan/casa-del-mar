@@ -80,7 +80,14 @@ export default function AdminDashboard() {
     finally { setDeleting(null) }
   }
 
-  const visible = filter === 'all' ? properties : properties.filter(p => p.country === filter)
+  const [refSearch, setRefSearch] = useState('')
+
+  const visible = (filter === 'all' ? properties : properties.filter(p => p.country === filter))
+    .filter(p => {
+      if (!refSearch) return true
+      const q = refSearch.toLowerCase()
+      return p.ref?.toLowerCase().includes(q) || p.name?.toLowerCase().includes(q)
+    })
   const spainCount  = properties.filter(p => p.country === 'spain').length
   const cyprusCount = properties.filter(p => p.country === 'cyprus').length
   const availableCount = properties.filter(p => p.status === 'available').length
@@ -118,6 +125,32 @@ export default function AdminDashboard() {
                 <p className="font-sans text-xs text-gray-500 mt-0.5">{s.label}</p>
               </div>
             ))}
+          </div>
+
+          {/* Search + Filter row */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
+            {/* REF / Name search */}
+            <div className="relative w-full sm:w-60">
+              <span className="absolute left-3 top-2.5 text-gray-400 text-sm pointer-events-none">🔍</span>
+              <input
+                type="text"
+                value={refSearch}
+                onChange={e => setRefSearch(e.target.value)}
+                placeholder="Search by REF or name..."
+                className="w-full pl-9 pr-8 py-2 border border-gray-200 rounded text-sm focus:outline-none focus:border-[#C9A84C] bg-white"
+              />
+              {refSearch && (
+                <button
+                  onClick={() => setRefSearch('')}
+                  className="absolute right-2 top-1.5 text-gray-400 hover:text-gray-600 text-xl leading-none"
+                >×</button>
+              )}
+            </div>
+            {refSearch && (
+              <p className="text-xs text-gray-400 sm:self-center">
+                {visible.length} result{visible.length !== 1 ? 's' : ''} for &ldquo;{refSearch}&rdquo;
+              </p>
+            )}
           </div>
 
           {/* Filter tabs */}

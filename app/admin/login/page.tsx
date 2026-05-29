@@ -51,7 +51,7 @@ export default function AdminLoginPage() {
             alt="Casa del Mar"
             height={60}
             width={240}
-            className="h-[60px] w-auto object-contain"
+            className="h-[60px] w-auto object-contain brightness-0 invert"
             priority
           />
           <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-gold">Admin Panel</p>

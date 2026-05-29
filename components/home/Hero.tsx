@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { Locale } from '@/types'
 import { getT } from '@/lib/i18n'
+import { getYearsExperience } from '@/lib/years'
 
 interface Props {
   locale: Locale
@@ -12,8 +13,6 @@ interface Props {
   /** Optional background photo shown behind the gradient (non-home pages) */
   bgImage?: string
   bgAlt?:   string
-  /** Dynamic total property count from the database */
-  propertyCount?: number
 }
 
 // ── Count-up stat item with IntersectionObserver ──────────────────────────────
@@ -70,7 +69,7 @@ function FreeStatItem({ label }: { label: string }) {
 }
 
 // ── Main Hero ─────────────────────────────────────────────────────────────────
-export default function Hero({ locale, page = 'home', bgImage, bgAlt, propertyCount = 0 }: Props) {
+export default function Hero({ locale, page = 'home', bgImage, bgAlt }: Props) {
   const t      = getT(locale)
   const hero   = t.hero[page]
   const isHome = page === 'home'
@@ -291,10 +290,10 @@ export default function Hero({ locale, page = 'home', bgImage, bgAlt, propertyCo
           <div className="container-site">
             <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-gold/10">
               {[
-                { value: 2,              suffix: '',  label: t.home.stats.countries },
-                { value: 6,              suffix: '+', label: t.home.stats.years },
-                { value: propertyCount,  suffix: '',  label: t.home.stats.properties },
-                { value: 0,              suffix: '',  label: t.home.stats.clients, freeLabel: true },
+                { value: 2,                      suffix: '',  label: t.home.stats.countries },
+                { value: getYearsExperience(),   suffix: '+', label: t.home.stats.years },
+                { value: 200,                    suffix: '+', label: t.home.stats.clients },
+                { value: 0,                      suffix: '',  label: t.home.stats.properties, freeLabel: true },
               ].map(stat => (
                 stat.freeLabel
                   ? <FreeStatItem key={stat.label} label={stat.label} />
