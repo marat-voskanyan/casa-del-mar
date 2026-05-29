@@ -435,7 +435,7 @@ const hy: typeof en = {
         { icon: '🏖️', title: 'Ամբողջ տարվա տուրիզմ',           desc: 'Բենիդորմը ակտիվ է տարվա բոլոր 12 ամիսներին, ինչը ապահովում է բարձր վարձակալական եկամուտ։' },
       ],
     },
-    stats: { properties: 'Խորհրդատվություն', countries: 'Երկրներ', clients: 'Հաճախորդներ', years: 'Տարվա փորձ' },
+    stats: { properties: 'Խորհրդատվություն', countries: 'Երկրներ', clients: 'Գույքեր', years: 'Տարվա փորձ' },
   },
   property: {
     bedrooms: 'Ննջասենյակ', bathrooms: 'Լոգասենյակ', size: 'Մակերես', floor: 'Հարկ',
