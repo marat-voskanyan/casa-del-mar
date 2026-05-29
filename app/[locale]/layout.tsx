@@ -22,11 +22,11 @@ export default function LocaleLayout({ children, params: { locale } }: Props) {
   if (!LOCALES.includes(locale)) notFound()
 
   return (
-    <>
+    <div lang={locale} className="locale-wrapper">
       <Header locale={locale} />
       <main>{children}</main>
       <Footer locale={locale} />
       <RevealObserver />
-    </>
+    </div>
   )
 }

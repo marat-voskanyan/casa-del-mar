@@ -340,7 +340,7 @@ const hy: typeof en = {
     featuredSub: '',
     viewAll:     'Բոլոր գույքերը',
     why:     'Ինչու Casa del Mar',
-    whySub:  'Միջerkerraçovyan škegh ansharzh guyqi olortum 6+ tarva porj',
+    whySub:  'Մijerkernadzovyan afnyal ansarzh guyqi olortum 6+ tarvayin porj',
     whyItems: [
       { title: 'Փորձագիտական ուղղորդում',   desc: 'Մեր եռալեզու թիմը տրամադրում է անհատական աջակցություն գույքի ձեռքբերման ամբողջ գործընթացի ընթացքում։' },
       { title: 'Լավագույն վայրեր',           desc: 'Բացառիկ հասանելիություն Իսպանիայի և Կիպրոսի ամենապահանջված գույքերին։' },

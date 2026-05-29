@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Playfair_Display, Inter, Montserrat } from 'next/font/google'
+import { Playfair_Display, Inter, Montserrat, Noto_Serif_Armenian, Noto_Sans_Armenian } from 'next/font/google'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -21,6 +21,20 @@ const montserrat = Montserrat({
   subsets: ['latin', 'cyrillic'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-montserrat',
+  display: 'swap',
+})
+
+const notoSerifArmenian = Noto_Serif_Armenian({
+  subsets: ['armenian'],
+  weight: ['300', '400', '500', '600'],
+  variable: '--font-noto-serif-armenian',
+  display: 'swap',
+})
+
+const notoSansArmenian = Noto_Sans_Armenian({
+  subsets: ['armenian'],
+  weight: ['300', '400', '500'],
+  variable: '--font-noto-sans-armenian',
   display: 'swap',
 })
 
@@ -68,7 +82,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${playfair.variable} ${inter.variable} ${montserrat.variable}`}>
+    <html lang="en" className={`${playfair.variable} ${inter.variable} ${montserrat.variable} ${notoSerifArmenian.variable} ${notoSansArmenian.variable}`}>
       <head>
         <meta name="site-id" content={process.env.NEXT_PUBLIC_SITE_ID || '69021918-94ab-48db-9e03-ca90f1a79617'} />
         <link rel="icon" type="image/png" href="/favicon.png" />
