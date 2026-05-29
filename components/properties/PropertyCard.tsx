@@ -141,6 +141,11 @@ export default function PropertyCard({ property, locale, onQuickView }: Props) {
           <h3 className="font-serif text-lg text-navy leading-tight group-hover:text-gold transition-colors duration-200">
             {property.name}
           </h3>
+          {property.ref && (
+            <span className="shrink-0 border border-[#C9A84C]/50 text-[#C9A84C] font-accent text-[10px] tracking-widest uppercase px-2 py-0.5 mt-0.5">
+              {property.ref}
+            </span>
+          )}
         </div>
 
         <p className="font-sans text-xs text-navy/45 tracking-wide mb-4 flex items-center gap-1.5">

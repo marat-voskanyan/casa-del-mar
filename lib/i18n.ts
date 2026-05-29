@@ -16,7 +16,7 @@ const en = {
     featuredSub: '',
     viewAll:     'View All Properties',
     why:     'Why Casa del Mar',
-    whySub:  'Over 15 years of expertise in Mediterranean luxury real estate',
+    whySub:  'Over 6 years of expertise in Mediterranean coastal real estate',
     whyItems: [
       { title: 'Expert Guidance',  desc: 'Our trilingual team provides personalised support throughout your property journey.' },
       { title: 'Prime Locations',  desc: 'Exclusive access to the most sought-after coastal properties in Spain and Cyprus.' },
@@ -111,7 +111,7 @@ const en = {
         { icon: '🏖️', title: 'Year-Round Tourism',       desc: 'Unlike many Spanish resorts, Benidorm attracts visitors 12 months a year — maximizing your rental income.' },
       ],
     },
-    stats: { properties: 'Properties', countries: 'Countries', clients: 'Happy Clients', years: 'Years Experience' },
+    stats: { properties: 'Properties', countries: 'Countries', clients: 'Consultation', years: 'Years Experience' },
   },
   property: {
     bedrooms: 'Bedrooms', bathrooms: 'Bathrooms', size: 'Size', floor: 'Floor',
@@ -178,7 +178,7 @@ const ru: typeof en = {
     featuredSub: '',
     viewAll:     'Все объекты',
     why:     'Почему Casa del Mar',
-    whySub:  'Более 15 лет опыта в сфере средиземноморской элитной недвижимости',
+    whySub:  'Более 6 лет опыта в сфере средиземноморской прибрежной недвижимости',
     whyItems: [
       { title: 'Экспертная помощь',     desc: 'Наша трёхъязычная команда оказывает персональную поддержку на всех этапах покупки.' },
       { title: 'Лучшие локации',        desc: 'Эксклюзивный доступ к самым востребованным прибрежным объектам в Испании и на Кипре.' },
@@ -273,7 +273,7 @@ const ru: typeof en = {
         { icon: '🏖️', title: 'Круглогодичный туризм',    desc: 'В отличие от многих курортов, Бенидорм принимает гостей 12 месяцев в году — максимальный доход от аренды.' },
       ],
     },
-    stats: { properties: 'Объектов', countries: 'Страны', clients: 'Довольных клиентов', years: 'Лет опыта' },
+    stats: { properties: 'Объектов', countries: 'Страны', clients: 'Консультация', years: 'Лет опыта' },
   },
   property: {
     bedrooms: 'Спальни', bathrooms: 'Ванные', size: 'Площадь', floor: 'Этаж',
@@ -340,7 +340,7 @@ const hy: typeof en = {
     featuredSub: '',
     viewAll:     'Բոլոր գույքերը',
     why:     'Ինչու Casa del Mar',
-    whySub:  'Միջերկրածովյան շքեղ անշարժ գույքի ոլորտում 15+ տարվա փորձ',
+    whySub:  'Միջerkerraçovyan škegh ansharzh guyqi olortum 6+ tarva porj',
     whyItems: [
       { title: 'Փորձագիտական ուղղորդում',   desc: 'Մեր եռալեզու թիմը տրամադրում է անհատական աջակցություն գույքի ձեռքբերման ամբողջ գործընթացի ընթացքում։' },
       { title: 'Լավագույն վայրեր',           desc: 'Բացառիկ հասանելիություն Իսպանիայի և Կիպրոսի ամենապահանջված գույքերին։' },
@@ -435,7 +435,7 @@ const hy: typeof en = {
         { icon: '🏖️', title: 'Ամբողջ տարվա տուրիզմ',           desc: 'Բենիդորմը ակտիվ է տարվա բոլոր 12 ամիսներին, ինչը ապահովում է բարձր վարձակալական եկամուտ։' },
       ],
     },
-    stats: { properties: 'Գույքեր', countries: 'Երկիր', clients: 'Գոհ հաճախորդներ', years: 'Տարվա փորձ' },
+    stats: { properties: 'Գույքեր', countries: 'Երկիր', clients: 'Խorhmrdatvutyun', years: 'Տarva porj' },
   },
   property: {
     bedrooms: 'Ննջ. սենյակ', bathrooms: 'Լոգ. սենյակ', size: 'Մակերես', floor: 'Հարկ',

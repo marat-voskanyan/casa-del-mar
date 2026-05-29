@@ -56,7 +56,8 @@ export default async function PropertyDetailPage({ params: { locale, id } }: Pro
     property.floor     != null && { label: t.property.floor,     value: String(property.floor) },
     property.size_sqm  != null && { label: t.property.size,      value: `${property.size_sqm} ${t.property.sqm}` },
     { label: t.property.parking, value: property.parking ? t.property.yes : t.property.no },
-  ].filter(Boolean) as { label: string; value: string }[]
+    property.ref       && { label: 'Reference', value: property.ref, isRef: true },
+  ].filter(Boolean) as { label: string; value: string; isRef?: boolean }[]
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -151,7 +152,7 @@ export default async function PropertyDetailPage({ params: { locale, id } }: Pro
                     {features.map(f => (
                       <div key={f.label} className="bg-sand p-4 border-l-2 border-gold">
                         <p className="font-accent text-[10px] tracking-[0.2em] text-navy/45 uppercase mb-1.5">{f.label}</p>
-                        <p className="font-serif text-xl text-navy">{f.value}</p>
+                        <p className={`font-serif text-xl ${f.isRef ? 'text-[#C9A84C] text-base tracking-widest' : 'text-navy'}`}>{f.value}</p>
                       </div>
                     ))}
                   </div>

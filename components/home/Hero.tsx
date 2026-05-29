@@ -12,6 +12,8 @@ interface Props {
   /** Optional background photo shown behind the gradient (non-home pages) */
   bgImage?: string
   bgAlt?:   string
+  /** Dynamic total property count from the database */
+  propertyCount?: number
 }
 
 // ── Count-up stat item with IntersectionObserver ──────────────────────────────
@@ -57,8 +59,18 @@ function StatItem({ value, suffix, label }: { value: number; suffix: string; lab
   )
 }
 
+// ── Free stat — no count-up animation, just shows "Free" ─────────────────────
+function FreeStatItem({ label }: { label: string }) {
+  return (
+    <div className="py-5 text-center">
+      <p className="font-serif text-2xl md:text-3xl text-gold font-light tracking-wide">Free</p>
+      <p className="font-accent text-[10px] tracking-[0.2em] text-white/45 uppercase mt-1">{label}</p>
+    </div>
+  )
+}
+
 // ── Main Hero ─────────────────────────────────────────────────────────────────
-export default function Hero({ locale, page = 'home', bgImage, bgAlt }: Props) {
+export default function Hero({ locale, page = 'home', bgImage, bgAlt, propertyCount = 0 }: Props) {
   const t      = getT(locale)
   const hero   = t.hero[page]
   const isHome = page === 'home'
@@ -279,12 +291,14 @@ export default function Hero({ locale, page = 'home', bgImage, bgAlt }: Props) {
           <div className="container-site">
             <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-gold/10">
               {[
-                { value: 200, suffix: '+', label: t.home.stats.properties },
-                { value: 2,   suffix: '',  label: t.home.stats.countries },
-                { value: 500, suffix: '+', label: t.home.stats.clients },
-                { value: 15,  suffix: '+', label: t.home.stats.years },
+                { value: 2,              suffix: '',  label: t.home.stats.countries },
+                { value: 6,              suffix: '+', label: t.home.stats.years },
+                { value: propertyCount,  suffix: '',  label: t.home.stats.properties },
+                { value: 0,              suffix: '',  label: t.home.stats.clients, freeLabel: true },
               ].map(stat => (
-                <StatItem key={stat.label} value={stat.value} suffix={stat.suffix} label={stat.label} />
+                stat.freeLabel
+                  ? <FreeStatItem key={stat.label} label={stat.label} />
+                  : <StatItem key={stat.label} value={stat.value} suffix={stat.suffix} label={stat.label} />
               ))}
             </div>
           </div>

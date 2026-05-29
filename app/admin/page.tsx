@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import AdminNav from '@/components/admin/AdminNav'
 import type { Property } from '@/types'
 
@@ -51,6 +52,7 @@ function NotesIcon({ notes }: { notes: string }) {
 }
 
 export default function AdminDashboard() {
+  const router = useRouter()
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState<number | null>(null)
@@ -149,20 +151,45 @@ export default function AdminDashboard() {
               <table className="w-full text-sm font-sans min-w-[580px]">
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
+                    <th className="w-16 px-2 py-3 text-xs uppercase tracking-wider text-gray-500 font-semibold hidden sm:table-cell">Photo</th>
+                    <th className="text-left px-3 py-3 text-xs uppercase tracking-wider text-gray-500 font-semibold hidden sm:table-cell">REF</th>
                     <th className="text-left px-4 py-3 text-xs uppercase tracking-wider text-gray-500 font-semibold">Property</th>
                     <th className="text-left px-4 py-3 text-xs uppercase tracking-wider text-gray-500 font-semibold hidden md:table-cell">Country</th>
                     <th className="text-left px-4 py-3 text-xs uppercase tracking-wider text-gray-500 font-semibold hidden md:table-cell">Price</th>
                     <th className="text-left px-4 py-3 text-xs uppercase tracking-wider text-gray-500 font-semibold">Status</th>
-                    <th className="text-center px-4 py-3 text-xs uppercase tracking-wider text-gray-500 font-semibold hidden md:table-cell">Notes</th>
+                    <th className="text-center px-4 py-3 text-xs uppercase tracking-wider text-gray-500 font-semibold hidden lg:table-cell">Notes</th>
                     <th className="text-right px-4 py-3 text-xs uppercase tracking-wider text-gray-500 font-semibold">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {visible.map(p => (
                     <tr key={p.id} className="hover:bg-gray-50 transition-colors">
+                      {/* Photo */}
+                      <td className="w-16 px-2 py-2 hidden sm:table-cell">
+                        {p.images?.[0] ? (
+                          <img
+                            src={p.images[0]}
+                            alt={p.name}
+                            className="w-14 h-10 object-cover rounded-sm cursor-pointer hover:opacity-80 transition-opacity"
+                            onClick={() => router.push(`/admin/properties/${p.id}/edit`)}
+                          />
+                        ) : (
+                          <div className="w-14 h-10 bg-gray-100 rounded-sm flex items-center justify-center">
+                            <span className="text-gray-300 text-lg">🏠</span>
+                          </div>
+                        )}
+                      </td>
+                      {/* REF */}
+                      <td className="px-3 py-2 hidden sm:table-cell">
+                        <span className="text-[#C9A84C] text-xs font-mono tracking-wide">
+                          {p.ref || '—'}
+                        </span>
+                      </td>
                       <td className="px-4 py-3">
                         <p className="font-medium text-navy">{p.name}</p>
                         <p className="text-xs text-gray-400 mt-0.5">📍 {p.location}</p>
+                        {/* Show REF inline on mobile */}
+                        {p.ref && <p className="text-[#C9A84C] text-[10px] font-mono mt-0.5 sm:hidden">{p.ref}</p>}
                       </td>
                       <td className="px-4 py-3 hidden md:table-cell">
                         <span className="text-base">{COUNTRY_FLAG[p.country]}</span>
@@ -176,7 +203,7 @@ export default function AdminDashboard() {
                           {p.status}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-center hidden md:table-cell">
+                      <td className="px-4 py-3 text-center hidden lg:table-cell">
                         {p.internal_notes ? (
                           <NotesIcon notes={p.internal_notes} />
                         ) : (

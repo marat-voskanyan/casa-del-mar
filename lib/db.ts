@@ -143,6 +143,12 @@ export async function getPropertyById(id: number): Promise<Property | null> {
   return row ? toProperty(row as Record<string, unknown>) : null
 }
 
+export async function getTotalPropertyCount(): Promise<number> {
+  await ensureSchema()
+  const res = await getDb().execute('SELECT COUNT(*) as count FROM properties')
+  return Number((res.rows[0] as Record<string, unknown>)?.count ?? 0)
+}
+
 export async function getFeaturedProperties(limit = 6): Promise<Property[]> {
   await ensureSchema()
   const res = await getDb().execute({

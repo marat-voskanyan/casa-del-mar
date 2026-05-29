@@ -3,20 +3,20 @@
 import { useEffect, useRef } from 'react'
 
 const MARKERS = [
-  { pos: [38.5430, -0.1150] as [number, number], label: 'Playa de Levante — 1.9km Golden Beach' },
-  { pos: [38.5370, -0.1310] as [number, number], label: 'Playa de Poniente — 3km Golden Beach' },
-  { pos: [38.5390, -0.1350] as [number, number], label: 'La Cala — Modern Apartments 2008–2015' },
-  { pos: [38.5520, -0.1050] as [number, number], label: 'Sierra Cortina — Prestigious Hillside' },
-  { pos: [38.6100, -0.0500] as [number, number], label: 'Altea Hills — Elite Gated Community' },
-  { pos: [38.5630, -0.1890] as [number, number], label: 'Finestrat — New Developments' },
-  { pos: [38.5413, -0.1189] as [number, number], label: 'Casco Antiguo — Historic Old Town' },
+  { pos: [38.5428, -0.1121] as [number, number], label: 'Playa de Levante — 1.9km' },
+  { pos: [38.5367, -0.1420] as [number, number], label: 'Playa de Poniente — 3km' },
+  { pos: [38.5355, -0.1467] as [number, number], label: 'La Cala — Modern Apartments' },
+  { pos: [38.5408, -0.1189] as [number, number], label: 'Casco Antiguo — Old Town' },
+  { pos: [38.5578, -0.0889] as [number, number], label: 'Sierra Cortina — Prestigious Area' },
+  { pos: [38.6089, -0.0467] as [number, number], label: 'Altea Hills — Elite Community' },
+  { pos: [38.5681, -0.1889] as [number, number], label: 'Finestrat — New Developments' },
 ]
 
 const LEVANTE_LINE: [number, number][] = [
-  [38.5398, -0.1193], [38.5430, -0.1150], [38.5458, -0.1108],
+  [38.5398, -0.1193], [38.5428, -0.1121], [38.5458, -0.1060],
 ]
 const PONIENTE_LINE: [number, number][] = [
-  [38.5398, -0.1193], [38.5370, -0.1310], [38.5345, -0.1385],
+  [38.5398, -0.1193], [38.5367, -0.1420], [38.5330, -0.1520],
 ]
 
 export default function BenidormMap() {
@@ -73,7 +73,7 @@ export default function BenidormMap() {
       // ── Map init ──────────────────────────────────────────────────────────────
       const map = L.map('benidorm-map', {
         center:           [38.5401, -0.1228],
-        zoom:             11,
+        zoom:             12,
         scrollWheelZoom:  false,
         zoomControl:      false,
         attributionControl: true,
