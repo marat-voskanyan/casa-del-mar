@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef } from 'react'
 import Image from 'next/image'
 import type { Locale } from '@/types'
 import { getT } from '@/lib/i18n'
@@ -12,61 +12,14 @@ interface Props {
   locale: Locale
 }
 
-// ── Luxury custom cursor (60px gold circle with "VIEW") ───────────────────────
-function GalleryCursor({ x, y, visible }: { x: number; y: number; visible: boolean }) {
-  return (
-    <div
-      style={{
-        position:      'fixed',
-        left:          x,
-        top:           y,
-        transform:     'translate(-50%, -50%)',
-        pointerEvents: 'none',
-        zIndex:        9998,
-        opacity:       visible ? 1 : 0,
-        transition:    'opacity 0.2s ease',
-        willChange:    'transform',
-      }}
-    >
-      <div style={{
-        width:           '60px',
-        height:          '60px',
-        border:          '1px solid #C9A84C',
-        borderRadius:    '50%',
-        display:         'flex',
-        alignItems:      'center',
-        justifyContent:  'center',
-        background:      'rgba(201,168,76,0.10)',
-        backdropFilter:  'blur(2px)',
-      }}>
-        <span style={{
-          color:         '#C9A84C',
-          fontSize:      '9px',
-          letterSpacing: '0.15em',
-          fontFamily:    'Montserrat, sans-serif',
-          fontWeight:    600,
-        }}>VIEW</span>
-      </div>
-    </div>
-  )
-}
+// Gold arrow SVG cursor (24×24, encoded for data URL)
+const GOLD_ARROW_CURSOR =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23C9A84C' stroke='%23000000' stroke-width='0.5' d='M4 4l16 7-7 2-2 7z'/%3E%3C/svg%3E\") 4 4, pointer"
 
 export default function PropertyGallery({ images, name, locale }: Props) {
   const t = getT(locale)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [mobileIndex,   setMobileIndex]   = useState(0)
-
-  // ── Custom cursor state ────────────────────────────────────────────────────
-  const [cursor,    setCursor]    = useState({ x: 0, y: 0 })
-  const [hovering,  setHovering]  = useState(false)
-  const cursorRAF   = useRef<number | null>(null)
-
-  const trackMouse = useCallback((e: React.MouseEvent) => {
-    const x = e.clientX, y = e.clientY
-    if (cursorRAF.current) cancelAnimationFrame(cursorRAF.current)
-    cursorRAF.current = requestAnimationFrame(() => setCursor({ x, y }))
-  }, [])
-
   const touchStartX = useRef<number | null>(null)
 
   const open  = (i: number) => setLightboxIndex(i)
@@ -81,18 +34,8 @@ export default function PropertyGallery({ images, name, locale }: Props) {
   const secondaries    = images.slice(1, 5)
   const remainingCount = images.length - 5
 
-  const galleryCursorProps = {
-    onMouseMove:  trackMouse,
-    onMouseEnter: () => setHovering(true),
-    onMouseLeave: () => setHovering(false),
-    style:        { cursor: 'none' } as React.CSSProperties,
-  }
-
   return (
     <>
-      {/* ── Custom cursor ── */}
-      <GalleryCursor x={cursor.x} y={cursor.y} visible={hovering} />
-
       {/* ── Gallery section header ── */}
       <div className="mb-10">
         <div className="flex items-center justify-between mb-4">
@@ -136,7 +79,6 @@ export default function PropertyGallery({ images, name, locale }: Props) {
             sizes="100vw"
             priority={mobileIndex === 0}
           />
-          {/* Counter */}
           <div className="absolute bottom-3 left-3 bg-black/50 text-white
             font-accent text-[10px] tracking-wider px-2.5 py-1 rounded-full">
             {mobileIndex + 1} / {images.length}
@@ -161,14 +103,15 @@ export default function PropertyGallery({ images, name, locale }: Props) {
           )}
         </div>
 
-        {/* ── Desktop: photo grid with custom cursor ── */}
+        {/* ── Desktop: photo grid with gold arrow cursor ── */}
         <div
           className="hidden md:grid grid-cols-4 grid-rows-2 gap-2 h-[520px]"
-          {...galleryCursorProps}
+          style={{ cursor: GOLD_ARROW_CURSOR }}
         >
           {/* Primary — 2 cols × 2 rows */}
           <button
             className="col-span-2 row-span-2 relative overflow-hidden group rounded-l-xl"
+            style={{ cursor: GOLD_ARROW_CURSOR }}
             onClick={() => open(0)}
           >
             <Image
@@ -190,6 +133,7 @@ export default function PropertyGallery({ images, name, locale }: Props) {
             return (
               <button
                 key={i}
+                style={{ cursor: GOLD_ARROW_CURSOR }}
                 className={`relative overflow-hidden group
                   ${i === 1 ? 'rounded-tr-xl' : ''}
                   ${i === 3 ? 'rounded-br-xl' : ''}`}
