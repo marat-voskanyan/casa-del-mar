@@ -45,7 +45,9 @@ export default async function PropertyDetailPage({ params: { locale, id } }: Pro
   try {
     property = await getPropertyByRef(id) as unknown as Property
     if (property) {
-      similar = await getSimilarProperties(property.id, property.country, 3) as unknown as Property[]
+      similar = await getSimilarProperties(
+        property.id, property.country, property.location, property.price, 3
+      ) as unknown as Property[]
     }
   } catch { /* */ }
 

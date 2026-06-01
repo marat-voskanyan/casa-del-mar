@@ -19,7 +19,10 @@ export default function SimilarProperties({ properties, locale }: Props) {
         <div className="mb-10">
           <p className="eyebrow text-gold mb-3">{t.property.similar}</p>
           <h2 className="font-serif text-3xl md:text-4xl text-navy">{t.property.similar}</h2>
-          <div className="gold-divider mt-4" />
+          <div className="gold-divider mt-4 mb-3" />
+          <p className="font-accent text-[10px] tracking-[0.15em] uppercase text-navy/40">
+            {(t.property as any).similarSub}
+          </p>
         </div>
 
         {/* Snap-scroll carousel on mobile, grid on md+ */}

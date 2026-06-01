@@ -182,16 +182,103 @@ export async function getFeaturedProperties(limit = 6): Promise<Property[]> {
   return res.rows.map(r => toProperty(r as Record<string, unknown>))
 }
 
-export async function getSimilarProperties(id: number, country: string, limit = 3): Promise<Property[]> {
+// ── Extract the main area from a location string ──────────────────────────────
+function extractArea(location: string): string {
+  const areas = [
+    'La Cala', 'Levante', 'Poniente', 'Vila Park',
+    'Sierra Cortina', 'Altea Hills', 'Finestrat',
+    'Larnaca', 'Paphos', 'Limassol', 'Nicosia',
+    'Benidorm', 'Oroklini', 'Geroskipou', 'Livadia',
+    'Faneromeni', 'Aphrodite Hills',
+  ]
+  for (const area of areas) {
+    if (location.includes(area)) return area
+  }
+  return location.split(',')[0].trim()
+}
+
+export async function getSimilarProperties(
+  id:       number,
+  country:  string,
+  location: string = '',
+  price:    number = 0,
+  limit = 3,
+): Promise<Property[]> {
   await ensureSchema()
-  const res = await getDb().execute({
-    sql: `SELECT * FROM properties
-          WHERE country = ? AND id != ?
-            AND status NOT IN ('sold', 'reserved')
-          ORDER BY created_at DESC LIMIT ?`,
-    args: [country, id, limit],
-  })
-  return res.rows.map(r => toProperty(r as Record<string, unknown>))
+  const db       = getDb()
+  const area     = location ? extractArea(location) : ''
+  const minPrice = price * 0.75
+  const maxPrice = price * 1.25
+  const collected: Record<string, unknown>[] = []
+  const usedIds   = new Set<number>([id])
+
+  const addRows = (rows: Record<string, unknown>[]) => {
+    for (const row of rows) {
+      const rid = Number(row.id)
+      if (!usedIds.has(rid)) { usedIds.add(rid); collected.push(row) }
+    }
+  }
+
+  // Step 1 — same area + price within ±25%
+  if (area && price > 0) {
+    const r = await db.execute({
+      sql: `SELECT * FROM properties
+            WHERE id != ? AND status NOT IN ('sold','reserved')
+              AND country = ? AND location LIKE ?
+              AND price BETWEEN ? AND ?
+            ORDER BY ABS(price - ?) ASC LIMIT ?`,
+      args: [id, country, `%${area}%`, minPrice, maxPrice, price, limit],
+    })
+    addRows(r.rows as Record<string, unknown>[])
+  }
+
+  // Step 2 — same area, any price
+  if (collected.length < limit && area) {
+    const needed    = limit - collected.length
+    const excludeIn = Array.from(usedIds).join(',')
+    const r = await db.execute({
+      sql: `SELECT * FROM properties
+            WHERE id NOT IN (${excludeIn})
+              AND status NOT IN ('sold','reserved')
+              AND country = ? AND location LIKE ?
+            ORDER BY ABS(price - ?) ASC LIMIT ?`,
+      args: [country, `%${area}%`, price, needed],
+    })
+    addRows(r.rows as Record<string, unknown>[])
+  }
+
+  // Step 3 — same country + price within ±25%
+  if (collected.length < limit && price > 0) {
+    const needed    = limit - collected.length
+    const excludeIn = Array.from(usedIds).join(',')
+    const r = await db.execute({
+      sql: `SELECT * FROM properties
+            WHERE id NOT IN (${excludeIn})
+              AND status NOT IN ('sold','reserved')
+              AND country = ?
+              AND price BETWEEN ? AND ?
+            ORDER BY ABS(price - ?) ASC LIMIT ?`,
+      args: [country, minPrice, maxPrice, price, needed],
+    })
+    addRows(r.rows as Record<string, unknown>[])
+  }
+
+  // Fallback — any available in same country
+  if (collected.length < limit) {
+    const needed    = limit - collected.length
+    const excludeIn = Array.from(usedIds).join(',')
+    const r = await db.execute({
+      sql: `SELECT * FROM properties
+            WHERE id NOT IN (${excludeIn})
+              AND status NOT IN ('sold','reserved')
+              AND country = ?
+            ORDER BY created_at DESC LIMIT ?`,
+      args: [country, needed],
+    })
+    addRows(r.rows as Record<string, unknown>[])
+  }
+
+  return collected.slice(0, limit).map(r => toProperty(r))
 }
 
 export async function createProperty(data: Record<string, SQLInputValue>): Promise<number> {
