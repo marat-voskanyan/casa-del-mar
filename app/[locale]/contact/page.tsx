@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import type { Locale } from '@/types'
 import { getT } from '@/lib/i18n'
 import ContactForm from '@/components/contact/ContactForm'
+import OfficeSection from '@/components/contact/OfficeSection'
 
 interface Props { params: { locale: Locale } }
 
@@ -140,6 +141,9 @@ export default function ContactPage({ params: { locale } }: Props) {
           </div>
         </div>
       </section>
+
+      {/* Office section — between contact form and footer */}
+      <OfficeSection locale={locale} />
     </>
   )
 }

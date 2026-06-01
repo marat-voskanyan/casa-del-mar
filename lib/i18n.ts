@@ -150,6 +150,15 @@ const en = {
     chatWhatsapp: 'Chat on WhatsApp',
     viewFacebook: 'Facebook',
   },
+  office: {
+    eyebrow:      'OUR OFFICE',
+    title:        'Visit Us in Yerevan',
+    paragraph:    "Our office is located in the heart of Yerevan, at 37 Mashtots Avenue — one of the city's most central streets. We welcome clients for in-person free consultations Monday to Friday, 11:00–18:00. Whether you are just starting your property search or ready to make a purchase, our team is here to guide you every step of the way.",
+    addressLabel: 'Address',
+    hoursLabel:   'Working Hours',
+    hoursValue:   'Mon–Fri: 11:00 – 18:00',
+    mapEye:       'Find Us',
+  },
   footer: {
     desc:                  'Premier international real estate agency. Based in Yerevan, serving buyers worldwide.',
     links:                 'Quick Links',
@@ -312,6 +321,15 @@ const ru: typeof en = {
     chatWhatsapp: 'WhatsApp',
     viewFacebook: 'Facebook',
   },
+  office: {
+    eyebrow:      'НАШ ОФИС',
+    title:        'Посетите нас в Ереване',
+    paragraph:    'Наш офис расположен в самом сердце Еревана, по адресу проспект Маштоца, 37 — на одной из самых центральных улиц города. Мы рады принимать клиентов на бесплатные консультации с понедельника по пятницу, с 11:00 до 18:00. Независимо от того, только ли вы начинаете поиск недвижимости или уже готовы к покупке, наша команда готова сопровождать вас на каждом этапе пути.',
+    addressLabel: 'Адрес',
+    hoursLabel:   'Часы работы',
+    hoursValue:   'Пн–Пт: 11:00 – 18:00',
+    mapEye:       'Найти нас',
+  },
   footer: {
     desc:                  'Ведущее международное агентство недвижимости. Ереван — для покупателей по всему миру.',
     links:                 'Быстрые ссылки',
@@ -473,6 +491,15 @@ const hy: typeof en = {
     followUs:    'Հետևեք մեզ',
     chatWhatsapp: 'WhatsApp',
     viewFacebook: 'Facebook',
+  },
+  office: {
+    eyebrow:      'ՄԵՐ ԳՐԱՍԵՆՅԱԿԸ',
+    title:        'Այցելեք մեզ Երևանում',
+    paragraph:    'Մեր գրասենյակը գտնվում է Երևանի սրտում՝ Մաշտոցի պողոտա 37 հասցեում՝ քաղաքի ամենակենտրոնական փողոցներից մեկում։ Մենք սիրով ընդունում ենք հաճախորդներին անվճար անձնական խորհրդատվությունների համար երկուշաբթիից ուրբաթ՝ ժամը 11:00-ից մինչև 18:00։ Անկախ նրանից՝ դուք նոր եք սկսում անշարժ գույքի որոնումը, թե արդեն պատրաստ եք գնման, մեր թիմը պատրաստ է ուղեկցել ձեզ յուրաքանչյուր փուլում։',
+    addressLabel: 'Հասցե',
+    hoursLabel:   'Աշխատանքային ժամեր',
+    hoursValue:   'Երկ–Ուրբ: 11:00 – 18:00',
+    mapEye:       'Գտեք մեզ',
   },
   footer: {
     desc:                  'Առաջատար միջազգային անշարժ գույքի գործակալություն։ Երևանից՝ ամբողջ աշխարհին։',
