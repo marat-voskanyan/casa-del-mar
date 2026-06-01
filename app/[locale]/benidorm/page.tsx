@@ -262,9 +262,9 @@ export default function BenidormPage({ params: { locale } }: Props) {
                   alt={IMAGE_ALT.about_benidorm}
                   fill
                   loading="lazy"
-                  quality={80}
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  quality={85}
+                  className="object-cover object-center"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 40vw"
                 />
               </div>
               <div className="mt-4 bg-sand p-5">
@@ -421,13 +421,13 @@ export default function BenidormPage({ params: { locale } }: Props) {
             <div className="lg:col-span-2 reveal">
               <div className="aspect-[4/3] relative rounded-sm shadow-2xl mb-6 overflow-hidden">
                 <Image
-                  src={BENIDORM_IMAGES.sections.la_cala_apartments}
-                  alt={IMAGE_ALT.la_cala_apartments}
+                  src={BENIDORM_IMAGES.sections.la_cala_section}
+                  alt={IMAGE_ALT.la_cala_section}
                   fill
                   loading="lazy"
-                  quality={80}
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  quality={85}
+                  className="object-cover object-center"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 40vw"
                 />
               </div>
 

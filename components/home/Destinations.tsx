@@ -53,9 +53,9 @@ export default function Destinations({ locale }: Props) {
                 alt={card.alt}
                 fill
                 loading="lazy"
-                quality={75}
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                sizes="(max-width: 768px) 100vw, 50vw"
+                quality={80}
+                className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
               {/* Dark overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-navy-900/90 via-navy-900/40 to-navy-900/10 group-hover:from-navy-900/80 transition-all duration-500" />
