@@ -113,7 +113,7 @@ export default function Hero({ locale, page = 'home', bgImage, bgAlt }: Props) {
   }
 
   return (
-    <section className={`relative flex items-center overflow-hidden ${isHome ? 'min-h-[100svh]' : 'min-h-[60vh]'}`}>
+    <section className={`relative flex overflow-hidden ${isHome ? 'min-h-[100svh] items-start md:items-center' : 'min-h-[60vh] items-center'}`}>
 
       {/* ── HOME: real Benidorm aerial photo with parallax ── */}
       {isHome && (
@@ -193,24 +193,28 @@ export default function Hero({ locale, page = 'home', bgImage, bgAlt }: Props) {
       <div className="absolute left-0 top-1/4 bottom-1/4 w-px z-[3] bg-gradient-to-b from-transparent via-gold/40 to-transparent" />
 
       {/* ── CONTENT ── */}
-      <div className={`container-site relative z-[10] flex flex-col items-center text-center ${isHome ? 'pt-40 pb-36' : 'pt-32 pb-20'}`}>
+      <div className={`container-site relative z-[10] flex flex-col items-center text-center w-full ${
+        isHome
+          ? 'pt-[82px] sm:pt-28 md:pt-40 pb-[120px] sm:pb-28 md:pb-36'
+          : 'pt-32 pb-20'
+      }`}>
 
         {/* Eyebrow */}
-        <div className="flex items-center gap-4 mb-8 opacity-0 animate-fade-in">
-          <div className="w-10 h-px bg-gold/70" />
-          <span className="font-accent text-[11px] tracking-[0.30em] uppercase text-gold/90">
+        <div className="flex items-center gap-3 mb-5 sm:mb-8 opacity-0 animate-fade-in">
+          <div className="w-6 sm:w-10 h-px bg-gold/70" />
+          <span className="font-accent text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.30em] uppercase text-gold/90">
             Casa del Mar · International Real Estate
           </span>
-          <div className="w-10 h-px bg-gold/70" />
+          <div className="w-6 sm:w-10 h-px bg-gold/70" />
         </div>
 
-        {/* Headline — bigger, more dramatic */}
+        {/* Headline */}
         <h1
-          className="font-serif font-light text-white leading-[1.05] mb-6 opacity-0 animate-fade-up whitespace-pre-line max-w-5xl"
+          className="font-serif font-light text-white leading-[1.05] mb-4 sm:mb-6 opacity-0 animate-fade-up whitespace-pre-line max-w-5xl"
           style={{
-            fontSize:    'clamp(2.2rem, 8vw, 7rem)',
+            fontSize:      'clamp(2rem, 9vw, 7rem)',
             letterSpacing: '-0.02em',
-            textShadow:  '0 2px 20px rgba(0,0,0,0.35)',
+            textShadow:    '0 2px 20px rgba(0,0,0,0.35)',
           }}
         >
           {hero.title}
@@ -219,15 +223,15 @@ export default function Hero({ locale, page = 'home', bgImage, bgAlt }: Props) {
         {/* Gold divider */}
         <div
           className="bg-gold opacity-0 animate-fade-up-d1"
-          style={{ width: '60px', height: '1px', margin: '1.5rem auto' }}
+          style={{ width: '40px', height: '1px', margin: '1rem auto' }}
         />
 
         {/* Subtitle */}
         <p
-          className="font-sans font-light text-white/80 max-w-2xl leading-relaxed mb-10 opacity-0 animate-fade-up-d1 px-2 sm:px-0"
+          className="font-sans font-light text-white/80 max-w-2xl leading-relaxed mb-7 sm:mb-10 opacity-0 animate-fade-up-d1 px-2 sm:px-0"
           style={{
-            fontSize:      'clamp(1rem, 2.5vw, 1.3rem)',
-            letterSpacing: '0.05em',
+            fontSize:      'clamp(0.875rem, 3.5vw, 1.3rem)',
+            letterSpacing: '0.04em',
           }}
         >
           {hero.subtitle}
@@ -235,23 +239,21 @@ export default function Hero({ locale, page = 'home', bgImage, bgAlt }: Props) {
 
         {/* ── CTAs — home only ── */}
         {isHome && (
-          <div className="flex flex-col sm:flex-row gap-4 mb-8 opacity-0 animate-fade-up-d2 w-full sm:w-auto px-4 sm:px-0">
-
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 opacity-0 animate-fade-up-d2 w-full sm:w-auto px-4 sm:px-0">
             {/* Primary — gold fill */}
             <Link
               href={`/${locale}/spain`}
-              className="flex items-center justify-center w-full sm:w-auto h-14 px-10 font-accent text-[12px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(201,168,76,0.35)]"
+              className="flex items-center justify-center w-full sm:w-auto h-[54px] px-8 font-accent text-[11px] sm:text-[12px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 active:scale-[0.97]"
               style={{ background: '#C9A84C', color: '#0D1F2D', border: '2px solid #C9A84C' }}
               onMouseEnter={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.background = 'transparent'; el.style.color = '#C9A84C' }}
               onMouseLeave={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.background = '#C9A84C'; el.style.color = '#0D1F2D' }}
             >
               {(hero as typeof t.hero.home).cta}
             </Link>
-
             {/* Ghost — white outline */}
             <Link
               href={`/${locale}/cyprus`}
-              className="flex items-center justify-center w-full sm:w-auto h-14 px-10 font-accent text-[12px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(201,168,76,0.25)]"
+              className="flex items-center justify-center w-full sm:w-auto h-[54px] px-8 font-accent text-[11px] sm:text-[12px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 active:scale-[0.97]"
               style={{ background: 'transparent', color: '#FFFFFF', border: '2px solid rgba(255,255,255,0.60)' }}
               onMouseEnter={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.background = 'rgba(255,255,255,0.08)'; el.style.borderColor = '#C9A84C'; el.style.color = '#C9A84C' }}
               onMouseLeave={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.background = 'transparent'; el.style.borderColor = 'rgba(255,255,255,0.60)'; el.style.color = '#FFFFFF' }}
@@ -260,25 +262,28 @@ export default function Hero({ locale, page = 'home', bgImage, bgAlt }: Props) {
             </Link>
           </div>
         )}
-
-        {/* ── Animated scroll indicator — home only ── */}
-        {isHome && (
-          <button
-            onClick={scrollToNext}
-            aria-label="Scroll to next section"
-            className="absolute bottom-24 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 opacity-0 animate-fade-up-d3 cursor-pointer group"
-          >
-            <div className="w-px h-10 bg-gradient-to-b from-gold/50 to-transparent" />
-            <div
-              className="w-1.5 h-1.5 rounded-full bg-gold/70 group-hover:bg-gold transition-colors"
-              style={{ animation: 'heroScrollBounce 2s ease-in-out infinite' }}
-            />
-            <span className="font-accent text-[9px] tracking-[0.35em] uppercase text-gold/50 group-hover:text-gold/80 transition-colors mt-0.5">
-              Scroll
-            </span>
-          </button>
-        )}
       </div>
+
+      {/* ── Scroll indicator — anchored to SECTION bottom, not content div ── */}
+      {isHome && (
+        <button
+          onClick={scrollToNext}
+          aria-label="Scroll to next section"
+          className="absolute bottom-[calc(var(--stats-h,80px)+20px)] left-1/2 -translate-x-1/2
+            flex flex-col items-center gap-1.5 z-[10]
+            opacity-0 animate-fade-up-d3 cursor-pointer group"
+          style={{ '--stats-h': '80px' } as React.CSSProperties}
+        >
+          <div className="w-px h-8 bg-gradient-to-b from-gold/50 to-transparent" />
+          <div
+            className="w-1.5 h-1.5 rounded-full bg-gold/70 group-hover:bg-gold transition-colors"
+            style={{ animation: 'heroScrollBounce 2s ease-in-out infinite' }}
+          />
+          <span className="font-accent text-[9px] tracking-[0.35em] uppercase text-gold/50 group-hover:text-gold/80 transition-colors mt-0.5">
+            Scroll
+          </span>
+        </button>
+      )}
 
       {/* ── Stats bar — home only ── */}
       {isHome && (
