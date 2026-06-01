@@ -30,8 +30,14 @@ export default function BenidormSection({ locale }: Props) {
     }
   }, [open])
 
+  const armenianFont = "'Noto Sans Armenian', 'Noto Serif Armenian', 'Arial Unicode MS', sans-serif"
+
   return (
-    <section className="bg-[#0D1F2D]">
+    <section
+      className="bg-[#0D1F2D]"
+      lang={locale}
+      style={locale === 'hy' ? { fontFamily: armenianFont } : undefined}
+    >
       {/* ── Trigger button ── */}
       <button
         onClick={() => setOpen(v => !v)}

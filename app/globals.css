@@ -2,33 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Armenian font rendering ── */
+/* ── Armenian font rendering — all descendants forced ── */
 :lang(hy),
-[lang="hy"] {
-  font-family: var(--font-noto-sans-armenian), 'Noto Sans Armenian', sans-serif !important;
+:lang(hy) *,
+[lang="hy"],
+[lang="hy"] * {
+  font-family: var(--font-noto-sans-armenian), 'Noto Sans Armenian',
+               'Arial Unicode MS', 'Segoe UI', sans-serif !important;
 }
 
-:lang(hy) h1,
-:lang(hy) h2,
-:lang(hy) h3,
-:lang(hy) h4,
-[lang="hy"] h1,
-[lang="hy"] h2,
-[lang="hy"] h3 {
-  font-family: var(--font-noto-serif-armenian), 'Noto Serif Armenian', serif !important;
-}
-
-:lang(hy) p,
-:lang(hy) span,
-:lang(hy) div,
-:lang(hy) a,
-:lang(hy) button,
-:lang(hy) input,
-:lang(hy) label,
-:lang(hy) li,
-:lang(hy) td,
-:lang(hy) th {
-  font-family: var(--font-noto-sans-armenian), 'Noto Sans Armenian', sans-serif !important;
+:lang(hy) h1, :lang(hy) h2, :lang(hy) h3, :lang(hy) h4,
+[lang="hy"] h1, [lang="hy"] h2, [lang="hy"] h3, [lang="hy"] h4 {
+  font-family: var(--font-noto-serif-armenian), 'Noto Serif Armenian',
+               'Arial Unicode MS', serif !important;
 }
 
 @layer base {

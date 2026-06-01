@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
+import SetDocumentLang from '@/components/layout/SetDocumentLang'
 import type { Locale } from '@/types'
 import RevealObserver from '@/components/layout/RevealObserver'
 
@@ -23,6 +24,8 @@ export default function LocaleLayout({ children, params: { locale } }: Props) {
 
   return (
     <div lang={locale} className="locale-wrapper">
+      {/* Sets document.documentElement.lang so :lang(hy) CSS activates on <html> */}
+      <SetDocumentLang locale={locale} />
       <Header locale={locale} />
       <main>{children}</main>
       <Footer locale={locale} />
