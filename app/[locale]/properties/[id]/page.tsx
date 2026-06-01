@@ -181,6 +181,8 @@ export default async function PropertyDetailPage({ params: { locale, id } }: Pro
                 lng={property.longitude}
                 name={property.name}
                 price={property.price}
+                location={property.location}
+                propertyRef={property.ref}
                 locale={locale}
               />
             </div>
