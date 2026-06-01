@@ -34,13 +34,21 @@
     font-size: 16px !important;
   }
 
-  /* Touch targets */
+  /* Touch targets — 44px minimum for iOS HIG compliance */
   button, a, [role="button"] {
     touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   /* Prevent horizontal overflow on all screen sizes */
   img, video { max-width: 100%; }
+
+  /* iOS Safari smooth momentum scroll */
+  html { -webkit-overflow-scrolling: touch; }
+
+  /* Hide scrollbar globally */
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
 }
 
 @layer components {
@@ -286,3 +294,89 @@
   50%  { box-shadow: 0 4px 35px rgba(37,211,102,0.70), 0 0 0 8px rgba(37,211,102,0.10); }
   100% { box-shadow: 0 4px 20px rgba(37,211,102,0.40); }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE LUXURY POLISH
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Safe area insets (iPhone notch / home bar) ── */
+.safe-top    { padding-top:    max(1rem, env(safe-area-inset-top)); }
+.safe-bottom { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+
+/* ── Touch feedback — active states for all interactive elements ── */
+@media (hover: none) {
+  button:active, a:active, [role="button"]:active {
+    transform: scale(0.97);
+    transition: transform 0.08s ease;
+  }
+  /* Disable browser tap highlight completely */
+  * { -webkit-tap-highlight-color: transparent; }
+}
+
+/* ── Filter pills — luxury refined style ── */
+.filter-pill {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 18px;
+  border: 1.5px solid rgba(13,31,45,0.15);
+  background: white;
+  font-family: var(--font-montserrat), 'Montserrat', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: rgba(13,31,45,0.7);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+}
+.filter-pill.active {
+  background: #C9A84C;
+  border-color: #C9A84C;
+  color: #0D1F2D;
+  font-weight: 600;
+}
+.filter-pill:active { transform: scale(0.96); }
+
+/* ── Right-edge scroll fade ── */
+.scroll-fade-right {
+  -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  mask-image: linear-gradient(to right, black 85%, transparent 100%);
+}
+
+/* ── Sticky bottom bar safe area ── */
+.sticky-bottom-bar {
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+}
+
+/* ── Smooth momentum scrolling ── */
+.scroll-x, .scroll-touch {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* ── Mobile card spacing ── */
+@media (max-width: 640px) {
+  .mobile-px { padding-left: 16px; padding-right: 16px; }
+  .mobile-gap { gap: 16px; }
+}
+
+/* ── FAB (Floating Action Button) ── */
+.fab {
+  position: fixed;
+  bottom: max(24px, env(safe-area-inset-bottom, 24px));
+  right: 20px;
+  z-index: 50;
+  width: 56px;
+  height: 56px;
+  background: #C9A84C;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 24px rgba(201,168,76,0.45), 0 2px 8px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.fab:active { transform: scale(0.93); box-shadow: 0 3px 12px rgba(201,168,76,0.35); }

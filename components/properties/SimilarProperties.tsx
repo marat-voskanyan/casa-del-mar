@@ -22,15 +22,24 @@ export default function SimilarProperties({ properties, locale }: Props) {
           <div className="gold-divider mt-4" />
         </div>
 
-        {/* Horizontal scroll on mobile, grid on md+ */}
-        <div className="scroll-x md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6 md:overflow-visible">
+        {/* Snap-scroll carousel on mobile, grid on md+ */}
+        <div className="flex gap-4 overflow-x-auto scroll-touch scrollbar-none
+          snap-x snap-mandatory -mx-5 px-5
+          md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6
+          md:overflow-visible md:snap-none">
           {properties.map(p => {
             const img = p.images?.[0]
+            const slug = p.ref || String(p.id)
             return (
               <Link
                 key={p.id}
-                href={`/${locale}/properties/${p.id}`}
-                className="group block w-72 md:w-auto shrink-0 md:shrink bg-white shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                href={`/${locale}/properties/${slug}`}
+                className="group block snap-start shrink-0 w-[260px]
+                  md:w-auto md:shrink
+                  bg-white overflow-hidden
+                  shadow-[0_4px_20px_rgba(13,31,45,0.08)]
+                  hover:shadow-[0_12px_32px_rgba(13,31,45,0.14)]
+                  transition-shadow duration-500"
               >
                 {/* Image */}
                 <div className="relative aspect-[4/3] overflow-hidden">
@@ -53,13 +62,14 @@ export default function SimilarProperties({ properties, locale }: Props) {
 
                 {/* Info */}
                 <div className="p-4">
-                  <h3 className="font-serif text-base text-navy leading-tight mb-1 group-hover:text-gold transition-colors">
+                  <h3 className="font-serif text-[15px] text-navy leading-snug mb-1.5
+                    group-hover:text-[#C9A84C] transition-colors duration-400">
                     {p.name}
                   </h3>
-                  <p className="font-sans text-xs text-navy/45">{p.location}</p>
+                  <p className="font-accent text-[10px] tracking-[0.12em] uppercase text-[#C9A84C]/70 mb-3">{p.location}</p>
 
                   {/* Mini features */}
-                  <div className="flex gap-3 mt-3 text-[11px] text-navy/50 font-sans">
+                  <div className="flex gap-3 text-[11px] font-accent uppercase tracking-wide text-navy/45">
                     {p.bedrooms != null && <span>{p.bedrooms} {t.property.bedrooms}</span>}
                     {p.size_sqm != null && <span>{p.size_sqm} {t.property.sqm}</span>}
                   </div>

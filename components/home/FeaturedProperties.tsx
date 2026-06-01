@@ -34,11 +34,14 @@ export default function FeaturedProperties({ locale, properties }: Props) {
         )}
 
         <div className="text-center mt-12">
-          <div className="flex justify-center gap-4">
-            <Link href={`/${locale}/spain`} className="btn-outline">
+          {/* Full width on mobile, side by side on desktop */}
+          <div className="flex flex-col sm:flex-row justify-center gap-3 px-5 sm:px-0">
+            <Link href={`/${locale}/spain`}
+              className="btn-outline w-full sm:w-auto justify-center py-4 sm:py-3">
               {t.nav.spain}
             </Link>
-            <Link href={`/${locale}/cyprus`} className="btn-outline">
+            <Link href={`/${locale}/cyprus`}
+              className="btn-outline w-full sm:w-auto justify-center py-4 sm:py-3">
               {t.nav.cyprus}
             </Link>
           </div>

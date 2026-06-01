@@ -92,78 +92,85 @@ export default function PropertiesGrid({ properties, locale, country, flag, subt
           <div className="gold-divider" />
         </div>
 
-        {/* Filter bar */}
-        <div className="sticky top-[80px] md:top-[88px] z-30 bg-sand/95 backdrop-blur-sm -mx-5 md:-mx-10 px-5 md:px-10 py-3 mb-10 border-b border-sand-300 shadow-sm">
-          {/* Single scrollable row on mobile, flex-wrap on desktop */}
-          <div className="overflow-x-auto scrollbar-none">
-            <div className="flex items-center gap-2 min-w-max pb-0.5">
-              {/* Status pills */}
-              {statusPills.map(pill => (
-                <button
-                  key={pill.key}
-                  onClick={() => setStatus(pill.key)}
-                  className={`filter-pill whitespace-nowrap py-2 ${status === pill.key ? 'active' : ''}`}
-                >
-                  {pill.label}
-                </button>
-              ))}
+        {/* Filter bar — sticky with right-edge fade on mobile */}
+        <div className="sticky top-[64px] md:top-[88px] z-30
+          bg-[#F2EBD9]/97 backdrop-blur-md
+          -mx-5 md:-mx-10 mb-10
+          border-b border-[#0D1F2D]/8
+          shadow-[0_2px_16px_rgba(13,31,45,0.06)]">
+          {/* Right-fade wrapper */}
+          <div className="relative">
+            <div className="overflow-x-auto scrollbar-none scroll-touch scroll-fade-right px-5 md:px-10 py-3">
+              <div className="flex items-center gap-2 min-w-max pb-0.5">
 
-              <div className="w-px h-5 bg-navy/15 mx-1 shrink-0" />
-
-              {/* Beds */}
-              <span className="font-accent text-[10px] tracking-[0.15em] uppercase text-navy/40 shrink-0">{t.filter.beds}:</span>
-              {bedOptions.map(b => (
-                <button
-                  key={b.key}
-                  onClick={() => setBeds(b.key)}
-                  className={`px-3 py-2 rounded-full font-accent text-[10px] tracking-wide transition-colors whitespace-nowrap shrink-0 ${
-                    beds === b.key
-                      ? 'bg-navy text-white'
-                      : 'bg-white/60 text-navy/60 hover:bg-white hover:text-navy border border-navy/15'
-                  }`}
-                >
-                  {b.label}
-                </button>
-              ))}
-
-              <div className="w-px h-5 bg-navy/15 mx-1 shrink-0" />
-
-              {/* Max price */}
-              <select
-                value={maxPrice}
-                onChange={e => setMaxPrice(Number(e.target.value))}
-                className="font-accent text-[11px] tracking-wide bg-white/60 border border-navy/15 rounded-full px-3 py-2 text-navy/70 focus:outline-none focus:border-gold cursor-pointer hover:bg-white transition-colors shrink-0"
-              >
-                {MAX_PRICE_OPTIONS.map(o => (
-                  <option key={o.value} value={o.value}>{o.label}</option>
+                {/* Status pills */}
+                {statusPills.map(pill => (
+                  <button
+                    key={pill.key}
+                    onClick={() => setStatus(pill.key)}
+                    className={`filter-pill ${status === pill.key ? 'active' : ''}`}
+                  >
+                    {pill.label}
+                  </button>
                 ))}
-              </select>
 
-              {/* Sort */}
-              <select
-                value={sort}
-                onChange={e => setSort(e.target.value as SortKey)}
-                className="font-accent text-[11px] tracking-wide bg-transparent border border-sand-400 rounded-full px-3 py-2 text-navy/70 focus:outline-none focus:border-gold cursor-pointer shrink-0"
-              >
-                {sortOptions.map(o => (
-                  <option key={o.key} value={o.key}>{o.label}</option>
+                <div className="w-px h-5 bg-[#0D1F2D]/12 mx-1 shrink-0" />
+
+                {/* Beds */}
+                <span className="font-accent text-[10px] tracking-[0.12em] uppercase text-navy/35 shrink-0 hidden sm:inline">{t.filter.beds}:</span>
+                {bedOptions.map(b => (
+                  <button
+                    key={b.key}
+                    onClick={() => setBeds(b.key)}
+                    className={`filter-pill ${beds === b.key ? 'active' : ''}`}
+                  >
+                    {b.label}
+                  </button>
                 ))}
-              </select>
 
-              {/* Results count */}
-              <span className="font-accent text-[10px] tracking-wider text-navy/50 uppercase shrink-0 ml-1">
-                {filtered.length} {t.filter.results}
-              </span>
+                <div className="w-px h-5 bg-[#0D1F2D]/12 mx-1 shrink-0" />
 
-              {/* Clear filters */}
-              {hasActiveFilters && (
-                <button
-                  onClick={clearAll}
-                  className="font-accent text-[10px] tracking-wider text-gold hover:text-gold/70 uppercase transition-colors underline underline-offset-2 shrink-0"
+                {/* Max price */}
+                <select
+                  value={maxPrice}
+                  onChange={e => setMaxPrice(Number(e.target.value))}
+                  className="h-[36px] font-accent text-[11px] tracking-wide
+                    bg-white border-[1.5px] border-[#0D1F2D]/15 rounded-full
+                    px-3 text-navy/70 focus:outline-none focus:border-gold
+                    cursor-pointer hover:border-gold/50 transition-colors shrink-0"
                 >
-                  ✕ Clear
-                </button>
-              )}
+                  {MAX_PRICE_OPTIONS.map(o => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
+                  ))}
+                </select>
+
+                {/* Sort */}
+                <select
+                  value={sort}
+                  onChange={e => setSort(e.target.value as SortKey)}
+                  className="h-[36px] font-accent text-[11px] tracking-wide
+                    bg-transparent border-[1.5px] border-[#0D1F2D]/15 rounded-full
+                    px-3 text-navy/70 focus:outline-none focus:border-gold
+                    cursor-pointer shrink-0"
+                >
+                  {sortOptions.map(o => (
+                    <option key={o.key} value={o.key}>{o.label}</option>
+                  ))}
+                </select>
+
+                {/* Results + clear */}
+                <span className="font-accent text-[10px] tracking-wider text-navy/40 uppercase shrink-0 ml-2">
+                  {filtered.length} {t.filter.results}
+                </span>
+                {hasActiveFilters && (
+                  <button
+                    onClick={clearAll}
+                    className="filter-pill border-gold/40 text-gold hover:bg-gold/10 ml-1"
+                  >
+                    ✕ Clear
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>

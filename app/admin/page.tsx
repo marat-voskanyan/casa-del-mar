@@ -107,7 +107,7 @@ export default function AdminDashboard() {
                 {properties.length} total · {availableCount} available
               </p>
             </div>
-            <Link href="/admin/properties/new" className="admin-btn">
+            <Link href="/admin/properties/new" className="admin-btn hidden sm:inline-flex">
               + Add Property
             </Link>
           </div>
@@ -269,6 +269,17 @@ export default function AdminDashboard() {
           )}
         </div>
       </div>
+
+      {/* Mobile FAB — floating Add Property button */}
+      <Link
+        href="/admin/properties/new"
+        className="fab sm:hidden"
+        aria-label="Add Property"
+      >
+        <svg className="w-7 h-7 text-[#0D1F2D]" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+      </Link>
     </div>
   )
 }

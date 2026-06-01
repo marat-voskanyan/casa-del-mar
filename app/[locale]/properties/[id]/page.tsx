@@ -7,6 +7,7 @@ import { getT, formatPrice } from '@/lib/i18n'
 import PropertyGallery from '@/components/properties/PropertyGallery'
 import PropertyMap from '@/components/properties/PropertyMap'
 import SimilarProperties from '@/components/properties/SimilarProperties'
+import DescriptionCollapse from '@/components/properties/DescriptionCollapse'
 import ShareButtonClient from './ShareButtonClient'
 import WhatsAppButton from '@/components/WhatsAppButton'
 
@@ -165,15 +166,13 @@ export default async function PropertyDetailPage({ params: { locale, id } }: Pro
                 </div>
               )}
 
-              {/* Description */}
+              {/* Description — collapsible on mobile */}
               {description && (
-                <div>
-                  <h2 className="font-serif text-2xl text-navy mb-4">{t.property.description}</h2>
-                  <div className="gold-divider mb-6" />
-                  <p className="font-sans text-navy/70 leading-relaxed whitespace-pre-wrap text-base">
-                    {description}
-                  </p>
-                </div>
+                <DescriptionCollapse
+                  text={description}
+                  title={t.property.description}
+                  previewChars={180}
+                />
               )}
 
               {/* Map */}
@@ -227,13 +226,20 @@ export default async function PropertyDetailPage({ params: { locale, id } }: Pro
       <SimilarProperties properties={similar} locale={locale} />
       <WhatsAppButton locale={locale} />
 
-      {/* Mobile sticky bottom bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-navy border-t border-white/10 shadow-lg px-4 py-3 flex items-center gap-3">
+      {/* Mobile sticky bottom bar — with safe area inset */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40
+        bg-white/95 backdrop-blur-md border-t-2 border-[#C9A84C]/40
+        shadow-[0_-8px_32px_rgba(13,31,45,0.12)]
+        px-5 pt-3 sticky-bottom-bar flex items-center gap-4">
         <div className="shrink-0">
-          <p className="font-accent text-[9px] tracking-[0.2em] uppercase text-gold/70">{t.property.price}</p>
-          <p className="font-serif text-xl text-white font-light leading-tight">{formatPrice(property.price)}</p>
+          <p className="font-accent text-[9px] tracking-[0.2em] uppercase text-navy/40">{t.property.price}</p>
+          <p className="font-serif text-[1.35rem] text-navy font-light leading-tight">{formatPrice(property.price)}</p>
         </div>
-        <Link href={`/${locale}/contact`} className="btn-primary flex-1 text-center text-xs py-3">
+        <Link href={`/${locale}/contact`}
+          className="flex-1 h-[44px] flex items-center justify-center
+            bg-[#C9A84C] text-[#0D1F2D] font-accent text-[11px]
+            tracking-[0.18em] uppercase font-semibold
+            active:scale-[0.97] transition-transform">
           {t.property.contactCta}
         </Link>
       </div>
