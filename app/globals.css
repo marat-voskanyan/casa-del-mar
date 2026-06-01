@@ -75,18 +75,18 @@
 
   /* ── Typography ── */
   .eyebrow {
-    @apply font-accent text-gold tracking-[0.3em] uppercase text-[11px] font-semibold;
+    @apply font-accent text-gold tracking-[0.32em] uppercase text-[10px] font-medium;
   }
   .section-title {
-    @apply font-serif text-4xl md:text-5xl lg:text-6xl font-normal leading-tight;
+    @apply font-serif text-[2.5rem] md:text-[3.25rem] lg:text-[4rem] font-light leading-[1.06] tracking-[-0.01em];
   }
-  .gold-divider { @apply w-14 h-[2px] bg-gold my-5; }
+  .gold-divider { @apply w-12 h-px bg-gold my-5; }
 
   /* ── Cards ── */
   .card {
-    @apply bg-white rounded-2xl shadow-card overflow-hidden
-           hover:shadow-card-hover hover:-translate-y-1.5
-           transition-all duration-400;
+    @apply bg-white overflow-hidden
+           transition-all duration-700 ease-out
+           hover:shadow-[0_24px_48px_-8px_rgba(13,31,45,0.16)];
   }
 
   /* ── Forms (public) ── */
@@ -161,7 +161,7 @@
 }
 
 /* ── Scroll animation hook ── */
-.reveal         { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal         { opacity: 0; transform: translateY(32px); transition: opacity 0.9s cubic-bezier(0.25,0.1,0.25,1), transform 0.9s cubic-bezier(0.25,0.1,0.25,1); }
 .reveal.visible { opacity: 1; transform: translateY(0); }
 .reveal-d1.visible { transition-delay: 0.1s; }
 .reveal-d2.visible { transition-delay: 0.2s; }

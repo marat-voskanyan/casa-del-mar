@@ -10,22 +10,27 @@ export default function ContactStrip({ locale }: Props) {
   const cs = t.home.contactStrip
 
   return (
-    <section className="relative overflow-hidden py-20 px-8 bg-navy-900">
-      {/* Gold gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-navy-900 via-[#0D1F2D] to-navy-900" />
+    <section className="relative overflow-hidden py-24 md:py-32 px-8 bg-[#0D1F2D]">
+      {/* Gold top border */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#C9A84C]/50 to-transparent" />
+      {/* Subtle diagonal lines */}
       <div
-        className="absolute inset-0 opacity-[0.06]"
+        className="absolute inset-0 opacity-[0.04]"
         style={{
-          backgroundImage: 'linear-gradient(45deg, #C9A84C 1px, transparent 1px), linear-gradient(-45deg, #C9A84C 1px, transparent 1px)',
-          backgroundSize: '40px 40px',
+          backgroundImage: 'linear-gradient(60deg, #C9A84C 1px, transparent 1px)',
+          backgroundSize: '80px 80px',
         }}
       />
+      {/* Radial gold glow center */}
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+        w-[600px] h-[300px] rounded-full opacity-[0.06]"
+        style={{ background: 'radial-gradient(ellipse, #C9A84C 0%, transparent 70%)' }} />
 
       <div className="relative container-site">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
           {/* Text */}
           <div className="text-center lg:text-left max-w-2xl">
-            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-light text-white mb-4">
+            <h2 className="font-serif text-[2.25rem] md:text-[3rem] lg:text-[3.5rem] font-light text-white mb-4 leading-[1.08] tracking-[-0.01em]">
               {cs.title}
             </h2>
             <p className="font-sans text-white/55 text-lg leading-relaxed">

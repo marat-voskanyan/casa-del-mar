@@ -56,22 +56,36 @@ export default function WhyUs({ locale }: { locale: Locale }) {
           {t.home.whyItems.map((item, i) => (
             <div
               key={i}
-              className={`group relative p-8 border border-white/8 hover:border-gold/30 transition-all duration-400 reveal reveal-d${i + 1}`}
-              style={{ background: 'rgba(255,255,255,0.02)' }}
+              className={`group relative p-8 border border-white/8 overflow-hidden
+                hover:border-gold/25
+                transition-all duration-700 ease-out
+                reveal reveal-d${i + 1}`}
+              style={{ background: 'rgba(255,255,255,0.025)' }}
             >
               {/* Index number */}
-              <span className="absolute top-6 right-6 font-serif text-5xl font-light text-white/5 leading-none select-none">
+              <span className="absolute top-4 right-5 font-serif text-[4rem] font-light
+                text-white/[0.04] leading-none select-none
+                group-hover:text-[#C9A84C]/10 transition-colors duration-700">
                 {String(i + 1).padStart(2, '0')}
               </span>
 
+              {/* Gold top accent — grows in on hover */}
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#C9A84C]
+                scale-x-0 group-hover:scale-x-100 origin-left
+                transition-transform duration-700 ease-out" />
+
               {/* Icon */}
-              <div className="w-14 h-14 rounded-xl border border-gold/20 flex items-center justify-center text-gold mb-6 group-hover:bg-gold/10 group-hover:border-gold/40 transition-all duration-300">
+              <div className="w-12 h-12 border border-gold/20 flex items-center justify-center
+                text-gold mb-7
+                group-hover:border-gold/50 group-hover:bg-gold/8
+                transition-all duration-700">
                 {ICONS[i]}
               </div>
 
-              <h3 className="font-serif text-xl text-white mb-3 leading-snug">{item.title}</h3>
-              <div className="w-8 h-px bg-gold/50 mb-4 group-hover:w-12 transition-all duration-300" />
-              <p className="font-sans text-sm text-white/55 leading-relaxed">{item.desc}</p>
+              <h3 className="font-serif text-[1.25rem] text-white mb-3 leading-snug font-light
+                group-hover:text-[#C9A84C] transition-colors duration-500">{item.title}</h3>
+              <div className="w-8 h-px bg-gold/40 mb-4 group-hover:w-14 transition-all duration-700 ease-out" />
+              <p className="font-sans text-sm text-white/50 leading-relaxed group-hover:text-white/65 transition-colors duration-500">{item.desc}</p>
             </div>
           ))}
         </div>
