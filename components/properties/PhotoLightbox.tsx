@@ -14,9 +14,9 @@ interface Props {
 export default function PhotoLightbox({ images, initialIndex, name, onClose }: Props) {
   const [current,   setCurrent]   = useState(initialIndex)
   const [mounted,   setMounted]   = useState(false)
-  const [visible,   setVisible]   = useState(false)   // fade-in gate
-  const [direction, setDirection] = useState<'left' | 'right' | null>(null)
+  const [visible,   setVisible]   = useState(false)
   const [sliding,   setSliding]   = useState(false)
+  const [direction, setDirection] = useState<'left' | 'right' | null>(null)
   const thumbsRef   = useRef<HTMLDivElement>(null)
   const touchStartX = useRef<number | null>(null)
   const closing     = useRef(false)
@@ -29,7 +29,7 @@ export default function PhotoLightbox({ images, initialIndex, name, onClose }: P
     return () => { document.body.style.overflow = '' }
   }, [])
 
-  // ── Keyboard navigation ────────────────────────────────────────────────────
+  // ── Navigate with slide animation ─────────────────────────────────────────
   const go = useCallback((dir: 'left' | 'right') => {
     if (sliding) return
     setDirection(dir)
@@ -37,8 +37,7 @@ export default function PhotoLightbox({ images, initialIndex, name, onClose }: P
     setTimeout(() => {
       setCurrent(c => dir === 'right'
         ? (c + 1) % images.length
-        : (c - 1 + images.length) % images.length
-      )
+        : (c - 1 + images.length) % images.length)
       setSliding(false)
       setDirection(null)
     }, 220)
@@ -51,174 +50,205 @@ export default function PhotoLightbox({ images, initialIndex, name, onClose }: P
     setTimeout(onClose, 160)
   }, [onClose])
 
+  // ── Keyboard ───────────────────────────────────────────────────────────────
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go('right') }
-      if (e.key === 'ArrowLeft')                    { e.preventDefault(); go('left') }
+      if (e.key === 'ArrowLeft')                    { e.preventDefault(); go('left')  }
       if (e.key === 'Escape')                        handleClose()
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   }, [go, handleClose])
 
-  // ── Auto-scroll thumbnail strip ────────────────────────────────────────────
+  // ── Auto-scroll thumbnails ─────────────────────────────────────────────────
   useEffect(() => {
     const strip = thumbsRef.current
     if (!strip) return
-    const thumb = strip.children[current] as HTMLElement
+    const thumb = strip.children[current] as HTMLElement | undefined
     if (!thumb) return
-    const offset = thumb.offsetLeft - strip.clientWidth / 2 + thumb.clientWidth / 2
-    strip.scrollTo({ left: offset, behavior: 'smooth' })
+    strip.scrollTo({ left: thumb.offsetLeft - strip.clientWidth / 2 + thumb.clientWidth / 2, behavior: 'smooth' })
   }, [current])
 
   if (!mounted) return null
 
-  // ── Image slide style ──────────────────────────────────────────────────────
+  // ── Slide style for main image ─────────────────────────────────────────────
   const imgStyle: React.CSSProperties = {
     transition: 'transform 220ms ease-in-out, opacity 220ms ease-in-out',
     transform:  sliding
-      ? direction === 'right' ? 'translateX(-6%) scale(0.97)' : 'translateX(6%) scale(0.97)'
+      ? direction === 'right' ? 'translateX(-5%) scale(0.97)' : 'translateX(5%) scale(0.97)'
       : 'translateX(0) scale(1)',
-    opacity: sliding ? 0.3 : 1,
+    opacity: sliding ? 0.25 : 1,
+    width: '100%', height: '100%',
   }
 
   const lightbox = (
     <div
-      className="fixed inset-0 z-[9999] flex flex-col select-none"
       style={{
-        background:           'rgba(0,0,0,0.95)',
-        backdropFilter:       'blur(4px)',
-        WebkitBackdropFilter: 'blur(4px)',
-        opacity:    visible ? 1 : 0,
+        position: 'fixed', inset: 0,
+        width: '100vw', height: '100dvh',
+        zIndex: 99999,
+        background: '#000',
+        display: 'flex', flexDirection: 'column',
+        opacity: visible ? 1 : 0,
         transition: 'opacity 200ms ease',
+        paddingTop:    'env(safe-area-inset-top)',
+        paddingBottom: 'env(safe-area-inset-bottom)',
       }}
       onClick={handleClose}
     >
-      {/* ── Top bar ── */}
-      <div
-        className="flex items-center justify-between px-4 py-3 shrink-0"
-        onClick={e => e.stopPropagation()}
-      >
-        {/* Counter pill */}
-        <div className="font-accent text-[11px] tracking-[0.2em] text-white/70
-          bg-black/50 rounded-full px-3 py-1">
+      {/* ── Fixed UI: counter + close ── */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }}>
+        {/* Counter — top centre */}
+        <div
+          style={{
+            position: 'absolute', top: '16px', left: '50%',
+            transform: 'translateX(-50%)',
+            background: 'rgba(0,0,0,0.5)', borderRadius: '999px',
+            padding: '4px 14px',
+            fontFamily: 'Montserrat,sans-serif', fontSize: '12px',
+            fontWeight: 500, letterSpacing: '0.12em',
+            color: 'rgba(255,255,255,0.85)',
+            pointerEvents: 'none',
+          }}
+        >
           {current + 1} / {images.length}
         </div>
 
-        {/* Property name */}
-        <p className="font-serif text-sm text-white/50 hidden sm:block max-w-xs truncate">
-          {name}
-        </p>
-
-        {/* Close */}
+        {/* Close — top right */}
         <button
-          onClick={handleClose}
+          onClick={e => { e.stopPropagation(); handleClose() }}
           aria-label="Close"
-          className="w-11 h-11 flex items-center justify-center
-            bg-white/10 hover:bg-white/20 border border-white/15
-            transition-colors duration-200 text-white"
+          style={{
+            position: 'absolute', top: '12px', right: '12px',
+            width: '44px', height: '44px', borderRadius: '50%',
+            background: 'rgba(255,255,255,0.10)',
+            border: '1px solid rgba(255,255,255,0.20)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer', color: 'white', transition: 'background 0.2s',
+          }}
+          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.20)' }}
+          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.10)' }}
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
 
-      {/* ── Main image ── */}
+      {/* ── Main image area ── */}
       <div
-        className="flex-1 flex items-center justify-center relative px-14 sm:px-20 min-h-0"
+        style={{
+          flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          width: '100vw', overflow: 'hidden', position: 'relative',
+        }}
         onClick={e => e.stopPropagation()}
+        onTouchStart={e => { touchStartX.current = e.touches[0].clientX }}
+        onTouchEnd={e => {
+          if (touchStartX.current === null) return
+          const diff = touchStartX.current - e.changedTouches[0].clientX
+          if (Math.abs(diff) > 40) diff > 0 ? go('right') : go('left')
+          touchStartX.current = null
+        }}
       >
-        <div
-          className="relative w-full h-full"
-          style={{
-            maxWidth:  '95vw',
-            maxHeight: '80vh',
-            ...imgStyle,
-          }}
-          onTouchStart={e => { touchStartX.current = e.touches[0].clientX }}
-          onTouchEnd={e => {
-            if (touchStartX.current === null) return
-            const diff = touchStartX.current - e.changedTouches[0].clientX
-            if (Math.abs(diff) > 40) diff > 0 ? go('right') : go('left')
-            touchStartX.current = null
-          }}
-        >
+        {/* Image with slide */}
+        <div style={{ ...imgStyle, position: 'relative', maxWidth: '100%', maxHeight: '100%' }}>
           <Image
             key={current}
             src={images[current]}
             alt={`${name} — ${current + 1}`}
             fill
             className="object-contain"
-            sizes="95vw"
+            sizes="100vw"
             priority
           />
         </div>
 
-        {/* ── Prev arrow ── */}
+        {/* Prev arrow — fixed left */}
         {images.length > 1 && (
           <button
             onClick={e => { e.stopPropagation(); go('left') }}
             aria-label="Previous"
-            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2
-              w-11 h-11 sm:w-12 sm:h-12 rounded-full
-              bg-black/40 hover:bg-[#C9A84C]/20
-              border border-white/15 hover:border-[#C9A84C]/50
-              flex items-center justify-center text-white
-              transition-all duration-200 z-10"
+            style={{
+              position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)',
+              width: '44px', height: '44px', borderRadius: '50%',
+              background: 'rgba(255,255,255,0.10)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', color: '#C9A84C', zIndex: 10,
+              transition: 'background 0.2s',
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.20)' }}
+            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.10)' }}
           >
-            <svg className="w-5 h-5 text-[#C9A84C]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
             </svg>
           </button>
         )}
 
-        {/* ── Next arrow ── */}
+        {/* Next arrow — fixed right */}
         {images.length > 1 && (
           <button
             onClick={e => { e.stopPropagation(); go('right') }}
             aria-label="Next"
-            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2
-              w-11 h-11 sm:w-12 sm:h-12 rounded-full
-              bg-black/40 hover:bg-[#C9A84C]/20
-              border border-white/15 hover:border-[#C9A84C]/50
-              flex items-center justify-center text-white
-              transition-all duration-200 z-10"
+            style={{
+              position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
+              width: '44px', height: '44px', borderRadius: '50%',
+              background: 'rgba(255,255,255,0.10)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', color: '#C9A84C', zIndex: 10,
+              transition: 'background 0.2s',
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.20)' }}
+            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.10)' }}
           >
-            <svg className="w-5 h-5 text-[#C9A84C]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
             </svg>
           </button>
         )}
       </div>
 
-      {/* ── Thumbnail strip ── */}
+      {/* ── Thumbnail strip — bottom ── */}
       {images.length > 1 && (
         <div
-          className="shrink-0 pb-4 pt-3 px-4"
+          style={{
+            flexShrink: 0, height: '80px',
+            background: 'rgba(0,0,0,0.65)',
+            display: 'flex', alignItems: 'center',
+            borderTop: '1px solid rgba(255,255,255,0.06)',
+          }}
           onClick={e => e.stopPropagation()}
         >
           <div
             ref={thumbsRef}
-            className="flex gap-2 overflow-x-auto"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            style={{
+              display: 'flex', gap: '6px',
+              overflowX: 'auto', overflowY: 'hidden',
+              padding: '0 16px',
+              height: '100%', alignItems: 'center',
+              scrollbarWidth: 'none', msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch',
+            } as React.CSSProperties}
           >
             {images.map((img, i) => (
               <button
                 key={i}
-                onClick={() => {
-                  setDirection(i > current ? 'right' : 'left')
-                  setCurrent(i)
-                }}
-                className="shrink-0 relative overflow-hidden transition-all duration-200"
+                onClick={() => { setDirection(i > current ? 'right' : 'left'); setCurrent(i) }}
                 style={{
-                  width:   '72px',
-                  height:  '72px',
-                  border:  i === current ? '2px solid #C9A84C' : '2px solid transparent',
+                  flexShrink: 0,
+                  width: '62px', height: '62px',
+                  border: i === current ? '2px solid #C9A84C' : '2px solid rgba(255,255,255,0.12)',
                   opacity: i === current ? 1 : 0.45,
+                  overflow: 'hidden', position: 'relative',
+                  cursor: 'pointer',
+                  transition: 'opacity 0.2s, border-color 0.2s',
+                  background: 'transparent',
                 }}
               >
-                <Image src={img} alt="" fill className="object-cover" sizes="72px" />
+                <Image src={img} alt="" fill className="object-cover" sizes="62px" />
               </button>
             ))}
           </div>
