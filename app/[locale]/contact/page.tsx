@@ -14,6 +14,10 @@ export default function ContactPage({ params: { locale } }: Props) {
 
   return (
     <>
+      {/* Preload office images for fast scroll experience */}
+      <link rel="preload" as="image" href="/images/Outdoor.jpeg" />
+      <link rel="preload" as="image" href="/images/Inside.jpeg" />
+
       {/* Hero */}
       <section className="hero-bg pt-40 pb-20 relative overflow-hidden">
         <div className="absolute inset-0 opacity-[0.03]"
