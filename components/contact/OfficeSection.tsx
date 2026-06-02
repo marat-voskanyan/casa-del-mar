@@ -28,21 +28,6 @@ export default function OfficeSection({ locale }: Props) {
         className="hidden md:block"
         style={{ background: '#F2EBD9' }}
       >
-        {/* ── Full-width panoramic outdoor strip ── */}
-        <div style={{ position: 'relative', width: '100%', height: '340px', overflow: 'hidden' }}>
-          <Image
-            src="/images/outdoor-new.png"
-            alt="Casa del Mar office exterior 37 Mashtots Ave Yerevan Armenia"
-            fill
-            priority
-            quality={90}
-            style={{ objectFit: 'cover', objectPosition: 'center' }}
-          />
-        </div>
-
-        {/* ── Thin gold separator ── */}
-        <div style={{ height: '1px', background: '#C9A84C' }} />
-
         {/* ── Two-column: portrait photo (40%) + text (60%) ── */}
         <div style={{ display: 'flex', alignItems: 'stretch' }}>
 
@@ -59,6 +44,7 @@ export default function OfficeSection({ locale }: Props) {
                 src="/images/inside-new.png"
                 alt="Casa del Mar office interior Yerevan Armenia"
                 fill
+                priority
                 quality={90}
                 style={{ objectFit: 'cover', objectPosition: 'center' }}
               />

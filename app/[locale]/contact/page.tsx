@@ -14,8 +14,7 @@ export default function ContactPage({ params: { locale } }: Props) {
 
   return (
     <>
-      {/* Preload office images */}
-      <link rel="preload" as="image" href="/images/outdoor-new.png" />
+      {/* Preload office interior image */}
       <link rel="preload" as="image" href="/images/inside-new.png" />
 
       {/* Hero */}
