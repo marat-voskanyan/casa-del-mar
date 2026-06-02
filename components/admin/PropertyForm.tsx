@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import type { Property, PropertyFormData } from '@/types'
+import { LockIcon, WarningIcon, WavesIcon, PhoneIcon, TrendIcon, PersonIcon, KeyIcon, ClipboardIcon } from '@/components/icons/LuxuryIcons'
 
 const MapPicker = dynamic(() => import('./MapPicker'), { ssr: false })
 
@@ -423,7 +424,7 @@ export default function PropertyForm({ initial, mode }: Props) {
                     : 'border-transparent text-gray-500 hover:text-navy',
               ].join(' ')}
             >
-              {isNotes ? `🔒 Internal Notes` : t === 'Images' ? `Images (${form.images.length}/${MAX_IMAGES})` : t}
+              {isNotes ? <><LockIcon size={13} className="inline mr-1" /> Internal Notes</> : t === 'Images' ? `Images (${form.images.length}/${MAX_IMAGES})` : t}
             </button>
           )
         })}
@@ -888,7 +889,7 @@ export default function PropertyForm({ initial, mode }: Props) {
               }}
               className="px-4 py-2 text-sm font-sans font-medium rounded border border-[#C9A84C] text-[#8a6b1e] hover:bg-[#C9A84C] hover:text-white transition-colors flex items-center gap-1.5"
             >
-              🏖️ Reset to Benidorm
+              <WavesIcon size={13} className="inline mr-1" /> Reset to Benidorm
             </button>
           </div>
 
@@ -916,7 +917,7 @@ export default function PropertyForm({ initial, mode }: Props) {
             className="rounded-lg px-4 py-3 font-sans font-bold text-sm"
             style={{ background: '#FEE2E2', border: '2px solid #EF4444', borderRadius: '8px' }}
           >
-            ⚠️ INTERNAL USE ONLY — This information is never shown to website visitors
+            <WarningIcon size={16} className="inline mr-2 align-text-bottom" /> INTERNAL USE ONLY — This information is never shown to website visitors
           </div>
 
           {/* Quick template buttons */}
@@ -924,19 +925,19 @@ export default function PropertyForm({ initial, mode }: Props) {
             <p className="admin-label mb-2">Quick Templates</p>
             <div className="flex flex-wrap gap-2">
               {[
-                { label: '📞 Owner contact', insert: 'Owner contact: ' },
-                { label: '💰 Price note',    insert: 'Price negotiable: ' },
-                { label: '👤 Client interest', insert: 'Client interested: ' },
-                { label: '🔑 Key location',  insert: 'Key location: ' },
-                { label: '📋 Commission',    insert: 'Commission: ' },
-              ].map(({ label, insert }) => (
+                { label: 'Owner contact',   icon: <PhoneIcon size={12} />,    insert: 'Owner contact: ' },
+                { label: 'Price note',      icon: <TrendIcon size={12} />,    insert: 'Price negotiable: ' },
+                { label: 'Client interest', icon: <PersonIcon size={12} />,   insert: 'Client interested: ' },
+                { label: 'Key location',    icon: <KeyIcon size={12} />,      insert: 'Key location: ' },
+                { label: 'Commission',      icon: <ClipboardIcon size={12} />, insert: 'Commission: ' },
+              ].map(({ label, icon, insert }) => (
                 <button
                   key={label}
                   type="button"
                   onClick={() => setField('internal_notes', form.internal_notes + (form.internal_notes && !form.internal_notes.endsWith('\n') ? '\n' : '') + insert)}
-                  className="px-3 py-1.5 text-xs font-sans rounded border border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-200 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-sans rounded border border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-200 transition-colors"
                 >
-                  {label}
+                  {icon}{label}
                 </button>
               ))}
             </div>

@@ -1,10 +1,28 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import type { Locale } from '@/types'
 import { getT } from '@/lib/i18n'
 import { BENIDORM_IMAGES, IMAGE_ALT } from '@/lib/images'
+import {
+  SunIcon, WavesIcon, PlaneIcon, ThermometerIcon, CityIcon,
+  PoolIcon, CheckIcon, ParkingIcon, BuildingIcon,
+  TrendIcon, GlobeIcon, ClipboardIcon, TransitIcon,
+} from '@/components/icons/LuxuryIcons'
+
+// Maps icon name strings (from i18n whyItems) to SVG components
+function WhyIcon({ name }: { name: string }) {
+  const map: Record<string, React.ReactNode> = {
+    trend:     <TrendIcon size={28} className="text-[#C9A84C]" />,
+    plane:     <PlaneIcon size={28} className="text-[#C9A84C]" />,
+    building:  <BuildingIcon size={28} className="text-[#C9A84C]" />,
+    globe:     <GlobeIcon size={28} className="text-[#C9A84C]" />,
+    clipboard: <ClipboardIcon size={28} className="text-[#C9A84C]" />,
+    waves:     <WavesIcon size={28} className="text-[#C9A84C]" />,
+  }
+  return <>{map[name] ?? null}</>
+}
 
 const BenidormMap = dynamic(
   () => import('@/components/BenidormMap'),
@@ -89,20 +107,20 @@ export default function BenidormPage({ params: { locale } }: Props) {
   const timeline = isRu ? LA_CALA_TIMELINE_RU : isHy ? LA_CALA_TIMELINE_HY : LA_CALA_TIMELINE_EN
 
   const laCalaFeatures = [
-    { icon: '🏊', text: (b.laCalaFeatures as string[])[0] },
-    { icon: '🎾', text: (b.laCalaFeatures as string[])[1] },
-    { icon: '🚗', text: (b.laCalaFeatures as string[])[2] },
-    { icon: '🏗️', text: (b.laCalaFeatures as string[])[3] },
-    { icon: '🏖️', text: (b.laCalaFeatures as string[])[4] },
-    { icon: '🛒', text: (b.laCalaFeatures as string[])[5] },
+    { icon: <PoolIcon     size={18} className="text-[#C9A84C] shrink-0" />, text: (b.laCalaFeatures as string[])[0] },
+    { icon: <CheckIcon    size={18} className="text-[#C9A84C] shrink-0" />, text: (b.laCalaFeatures as string[])[1] },
+    { icon: <ParkingIcon  size={18} className="text-[#C9A84C] shrink-0" />, text: (b.laCalaFeatures as string[])[2] },
+    { icon: <BuildingIcon size={18} className="text-[#C9A84C] shrink-0" />, text: (b.laCalaFeatures as string[])[3] },
+    { icon: <WavesIcon size={24} className="text-[#C9A84C]" />, text: (b.laCalaFeatures as string[])[4] },
+    { icon: <CheckIcon    size={18} className="text-[#C9A84C] shrink-0" />, text: (b.laCalaFeatures as string[])[5] },
   ]
 
   const quickFacts = [
-    { icon: '🌞', value: '320+', label: isRu ? 'Солнечных дней' : isHy ? 'Արևային օր' : 'Sunny Days' },
-    { icon: '🏖️', value: '2',   label: isRu ? 'Пляжа' : isHy ? 'Լողափ' : 'Famous Beaches' },
-    { icon: '✈️', value: '60km', label: isRu ? 'До аэропорта' : isHy ? 'Օդանավակայան' : 'To Airport' },
-    { icon: '🌡️', value: '20°C', label: isRu ? 'Средняя темп.' : isHy ? 'Միջ. ջերմաստ.' : 'Avg Temperature' },
-    { icon: '🏙️', value: '1960s', label: isRu ? 'Курорт с' : isHy ? 'Հանգստավայր' : 'Resort Since' },
+    { icon: <SunIcon size={24} className="text-[#C9A84C]" />, value: '320+', label: isRu ? 'Солнечных дней' : isHy ? 'Արևային օր' : 'Sunny Days' },
+    { icon: <WavesIcon size={24} className="text-[#C9A84C]" />, value: '2',   label: isRu ? 'Пляжа' : isHy ? 'Լողափ' : 'Famous Beaches' },
+    { icon: <PlaneIcon size={24} className="text-[#C9A84C]" />, value: '60km', label: isRu ? 'До аэропорта' : isHy ? 'Օդանավակայան' : 'To Airport' },
+    { icon: <ThermometerIcon size={24} className="text-[#C9A84C]" />, value: '20°C', label: isRu ? 'Средняя темп.' : isHy ? 'Միջ. ջերմաստ.' : 'Avg Temperature' },
+    { icon: <CityIcon size={24} className="text-[#C9A84C]" />, value: '1960s', label: isRu ? 'Курорт с' : isHy ? 'Հանգստավայր' : 'Resort Since' },
   ]
 
   const districts = isRu ? [
@@ -208,7 +226,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
             <div className="flex divide-x divide-white/8 min-w-max md:grid md:grid-cols-5 md:min-w-0">
               {quickFacts.map(f => (
                 <div key={f.value} className="py-5 px-6 text-center shrink-0 md:shrink">
-                  <div className="text-2xl mb-1">{f.icon}</div>
+                  <div className="flex justify-center mb-1">{f.icon}</div>
                   <p className="font-serif text-2xl text-gold font-light">{f.value}</p>
                   <p className="font-accent text-[9px] tracking-[0.18em] text-white/45 uppercase mt-0.5">{f.label}</p>
                 </div>
@@ -282,7 +300,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
       <section className="section-pad bg-sand">
         <div className="container-site">
           <div className="text-center mb-14 reveal">
-            <p className="eyebrow text-gold mb-3">🏖️ Benidorm</p>
+            <p className="eyebrow text-gold mb-3">Benidorm</p>
             <h2 className="section-title text-navy mb-4">{b.beachesTitle}</h2>
             <div className="gold-divider mx-auto" />
           </div>
@@ -405,7 +423,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {laCalaFeatures.map((f, i) => (
                   <div key={i} className="flex items-start gap-3 bg-white/5 border border-white/8 rounded-lg px-4 py-3 hover:bg-white/8 transition-colors">
-                    <span className="text-xl shrink-0">{f.icon}</span>
+                    <span className="shrink-0 mt-0.5">{f.icon}</span>
                     <p className="font-sans text-sm text-white/75 leading-relaxed">{f.text}</p>
                   </div>
                 ))}
@@ -458,7 +476,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
       <section className="section-pad bg-navy">
         <div className="container-site">
           <div className="text-center mb-14 reveal">
-            <p className="eyebrow text-gold mb-3">🌡️ Benidorm</p>
+            <p className="eyebrow text-gold mb-3">Benidorm</p>
             <h2 className="section-title text-white mb-4">{b.climateTitle}</h2>
             <div className="gold-divider mx-auto mb-4" />
             <p className="font-sans text-white/45 max-w-xl mx-auto text-sm">
@@ -501,7 +519,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
       <section className="section-pad bg-sand">
         <div className="container-site">
           <div className="text-center mb-14 reveal">
-            <p className="eyebrow text-gold mb-3">📍 Benidorm</p>
+            <p className="eyebrow text-gold mb-3">Benidorm</p>
             <h2 className="section-title text-navy mb-4">{b.districtsTitle}</h2>
             <div className="gold-divider mx-auto" />
           </div>
@@ -554,7 +572,7 @@ export default function BenidormPage({ params: { locale } }: Props) {
                 key={i}
                 className="reveal bg-white/5 border border-white/8 p-6 hover:bg-white/8 hover:border-gold/30 transition-all duration-300"
               >
-                <div className="text-3xl mb-4">{card.icon}</div>
+                <div className="mb-4"><WhyIcon name={card.icon} /></div>
                 <h3 className="font-serif text-lg text-white font-light mb-3">{card.title}</h3>
                 <div className="w-8 h-px bg-gold/40 mb-3" />
                 <p className="font-sans text-sm text-white/55 leading-relaxed">{card.desc}</p>
@@ -568,28 +586,28 @@ export default function BenidormPage({ params: { locale } }: Props) {
       <section className="section-pad bg-white">
         <div className="container-site">
           <div className="text-center mb-14 reveal">
-            <p className="eyebrow text-gold mb-3">🗺️ Benidorm</p>
+            <p className="eyebrow text-gold mb-3">Benidorm</p>
             <h2 className="section-title text-navy mb-4">{b.gettingTitle}</h2>
             <div className="gold-divider mx-auto" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                icon: '✈️',
+                icon: 'plane',
                 title: isRu ? 'На самолёте' : isHy ? 'Ինքնաթիռով' : 'By Air',
                 desc:  isRu ? 'Аэропорт Аликанте (ALC) — 60 км, 45 мин. Ryanair, EasyJet, Vueling.'
                              : isHy ? 'Ալիկանտե օդ/կ (ALC) — 60 կմ, 45 ր. ավ/մ-ով։ Ryanair, EasyJet, Vueling.'
                              : 'Alicante Airport (ALC) — 60km, 45 min by car. Ryanair, EasyJet, Vueling and others.',
               },
               {
-                icon: '🚗',
+                icon: 'car',
                 title: isRu ? 'На машине' : isHy ? 'Ավտոմեքենայով' : 'By Car',
                 desc:  isRu ? 'Из Аликанте — 50 км по AP-7. Из Валенсии — 120 км. Из Мадрида — 440 км.'
                              : isHy ? 'Ալիկանտեից — 50 կմ AP-7 ճ-ով։ Վալ-ից — 120 կմ։ Մ-ից — 440 կմ։'
                              : 'From Alicante — 50km on the AP-7 motorway. From Valencia — 120km. From Madrid — 440km.',
               },
               {
-                icon: '🚌',
+                icon: 'bus',
                 title: isRu ? 'На автобусе' : isHy ? 'Ավտոբուսով' : 'By Bus',
                 desc:  isRu ? 'Регулярные ALSA из Аликанте, Валенсии и Мадрида прямо до Бенидорма.'
                              : isHy ? 'ALSA ավ/բ-ներ Ալ-ից, Վ-ից ու Մ-ից — ուղ. Բ-որմ։'
@@ -597,7 +615,9 @@ export default function BenidormPage({ params: { locale } }: Props) {
               },
             ].map((item, i) => (
               <div key={i} className="reveal bg-sand p-8 border-l-4 border-gold hover:shadow-md transition-shadow">
-                <div className="text-3xl mb-4">{item.icon}</div>
+                <div className="mb-4 text-[#C9A84C]">
+                  {item.icon === 'plane' ? <PlaneIcon size={28} /> : item.icon === 'car' ? <ParkingIcon size={28} /> : <TransitIcon size={28} />}
+                </div>
                 <h3 className="font-serif text-xl text-navy mb-3">{item.title}</h3>
                 <p className="font-sans text-sm text-navy/65 leading-relaxed">{item.desc}</p>
               </div>

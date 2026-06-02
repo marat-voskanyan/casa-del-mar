@@ -5,14 +5,15 @@ import Link from 'next/link'
 import type { Locale } from '@/types'
 import { getT } from '@/lib/i18n'
 import { getYearsExperience } from '@/lib/years'
+import { SunIcon, WavesIcon, PlaneIcon, ThermometerIcon } from '@/components/icons/LuxuryIcons'
 
 interface Props { locale: Locale }
 
 const FACTS = [
-  { icon: '🌞', value: '320+', label: 'Sunny Days' },
-  { icon: '🏖️', value: '2',    label: 'Famous Beaches' },
-  { icon: '✈️', value: '60km', label: 'To Airport' },
-  { icon: '🌡️', value: '20°C', label: 'Average Temp' },
+  { icon: <SunIcon size={22} className="text-[#C9A84C]" />,         value: '320+', label: 'Sunny Days' },
+  { icon: <WavesIcon size={22} className="text-[#C9A84C]" />,       value: '2',    label: 'Famous Beaches' },
+  { icon: <PlaneIcon size={22} className="text-[#C9A84C]" />,       value: '60km', label: 'To Airport' },
+  { icon: <ThermometerIcon size={22} className="text-[#C9A84C]" />, value: '20°C', label: 'Average Temp' },
 ]
 
 export default function BenidormSection({ locale }: Props) {
@@ -152,7 +153,7 @@ export default function BenidormSection({ locale }: Props) {
                     transition: `opacity 0.5s ease ${0.3 + i * 0.05}s, transform 0.5s ease ${0.3 + i * 0.05}s`,
                   }}
                 >
-                  <div className="text-2xl mb-2">{f.icon}</div>
+                  <div className="mb-2">{f.icon}</div>
                   <p className="font-serif text-2xl text-[#C9A84C] font-light">{f.value}</p>
                   <p className="font-accent text-[10px] tracking-[0.18em] uppercase text-white/45 mt-1">{f.label}</p>
                 </div>

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import AdminNav from '@/components/admin/AdminNav'
 import type { Property } from '@/types'
+import { ClipboardIcon, LocationIcon } from '@/components/icons/LuxuryIcons'
 
 const COUNTRY_FLAG: Record<string, string> = { spain: '🇪🇸', cyprus: '🇨🇾' }
 const STATUS_STYLE: Record<string, string> = {
@@ -36,7 +37,7 @@ function NotesIcon({ notes }: { notes: string }) {
         title="View internal notes"
         className="text-lg hover:scale-110 transition-transform"
       >
-        📋
+        <ClipboardIcon size={15} />
       </button>
       {open && (
         <div className="absolute z-50 right-0 mt-1 w-72 bg-[#FFFBEB] border border-yellow-300 rounded-lg shadow-xl p-4 text-left">
@@ -284,7 +285,7 @@ export default function AdminDashboard() {
                         </td>
                         <td className="px-4 py-3">
                           <p className="font-medium text-navy">{p.name}</p>
-                          <p className="text-xs text-gray-400 mt-0.5">📍 {p.location}</p>
+                          <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1"><LocationIcon size={11} className="shrink-0" /> {p.location}</p>
                         </td>
                         <td className="px-4 py-3 hidden lg:table-cell">
                           <span className="text-base">{COUNTRY_FLAG[p.country]}</span>

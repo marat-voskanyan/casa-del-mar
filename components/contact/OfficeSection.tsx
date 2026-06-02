@@ -2,6 +2,7 @@ import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import type { Locale } from '@/types'
 import { getT } from '@/lib/i18n'
+import { LocationIcon, ClockIcon } from '@/components/icons/LuxuryIcons'
 
 const OfficeMap = dynamic(() => import('@/components/OfficeMap'), {
   ssr: false,
@@ -106,7 +107,7 @@ export default function OfficeSection({ locale }: Props) {
                 rel="noopener noreferrer"
                 style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', textDecoration: 'none', color: 'inherit' }}
               >
-                <span style={{ fontSize: '16px', flexShrink: 0, lineHeight: '1.2' }}>📍</span>
+                <LocationIcon size={16} className="text-[#C9A84C] shrink-0 mt-0.5" />
                 <div>
                   <p style={{
                     fontFamily: 'Montserrat, sans-serif',
@@ -126,7 +127,7 @@ export default function OfficeSection({ locale }: Props) {
 
               {/* Hours */}
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                <span style={{ fontSize: '16px', flexShrink: 0, lineHeight: '1.2' }}>🕐</span>
+                <ClockIcon size={16} className="text-[#C9A84C] shrink-0 mt-0.5" />
                 <div>
                   <p style={{
                     fontFamily: 'Montserrat, sans-serif',
