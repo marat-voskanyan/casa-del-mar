@@ -47,8 +47,8 @@ export const BENIDORM_IMAGES = {
 
   // ── Page banners ─────────────────────────────────────────────────────────────
   banners: {
-    /** Spain listing page hero — Benidorm skyline panorama */
-    spain_page:    L('benidorm-skyline-1.jpg'),
+    /** Spain listing page hero — main banner */
+    spain_page:    L('spain-main.jpg'),
     /** Benidorm guide page — aerial coastal view */
     benidorm_page: L('benidorm-aerial-1.jpg'),
     /** Cyprus listing page — Unsplash until Cyprus photos are uploaded */

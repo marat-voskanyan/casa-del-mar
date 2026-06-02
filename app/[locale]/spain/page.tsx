@@ -33,7 +33,7 @@ export default async function SpainPage({ params: { locale } }: Props) {
         locale={locale}
         page="spain"
         bgImage={BENIDORM_IMAGES.banners.spain_page}
-        bgAlt={IMAGE_ALT.benidorm_skyline}
+        bgAlt="Spain properties banner - Costa Blanca Benidorm"
       />
       <BenidormSection locale={locale} />
       <PropertiesGrid
