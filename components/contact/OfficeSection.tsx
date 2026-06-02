@@ -29,7 +29,7 @@ export default function OfficeSection({ locale }: Props) {
         style={{ background: '#F2EBD9' }}
       >
         {/* ── Full-width panoramic outdoor strip ── */}
-        <div style={{ position: 'relative', width: '100%', height: '520px', overflow: 'hidden' }}>
+        <div style={{ position: 'relative', width: '100%', height: '340px', overflow: 'hidden' }}>
           <Image
             src="/images/outdoor-new.png"
             alt="Casa del Mar office exterior 37 Mashtots Ave Yerevan Armenia"
