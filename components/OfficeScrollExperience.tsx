@@ -1,28 +1,26 @@
 'use client'
 import { useRef, useEffect, useState } from 'react'
 import Image from 'next/image'
+import { motion, useScroll, useTransform } from 'framer-motion'
 
+// ── Reduced-motion / mobile static fallback ───────────────────────────────────
 function StaticOfficePhotos() {
   const [showInside, setShowInside] = useState(false)
   return (
     <div
       style={{
-        position: 'relative',
-        width: '100%',
-        height: '70vw',
-        maxHeight: '420px',
-        overflow: 'hidden',
-        cursor: 'pointer',
+        position: 'relative', width: '100%',
+        height: '70vw', maxHeight: '420px',
+        overflow: 'hidden', cursor: 'pointer',
       }}
-      onClick={() => setShowInside(prev => !prev)}
+      onClick={() => setShowInside(p => !p)}
     >
       <Image
         src="/images/outdoor-new.png"
         alt="Casa del Mar office entrance Yerevan Armenia"
         fill
         style={{ objectFit: 'cover', opacity: showInside ? 0 : 1, transition: 'opacity 0.9s ease' }}
-        priority
-        quality={85}
+        priority quality={85}
       />
       <Image
         src="/images/inside-new.png"
@@ -50,69 +48,140 @@ function StaticOfficePhotos() {
   )
 }
 
+// ── Main component ────────────────────────────────────────────────────────────
 export function OfficeScrollExperience() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [progress, setProgress] = useState(0)
-  const [isMobile, setIsMobile] = useState(false)
-  const [showInside, setShowInside] = useState(false)
+  // DOM refs for GSAP targets
+  const containerRef      = useRef<HTMLDivElement>(null)
+  const outdoorWrapRef    = useRef<HTMLDivElement>(null)
+  const outdoorImgWrapRef = useRef<HTMLDivElement>(null)
+  const insideWrapRef     = useRef<HTMLDivElement>(null)
+  const insideImgWrapRef  = useRef<HTMLDivElement>(null)
+  const flashRef          = useRef<HTMLDivElement>(null)
+
+  const [isMobile,      setIsMobile]      = useState(false)
+  const [showInside,    setShowInside]    = useState(false)
   const [reducedMotion, setReducedMotion] = useState(false)
 
+  // ── Framer Motion scroll progress — drives text labels ─────────────────────
+  const { scrollYProgress } = useScroll({
+    target:  containerRef,
+    offset:  ['start start', 'end end'],
+  })
+
+  // Outdoor label: visible at start, fades out by 33%
+  const outdoorLabelOpacity = useTransform(scrollYProgress, [0,    0.33], [1, 0])
+  const outdoorLabelY       = useTransform(scrollYProgress, [0,    0.33], [0, 15])
+
+  // Inside label: appears between 72% and 92%
+  const insideLabelOpacity  = useTransform(scrollYProgress, [0.72, 0.92], [0, 1])
+  const insideLabelY        = useTransform(scrollYProgress, [0.72, 0.92], [15, 0])
+
+  // Scroll hint: visible at start, gone by 16%
+  const hintOpacity         = useTransform(scrollYProgress, [0, 0.05, 0.16], [1, 1, 0])
+
+  // ── Detect mobile + reduced-motion (client-only) ───────────────────────────
   useEffect(() => {
     setIsMobile(window.innerWidth < 768)
     setReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
-    const handleResize = () => setIsMobile(window.innerWidth < 768)
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    const onResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
   }, [])
 
+  // ── GSAP ScrollTrigger — cinematic photo animation (desktop only) ──────────
   useEffect(() => {
     if (isMobile || reducedMotion) return
-    const handleScroll = () => {
-      if (!containerRef.current) return
-      const rect = containerRef.current.getBoundingClientRect()
-      const containerHeight = containerRef.current.offsetHeight
-      const windowHeight = window.innerHeight
-      const scrolled = windowHeight - rect.top
-      const total = containerHeight + windowHeight
-      const p = Math.max(0, Math.min(1, scrolled / total))
-      setProgress(p)
+    if (
+      !containerRef.current || !outdoorWrapRef.current ||
+      !outdoorImgWrapRef.current || !insideWrapRef.current ||
+      !insideImgWrapRef.current  || !flashRef.current
+    ) return
+
+    let cancelled = false
+    let cleanup: (() => void) | undefined
+
+    Promise.all([
+      import('gsap'),
+      import('gsap/ScrollTrigger'),
+    ]).then(([{ gsap }, { ScrollTrigger }]) => {
+      if (cancelled || !containerRef.current) return
+
+      gsap.registerPlugin(ScrollTrigger)
+
+      // ── Set known initial states so no flash on first render ────────────────
+      gsap.set(outdoorImgWrapRef.current, { scale: 1 })
+      gsap.set(insideWrapRef.current,     { opacity: 0 })
+      gsap.set(insideImgWrapRef.current,  { scale: 1.35 })
+      gsap.set(flashRef.current,          { opacity: 0 })
+
+      // ── ScrollTrigger timeline — scrub links directly to scroll ─────────────
+      // Duration units here are fractions of the full scroll distance (0→1)
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger:      containerRef.current,
+          start:        'top top',
+          end:          'bottom bottom',
+          scrub:        1.5,   // slight lag for cinematic feel
+        },
+      })
+
+      // Phase 1 (0 → 1.0): Outdoor zooms toward entrance door
+      tl.to(outdoorImgWrapRef.current, {
+        scale:    1.45,
+        ease:     'none',
+        duration: 1,
+      }, 0)
+
+      // Phase 2a (0.50 → 0.75): Outdoor fades out
+      tl.to(outdoorWrapRef.current, {
+        opacity:  0,
+        ease:     'none',
+        duration: 0.25,
+      }, 0.5)
+
+      // Phase 2b (0.35 → 0.485): Dark flash rises
+      tl.to(flashRef.current, {
+        opacity:  0.45,
+        ease:     'power1.in',
+        duration: 0.135,
+      }, 0.35)
+
+      // Phase 2c (0.485 → 0.62): Flash fades out
+      tl.to(flashRef.current, {
+        opacity:  0,
+        ease:     'power1.out',
+        duration: 0.135,
+      }, 0.485)
+
+      // Phase 3a (0.35 → 0.63): Inside crossfades in
+      tl.to(insideWrapRef.current, {
+        opacity:  1,
+        ease:     'none',
+        duration: 0.28,
+      }, 0.35)
+
+      // Phase 3b (0.35 → 1.0): Inside zooms from 1.35 → 1.0 (settles naturally)
+      tl.to(insideImgWrapRef.current, {
+        scale:    1,
+        ease:     'none',
+        duration: 0.65,
+      }, 0.35)
+
+      cleanup = () => {
+        tl.scrollTrigger?.kill()
+        tl.kill()
+      }
+    })
+
+    return () => {
+      cancelled = true
+      cleanup?.()
     }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
-    return () => window.removeEventListener('scroll', handleScroll)
   }, [isMobile, reducedMotion])
 
-  // Reduced motion fallback
-  if (reducedMotion) {
-    return <StaticOfficePhotos />
-  }
+  // ── Fallbacks ──────────────────────────────────────────────────────────────
+  if (reducedMotion) return <StaticOfficePhotos />
 
-  // Animation values based on scroll progress
-  const outdoorScale = 1 + progress * 0.45
-  const outdoorOpacity = progress < 0.5
-    ? 1
-    : Math.max(0, 1 - ((progress - 0.5) / 0.25))
-
-  const insideOpacity = progress < 0.35
-    ? 0
-    : Math.min(1, (progress - 0.35) / 0.28)
-  const insideScale = Math.max(1, 1.35 - progress * 0.35)
-
-  // Dark flash during transition
-  const flashOpacity = progress > 0.35 && progress < 0.62
-    ? Math.sin(((progress - 0.35) / 0.27) * Math.PI) * 0.45
-    : 0
-
-  // Label opacities
-  const outdoorLabelOpacity = Math.max(0, 1 - progress * 3)
-  const insideLabelOpacity = progress > 0.72
-    ? Math.min(1, (progress - 0.72) / 0.2)
-    : 0
-
-  // Scroll hint
-  const hintOpacity = progress < 0.08 ? 1 : Math.max(0, 1 - (progress - 0.08) / 0.08)
-
-  // MOBILE VERSION — tap to switch
   if (isMobile) {
     return (
       <div
@@ -121,15 +190,14 @@ export function OfficeScrollExperience() {
           height: '70vw', maxHeight: '420px',
           overflow: 'hidden', cursor: 'pointer',
         }}
-        onClick={() => setShowInside(prev => !prev)}
+        onClick={() => setShowInside(p => !p)}
       >
         <Image
           src="/images/outdoor-new.png"
           alt="Casa del Mar office entrance Yerevan Armenia"
           fill
           style={{ objectFit: 'cover', opacity: showInside ? 0 : 1, transition: 'opacity 0.9s ease' }}
-          priority
-          quality={85}
+          priority quality={85}
         />
         <Image
           src="/images/inside-new.png"
@@ -157,7 +225,7 @@ export function OfficeScrollExperience() {
     )
   }
 
-  // DESKTOP VERSION — cinematic scroll
+  // ── Desktop: GSAP drives photos, Framer Motion drives text ────────────────
   return (
     <div ref={containerRef} style={{ height: '260vh', position: 'relative' }}>
       <div style={{
@@ -166,63 +234,70 @@ export function OfficeScrollExperience() {
         background: '#0D1F2D',
       }}>
 
-        {/* OUTDOOR PHOTO */}
-        <div style={{ position: 'absolute', inset: 0, opacity: outdoorOpacity, willChange: 'opacity' }}>
-          <Image
-            src="/images/outdoor-new.png"
-            alt="Casa del Mar office entrance Yerevan Armenia"
-            fill
-            priority
-            quality={90}
-            className="office-scroll-outdoor"
+        {/* ── OUTDOOR PHOTO ── opacity animated by GSAP on outdoorWrapRef */}
+        <div
+          ref={outdoorWrapRef}
+          style={{ position: 'absolute', inset: 0, willChange: 'opacity' }}
+        >
+          {/* scale animated by GSAP on outdoorImgWrapRef — transformOrigin aims at door */}
+          <div
+            ref={outdoorImgWrapRef}
             style={{
-              objectFit: 'cover',
-              objectPosition: 'center center',
-              transform: `scale(${outdoorScale})`,
+              position: 'absolute', inset: 0,
+              willChange: 'transform',
               transformOrigin: 'center 55%',
-              willChange: 'transform',
             }}
-          />
+          >
+            <Image
+              src="/images/outdoor-new.png"
+              alt="Casa del Mar office entrance Yerevan Armenia"
+              fill priority quality={90}
+              style={{ objectFit: 'cover', objectPosition: 'center center' }}
+            />
+          </div>
         </div>
 
-        {/* INSIDE PHOTO */}
-        <div style={{ position: 'absolute', inset: 0, opacity: insideOpacity, willChange: 'opacity' }}>
-          <Image
-            src="/images/inside-new.png"
-            alt="Casa del Mar office interior Yerevan Armenia"
-            fill
-            loading="eager"
-            quality={90}
-            className="office-scroll-inside"
+        {/* ── INSIDE PHOTO ── opacity animated by GSAP on insideWrapRef */}
+        <div
+          ref={insideWrapRef}
+          style={{ position: 'absolute', inset: 0, opacity: 0, willChange: 'opacity' }}
+        >
+          {/* scale animated by GSAP on insideImgWrapRef — zooms to natural size */}
+          <div
+            ref={insideImgWrapRef}
             style={{
-              objectFit: 'cover',
-              objectPosition: 'center center',
-              transform: `scale(${insideScale})`,
-              transformOrigin: 'center center',
+              position: 'absolute', inset: 0,
               willChange: 'transform',
+              transformOrigin: 'center center',
             }}
-          />
+          >
+            <Image
+              src="/images/inside-new.png"
+              alt="Casa del Mar office interior Yerevan Armenia"
+              fill loading="eager" quality={90}
+              style={{ objectFit: 'cover', objectPosition: 'center center' }}
+            />
+          </div>
         </div>
 
-        {/* TRANSITION FLASH */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: '#000', opacity: flashOpacity,
-          pointerEvents: 'none',
-        }} />
+        {/* ── TRANSITION FLASH — opacity animated by GSAP ── */}
+        <div
+          ref={flashRef}
+          style={{ position: 'absolute', inset: 0, background: '#000', opacity: 0, pointerEvents: 'none' }}
+        />
 
-        {/* BOTTOM GRADIENT */}
+        {/* ── BOTTOM GRADIENT ── */}
         <div style={{
           position: 'absolute', inset: 0,
           background: 'linear-gradient(to top, rgba(13,31,45,0.75) 0%, transparent 45%)',
           pointerEvents: 'none', zIndex: 5,
         }} />
 
-        {/* OUTDOOR LABEL */}
-        <div style={{
-          position: 'absolute', bottom: '3rem', left: '3rem',
-          zIndex: 10, opacity: outdoorLabelOpacity,
-          transform: `translateY(${progress * 15}px)`,
+        {/* ── OUTDOOR LABEL — Framer Motion scroll-linked opacity + Y ── */}
+        <motion.div style={{
+          position: 'absolute', bottom: '3rem', left: '3rem', zIndex: 10,
+          opacity: outdoorLabelOpacity,
+          y:       outdoorLabelY,
         }}>
           <p style={{
             color: '#C9A84C', fontFamily: 'Montserrat, sans-serif',
@@ -238,13 +313,13 @@ export function OfficeScrollExperience() {
           }}>
             Our Office
           </h2>
-        </div>
+        </motion.div>
 
-        {/* INSIDE LABEL */}
-        <div style={{
-          position: 'absolute', bottom: '3rem', left: '3rem',
-          zIndex: 10, opacity: insideLabelOpacity,
-          transform: `translateY(${(1 - progress) * 15}px)`,
+        {/* ── INSIDE LABEL — Framer Motion scroll-linked opacity + Y ── */}
+        <motion.div style={{
+          position: 'absolute', bottom: '3rem', left: '3rem', zIndex: 10,
+          opacity: insideLabelOpacity,
+          y:       insideLabelY,
         }}>
           <p style={{
             color: '#C9A84C', fontFamily: 'Montserrat, sans-serif',
@@ -260,13 +335,12 @@ export function OfficeScrollExperience() {
           }}>
             Casa del Mar
           </h2>
-        </div>
+        </motion.div>
 
-        {/* SCROLL HINT */}
-        <div style={{
+        {/* ── SCROLL HINT — Framer Motion fades out after 16% scroll ── */}
+        <motion.div style={{
           position: 'absolute', bottom: '2rem', left: '50%',
-          transform: 'translateX(-50%)',
-          opacity: hintOpacity, zIndex: 20,
+          x: '-50%', opacity: hintOpacity, zIndex: 20,
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', gap: '8px',
           pointerEvents: 'none',
@@ -284,7 +358,7 @@ export function OfficeScrollExperience() {
             background: 'linear-gradient(to bottom, #C9A84C, transparent)',
             animation: 'officePulse 1.6s ease-in-out infinite',
           }} />
-        </div>
+        </motion.div>
 
       </div>
     </div>
