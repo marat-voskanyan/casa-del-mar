@@ -149,9 +149,9 @@ export default function PropertiesGrid({ properties, locale, country, flag, subt
                   value={sort}
                   onChange={e => setSort(e.target.value as SortKey)}
                   className="h-[36px] font-accent text-[11px] tracking-wide
-                    bg-transparent border-[1.5px] border-[#0D1F2D]/15 rounded-full
+                    bg-white border-[1.5px] border-[#0D1F2D]/15 rounded-full
                     px-3 text-navy/70 focus:outline-none focus:border-gold
-                    cursor-pointer shrink-0"
+                    cursor-pointer hover:border-gold/50 transition-colors shrink-0"
                 >
                   {sortOptions.map(o => (
                     <option key={o.key} value={o.key}>{o.label}</option>
