@@ -1,10 +1,7 @@
-'use client'
-import { useRef, useEffect } from 'react'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import type { Locale } from '@/types'
 import { getT } from '@/lib/i18n'
-import { OfficeScrollExperience } from '@/components/OfficeScrollExperience'
 
 const OfficeMap = dynamic(() => import('@/components/OfficeMap'), {
   ssr: false,
@@ -21,172 +18,43 @@ export default function OfficeSection({ locale }: Props) {
   const t = getT(locale)
   const o = t.office
 
-  // ── Intersection Observer: scroll reveal + pause looping anim off-screen ──
-  const sectionRef  = useRef<HTMLElement>(null)
-  const leftRef     = useRef<HTMLDivElement>(null)
-  const rightRef    = useRef<HTMLDivElement>(null)
-  const goldLineRef = useRef<HTMLDivElement>(null)
-  const outdoorImgRef = useRef<HTMLImageElement | null>(null)
-  const insideCardRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const section  = sectionRef.current
-    const left     = leftRef.current
-    const right    = rightRef.current
-    const goldLine = goldLineRef.current
-    if (!section) return
-
-    // Reveal on enter
-    const revealObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            left?.classList.add('visible')
-            right?.classList.add('visible')
-            goldLine?.classList.add('visible')
-            revealObserver.unobserve(section)
-          }
-        })
-      },
-      { threshold: 0.12 }
-    )
-    revealObserver.observe(section)
-
-    // Pause looping animations when out of view (performance)
-    const animObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          const state = entry.isIntersecting ? 'running' : 'paused'
-          if (outdoorImgRef.current) outdoorImgRef.current.style.animationPlayState = state
-          if (insideCardRef.current) insideCardRef.current.style.animationPlayState = state
-        })
-      },
-      { threshold: 0 }
-    )
-    animObserver.observe(section)
-
-    return () => {
-      revealObserver.disconnect()
-      animObserver.disconnect()
-    }
-  }, [])
-
   return (
     <>
-      {/* ── Cinematic scroll experience — unchanged ── */}
-      <section style={{ background: '#0D1F2D' }}>
-        <OfficeScrollExperience />
-      </section>
-
-      {/* ══════════════════════════════════════════
-          DESKTOP EDITORIAL SPLIT (768px +)
-          Luxury full-bleed two-column layout
-          ══════════════════════════════════════════ */}
+      {/* ════════════════════════════════════════════════
+          DESKTOP OFFICE SECTION — md and above
+          Warm sand background, static, no animations
+          ════════════════════════════════════════════════ */}
       <section
-        ref={sectionRef}
-        className="hidden md:flex"
-        style={{
-          position: 'relative',
-          minHeight: '680px',
-          overflow: 'hidden',
-          background: '#0D1F2D',
-          borderTop: '1px solid rgba(201,168,76,0.2)',
-        }}
+        className="hidden md:block"
+        style={{ background: '#F2EBD9' }}
       >
-        {/* LEFT HALF — outdoor photo, edge-to-edge, Ken Burns */}
-        <div
-          ref={leftRef}
-          className="office-left"
-          style={{ width: '50%', position: 'relative', flexShrink: 0, overflow: 'hidden' }}
-        >
+        {/* ── Full-width panoramic outdoor strip ── */}
+        <div style={{ position: 'relative', width: '100%', height: '520px', overflow: 'hidden' }}>
           <Image
-            ref={outdoorImgRef as any}
             src="/images/outdoor-new.png"
-            alt="Casa del Mar office entrance 37 Mashtots Ave Yerevan Armenia"
+            alt="Casa del Mar office exterior 37 Mashtots Ave Yerevan Armenia"
             fill
             priority
             quality={90}
-            className="outdoor-photo-img"
             style={{ objectFit: 'cover', objectPosition: 'center' }}
           />
-
-          {/* Dark gradient for quote readability */}
-          <div style={{
-            position: 'absolute', inset: 0, pointerEvents: 'none',
-            background: 'linear-gradient(to top, rgba(13,31,45,0.75) 0%, rgba(13,31,45,0.2) 40%, transparent 70%)',
-          }} />
-
-          {/* Serif quote overlay */}
-          <div style={{
-            position: 'absolute', bottom: '3rem', left: '3rem', right: '3rem',
-            zIndex: 2,
-          }}>
-            <p style={{
-              fontFamily: 'Playfair Display, serif',
-              fontSize: 'clamp(1.6rem, 3vw, 2.4rem)',
-              fontWeight: 300,
-              color: 'rgba(255,255,255,0.9)',
-              textShadow: '0 2px 20px rgba(0,0,0,0.5)',
-              lineHeight: 1.2,
-              marginBottom: '1rem',
-            }}>
-              {o.officeQuote}
-            </p>
-            {/* Gold accent line — draws in on scroll */}
-            <div
-              ref={goldLineRef}
-              className="gold-draw-line"
-              style={{ width: '50px', height: '1px', background: '#C9A84C' }}
-            />
-          </div>
         </div>
 
-        {/* RIGHT HALF — navy, inside card + text */}
-        <div
-          ref={rightRef}
-          className="office-right"
-          style={{
-            flex: 1,
-            background: '#0D1F2D',
-            padding: '6rem 4rem 4rem',
-            position: 'relative',
-            zIndex: 1,
-            overflow: 'visible',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          {/* Inside photo card — floating, overlapping split line */}
-          <div
-            ref={insideCardRef}
-            className="inside-card inside-card-wrap"
-            style={{
-              width: '65%',
-              aspectRatio: '4/3',
+        {/* ── Thin gold separator ── */}
+        <div style={{ height: '1px', background: '#C9A84C' }} />
+
+        {/* ── Two-column: portrait photo (40%) + text (60%) ── */}
+        <div style={{ display: 'flex', alignItems: 'stretch' }}>
+
+          {/* Left — inside photo, portrait, gold border */}
+          <div style={{ width: '40%', flexShrink: 0, position: 'relative' }}>
+            <div style={{
               position: 'relative',
-              marginTop: '-80px',
-              marginLeft: '-80px',
-              flexShrink: 0,
-              zIndex: 2,
-            }}
-          >
-            <div
-              className="inside-card-frame"
-              style={{
-                position: 'relative',
-                width: '100%',
-                height: '100%',
-                border: '2px solid #C9A84C',
-                borderRadius: '2px',
-                overflow: 'hidden',
-                boxShadow: [
-                  '0 0 0 1px rgba(201,168,76,0.2)',
-                  '0 20px 60px rgba(0,0,0,0.5)',
-                  '0 8px 20px rgba(0,0,0,0.3)',
-                  'inset 0 0 30px rgba(201,168,76,0.05)',
-                ].join(', '),
-              }}
-            >
+              width: '100%',
+              paddingBottom: '133.33%', /* 3:4 portrait aspect ratio */
+              border: '1px solid #C9A84C',
+              overflow: 'hidden',
+            }}>
               <Image
                 src="/images/inside-new.png"
                 alt="Casa del Mar office interior Yerevan Armenia"
@@ -197,8 +65,8 @@ export default function OfficeSection({ locale }: Props) {
             </div>
           </div>
 
-          {/* Text content below card */}
-          <div style={{ marginTop: '2.5rem' }}>
+          {/* Right — text content on sand */}
+          <div style={{ flex: 1, padding: '3rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
 
             {/* Eyebrow */}
             <p style={{
@@ -218,42 +86,53 @@ export default function OfficeSection({ locale }: Props) {
             {/* Title */}
             <h2 style={{
               fontFamily: 'Playfair Display, serif',
-              fontSize: 'clamp(1.6rem, 2.5vw, 2.2rem)',
+              fontSize: '2.2rem',
               fontWeight: 300,
-              color: '#ffffff',
-              marginBottom: '1.5rem',
+              color: '#0D1F2D',
               lineHeight: 1.2,
+              marginBottom: '1.5rem',
             }}>
               {o.title}
             </h2>
 
-            {/* Paragraph — EXACTLY from i18n, zero modifications */}
+            {/* Paragraph — exactly from i18n */}
             <p style={{
               fontSize: '14px',
-              color: 'rgba(255,255,255,0.72)',
+              color: '#0D1F2D',
               lineHeight: 1.9,
-              maxWidth: '420px',
+              maxWidth: '480px',
               marginBottom: '2rem',
+              opacity: 0.75,
             }}>
               {o.paragraph}
             </p>
 
-            {/* Address + Hours info items */}
+            {/* Thin divider */}
+            <div style={{ height: '1px', background: 'rgba(13,31,45,0.1)', maxWidth: '480px', marginBottom: '1.5rem' }} />
+
+            {/* Info items */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
-              {/* Address — links to Google Maps */}
+              {/* Address */}
               <a
                 href="https://maps.google.com/?q=40.186472,44.512972"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', textDecoration: 'none', color: 'inherit' }}
               >
-                <span style={{ color: '#C9A84C', fontSize: '16px', flexShrink: 0, lineHeight: 1 }}>📍</span>
+                <span style={{ fontSize: '16px', flexShrink: 0, lineHeight: '1.2' }}>📍</span>
                 <div>
-                  <p style={{ fontSize: '10px', color: 'rgba(201,168,76,0.7)', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'Montserrat, sans-serif', marginBottom: '2px' }}>
+                  <p style={{
+                    fontFamily: 'Montserrat, sans-serif',
+                    fontSize: '10px',
+                    letterSpacing: '0.15em',
+                    textTransform: 'uppercase',
+                    color: 'rgba(13,31,45,0.5)',
+                    marginBottom: '2px',
+                  }}>
                     {o.addressLabel}
                   </p>
-                  <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.8)' }}>
+                  <p style={{ fontSize: '13px', color: '#0D1F2D' }}>
                     37 Mashtots Ave, Yerevan, Armenia
                   </p>
                 </div>
@@ -261,12 +140,19 @@ export default function OfficeSection({ locale }: Props) {
 
               {/* Hours */}
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                <span style={{ color: '#C9A84C', fontSize: '16px', flexShrink: 0, lineHeight: 1 }}>🕐</span>
+                <span style={{ fontSize: '16px', flexShrink: 0, lineHeight: '1.2' }}>🕐</span>
                 <div>
-                  <p style={{ fontSize: '10px', color: 'rgba(201,168,76,0.7)', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'Montserrat, sans-serif', marginBottom: '2px' }}>
+                  <p style={{
+                    fontFamily: 'Montserrat, sans-serif',
+                    fontSize: '10px',
+                    letterSpacing: '0.15em',
+                    textTransform: 'uppercase',
+                    color: 'rgba(13,31,45,0.5)',
+                    marginBottom: '2px',
+                  }}>
                     {o.hoursLabel}
                   </p>
-                  <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.8)' }}>
+                  <p style={{ fontSize: '13px', color: '#0D1F2D' }}>
                     {o.hoursValue}
                   </p>
                 </div>
@@ -277,10 +163,9 @@ export default function OfficeSection({ locale }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════
-          MOBILE SECTION — EXACTLY as before
-          (hidden on desktop, 768px+)
-          ══════════════════════════════════════════ */}
+      {/* ════════════════════════════════════════════════
+          MOBILE SECTION — exactly as before, unchanged
+          ════════════════════════════════════════════════ */}
       <section
         className="md:hidden py-14 px-4"
         style={{ background: '#0D1F2D' }}
@@ -337,7 +222,7 @@ export default function OfficeSection({ locale }: Props) {
         </div>
       </section>
 
-      {/* ── Map section — unchanged, always visible ── */}
+      {/* ── Map — always visible ── */}
       <section style={{ background: '#0D1F2D', padding: '2rem 2rem 4rem' }}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-6">
