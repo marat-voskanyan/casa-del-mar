@@ -17,16 +17,16 @@ function StaticOfficePhotos() {
       onClick={() => setShowInside(prev => !prev)}
     >
       <Image
-        src="/images/Outdoor.jpeg"
-        alt="Casa del Mar office entrance Yerevan"
+        src="/images/outdoor-new.png"
+        alt="Casa del Mar office entrance Yerevan Armenia"
         fill
         style={{ objectFit: 'cover', opacity: showInside ? 0 : 1, transition: 'opacity 0.9s ease' }}
         priority
         quality={85}
       />
       <Image
-        src="/images/Inside.jpeg"
-        alt="Casa del Mar office interior Yerevan"
+        src="/images/inside-new.png"
+        alt="Casa del Mar office interior Yerevan Armenia"
         fill
         style={{ objectFit: 'cover', opacity: showInside ? 1 : 0, transition: 'opacity 0.9s ease' }}
         quality={85}
@@ -124,16 +124,16 @@ export function OfficeScrollExperience() {
         onClick={() => setShowInside(prev => !prev)}
       >
         <Image
-          src="/images/Outdoor.jpeg"
-          alt="Casa del Mar office entrance Yerevan"
+          src="/images/outdoor-new.png"
+          alt="Casa del Mar office entrance Yerevan Armenia"
           fill
           style={{ objectFit: 'cover', opacity: showInside ? 0 : 1, transition: 'opacity 0.9s ease' }}
           priority
           quality={85}
         />
         <Image
-          src="/images/Inside.jpeg"
-          alt="Casa del Mar office interior Yerevan"
+          src="/images/inside-new.png"
+          alt="Casa del Mar office interior Yerevan Armenia"
           fill
           style={{ objectFit: 'cover', opacity: showInside ? 1 : 0, transition: 'opacity 0.9s ease' }}
           quality={85}
@@ -169,8 +169,8 @@ export function OfficeScrollExperience() {
         {/* OUTDOOR PHOTO */}
         <div style={{ position: 'absolute', inset: 0, opacity: outdoorOpacity, willChange: 'opacity' }}>
           <Image
-            src="/images/Outdoor.jpeg"
-            alt="Casa del Mar office entrance 37 Mashtots Ave Yerevan"
+            src="/images/outdoor-new.png"
+            alt="Casa del Mar office entrance Yerevan Armenia"
             fill
             priority
             quality={90}
@@ -188,8 +188,8 @@ export function OfficeScrollExperience() {
         {/* INSIDE PHOTO */}
         <div style={{ position: 'absolute', inset: 0, opacity: insideOpacity, willChange: 'opacity' }}>
           <Image
-            src="/images/Inside.jpeg"
-            alt="Casa del Mar office interior Yerevan"
+            src="/images/inside-new.png"
+            alt="Casa del Mar office interior Yerevan Armenia"
             fill
             loading="eager"
             quality={90}
