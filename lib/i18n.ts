@@ -158,6 +158,7 @@ const en = {
     hoursLabel:   'Working Hours',
     hoursValue:   'Mon–Fri: 11:00 – 18:00',
     mapEye:       'Find Us',
+    officeQuote:  'Where Your Journey Begins',
   },
   footer: {
     desc:                  'Premier international real estate agency. Based in Yerevan, serving buyers worldwide.',
@@ -329,6 +330,7 @@ const ru: typeof en = {
     hoursLabel:   'Часы работы',
     hoursValue:   'Пн–Пт: 11:00 – 18:00',
     mapEye:       'Найти нас',
+    officeQuote:  'Где начинается ваш путь',
   },
   footer: {
     desc:                  'Ведущее международное агентство недвижимости. Ереван — для покупателей по всему миру.',
@@ -500,6 +502,7 @@ const hy: typeof en = {
     hoursLabel:   'Աշխատանքային ժամեր',
     hoursValue:   'Երկ–Ուրբ: 11:00 – 18:00',
     mapEye:       'Գտեք մեզ',
+    officeQuote:  'Ուր սկսվում է ձեր ճամփան',
   },
   footer: {
     desc:                  'Առաջատար միջազգային անշարժ գույքի գործակալություն։ Երևանից՝ ամբողջ աշխարհին։',
