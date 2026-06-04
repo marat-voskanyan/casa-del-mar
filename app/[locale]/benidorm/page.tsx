@@ -596,21 +596,21 @@ export default function BenidormPage({ params: { locale } }: Props) {
                 icon: 'plane',
                 title: isRu ? 'На самолёте' : isHy ? 'Ինքնաթիռով' : 'By Air',
                 desc:  isRu ? 'Аэропорт Аликанте (ALC) — 60 км, 45 мин. Ryanair, EasyJet, Vueling.'
-                             : isHy ? 'Ալիկանտե օդ/կ (ALC) — 60 կմ, 45 ր. ավ/մ-ով։ Ryanair, EasyJet, Vueling.'
+                             : isHy ? 'Ալիկանտե օդանավակայանից (ALC) — 60 կմ, 45 ր. մեքենայով։ Ուղիղ թռիչք Երևանից'
                              : 'Alicante Airport (ALC) — 60km, 45 min by car. Ryanair, EasyJet, Vueling and others.',
               },
               {
                 icon: 'car',
                 title: isRu ? 'На машине' : isHy ? 'Ավտոմեքենայով' : 'By Car',
                 desc:  isRu ? 'Из Аликанте — 50 км по AP-7. Из Валенсии — 120 км. Из Мадрида — 440 км.'
-                             : isHy ? 'Ալիկանտեից — 50 կմ AP-7 ճ-ով։ Վալ-ից — 120 կմ։ Մ-ից — 440 կմ։'
+                             : isHy ? 'Ալիկանտեից — 50 կմ Վալենսիայից — 120 կմ։ Մադրիդից — 440 կմ։'
                              : 'From Alicante — 50km on the AP-7 motorway. From Valencia — 120km. From Madrid — 440km.',
               },
               {
                 icon: 'bus',
                 title: isRu ? 'На автобусе' : isHy ? 'Ավտոբուսով' : 'By Bus',
                 desc:  isRu ? 'Регулярные ALSA из Аликанте, Валенсии и Мадрида прямо до Бенидорма.'
-                             : isHy ? 'ALSA ավ/բ-ներ Ալ-ից, Վ-ից ու Մ-ից — ուղ. Բ-որմ։'
+                             : isHy ? 'ALSA ավտոբուսներ Ալիկանեյից, Վալենսիայից ու Մադրիդից — Բենիորմ։'
                              : 'Regular ALSA bus services from Alicante, Valencia, and Madrid directly to Benidorm.',
               },
             ].map((item, i) => (
