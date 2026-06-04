@@ -59,8 +59,8 @@ export const BENIDORM_IMAGES = {
   cards: {
     /** Spain destination card — Benidorm city panorama */
     spain_destination:  L('benidorm-main.jpg'),
-    /** Cyprus destination card — Unsplash until Cyprus photos are uploaded */
-    cyprus_destination: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&q=85&fit=crop&auto=format',
+    /** Cyprus destination card */
+    cyprus_destination: '/images/Cyprus-Main.jpg',
     /** Altea Hills card — Benidorm tallest residential tower */
     altea_hills:        L('tallest-building.jpg'),
     /** Finestrat card — Poniente beach view */
