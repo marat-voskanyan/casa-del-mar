@@ -114,7 +114,7 @@ export default function BenidormSection({ locale }: Props) {
                 {locale === 'ru'
                   ? 'Бенидорм — ведущий курортный город Коста Бланки с 320+ солнечными днями в году. Один из самых посещаемых городов Испании.'
                   : locale === 'hy'
-                  ? 'Բenenidormը Կоستа Բlankayum aaarachatarar hankstavarq taghn e, 320+ araevnay orner tarakan. Испаниայи amenaaytselvadz taqhnerits voch mekn e.'
+                  ? 'Բենիդորմը Կոստա Բլանկայի առաջատար առողջարանային քաղաքն է՝ տարեկան ավելի քան 320 արևոտ օրերով։ Այն Իսպանիայի ամենաշատ այցելվող քաղաքներից մեկն է։'
                   : 'Benidorm is Costa Blanca\'s premier resort city with 320+ sunny days per year. One of Spain\'s most visited cities, with world-class beaches and year-round tourism.'}
               </p>
               <div
@@ -131,7 +131,7 @@ export default function BenidormSection({ locale }: Props) {
                     hover:border-[#C9A84C] px-5 py-2.5 transition-all duration-300"
                 >
                   {locale === 'ru' ? 'Полный гид по Бенидорму'
-                   : locale === 'hy' ? 'Բenidormi ughecuyts'
+                   : locale === 'hy' ? 'Բենիդորմի ուղեցույց'
                    : 'Full Benidorm Guide'}
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
