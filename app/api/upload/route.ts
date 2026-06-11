@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { verifyToken } from '@/lib/auth'
+import { uploadToCloudflare } from '@/lib/cloudflare-upload'
 import { v4 as uuidv4 } from 'uuid'
 import path from 'path'
 import fs from 'fs'
@@ -32,8 +33,29 @@ export async function POST(request: Request) {
     const ext      = file.name.split('.').pop()?.toLowerCase() || 'jpg'
     const filename = `${uuidv4()}.${ext}`
 
-    // Prefer Vercel Blob when configured (production). Fall back to local
-    // filesystem for development.
+    // Try uploaders in order of preference:
+    // 1. Cloudflare Images (if all credentials present)
+    // 2. Vercel Blob (if token present)
+    // 3. Local filesystem (development fallback)
+
+    const buffer = Buffer.from(await file.arrayBuffer())
+
+    // Try Cloudflare first
+    if (
+      process.env.CLOUDFLARE_ACCOUNT_ID &&
+      process.env.CLOUDFLARE_API_TOKEN &&
+      process.env.NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_HASH
+    ) {
+      try {
+        const url = await uploadToCloudflare(buffer, filename)
+        return NextResponse.json({ url })
+      } catch (err) {
+        console.error('Cloudflare upload failed, falling back:', err)
+        // Fall through to next option
+      }
+    }
+
+    // Fall back to Vercel Blob
     if (process.env.BLOB_READ_WRITE_TOKEN) {
       const { put } = await import('@vercel/blob')
       const blob = await put(`uploads/${filename}`, file, {
@@ -44,10 +66,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ url: blob.url })
     }
 
+    // Final fallback: local filesystem
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads')
     if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true })
 
-    const buffer = Buffer.from(await file.arrayBuffer())
     fs.writeFileSync(path.join(uploadsDir, filename), buffer)
 
     return NextResponse.json({ url: `/uploads/${filename}` })
