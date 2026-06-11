@@ -42,7 +42,7 @@ export default function OfficeSection({ locale }: Props) {
               overflow: 'hidden',
             }}>
               <Image
-                src="/images/inside-new.png"
+                src="https://imagedelivery.net/UVRKYy_K6KMZ0Z1qPkVfYw/25d24ccd-a33e-4571-4aa9-203712c5fd00/public"
                 alt="Casa del Mar office interior Yerevan Armenia"
                 fill
                 priority

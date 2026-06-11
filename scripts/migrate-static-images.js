@@ -8,8 +8,6 @@
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import fetch from 'node-fetch'
-import FormData from 'form-data'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const rootDir = path.join(__dirname, '..')
@@ -28,6 +26,21 @@ if (!ACCOUNT_ID || !API_TOKEN || !ACCOUNT_HASH) {
   process.exit(1)
 }
 
+function getMimeType(filename) {
+  const ext = filename.toLowerCase().split('.').pop()
+  const mimeTypes = {
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    png: 'image/png',
+    gif: 'image/gif',
+    webp: 'image/webp',
+    avif: 'image/avif',
+    svg: 'image/svg+xml',
+    heic: 'image/heic',
+  }
+  return mimeTypes[ext] || 'image/jpeg'
+}
+
 // Load or create mapping
 const map = fs.existsSync(MAP_FILE)
   ? JSON.parse(fs.readFileSync(MAP_FILE, 'utf8'))
@@ -35,7 +48,9 @@ const map = fs.existsSync(MAP_FILE)
 
 async function uploadBufferToCloudflare(buffer, filename) {
   const form = new FormData()
-  form.append('file', buffer, { filename })
+  const mimeType = getMimeType(filename)
+  const blob = new Blob([new Uint8Array(buffer)], { type: mimeType })
+  form.append('file', blob, filename)
 
   const res = await fetch(
     `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/images/v1`,

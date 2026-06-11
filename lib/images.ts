@@ -60,7 +60,7 @@ export const BENIDORM_IMAGES = {
     /** Spain destination card — Benidorm city panorama */
     spain_destination:  L('benidorm-main.jpg'),
     /** Cyprus destination card */
-    cyprus_destination: '/images/Cyprus-Main.jpg',
+    cyprus_destination: 'https://imagedelivery.net/UVRKYy_K6KMZ0Z1qPkVfYw/173bef25-b1d1-40c1-d974-be25e55b4400/public',
     /** Altea Hills card — Benidorm tallest residential tower */
     altea_hills:        L('tallest-building.jpg'),
     /** Finestrat card — Poniente beach view */
